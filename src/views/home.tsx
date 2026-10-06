@@ -5,6 +5,7 @@ import { HomeHero } from "@/components/sections/HomeHero";
 import { MomentsMosaic } from "@/components/sections/MomentsMosaic";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { Container } from "@/components/ui/Container";
+import { Media } from "@/components/ui/Media";
 import { getHeroSlides } from "@/content/hero";
 import { getImage } from "@/content/media";
 import type { Locale } from "@/i18n/config";
@@ -39,6 +40,7 @@ export async function HomeView({ locale }: { locale: Locale }) {
   ]);
   const contactHref = routePath("contact", locale);
   const dinner = showcase.find((item) => item.id === "diner-ciel-de-lumieres");
+  const labelOf = (key: string) => categories.find((category) => category.key === key)?.label ?? wedding.label;
 
   return (
     <>
@@ -61,7 +63,7 @@ export async function HomeView({ locale }: { locale: Locale }) {
       <section className="py-20 sm:py-28">
         <Container className="grid gap-8 lg:grid-cols-12 lg:gap-8">
           <h2 className="eyebrow text-ivory/50 lg:col-span-3 lg:pt-3">{t.intro.eyebrow}</h2>
-          <div className="lg:col-span-8">
+          <div className="lg:col-span-5">
             <p className="font-display text-[1.75rem] leading-[1.3] font-light text-balance sm:text-4xl sm:leading-[1.25]">
               {t.intro.text}
             </p>
@@ -75,6 +77,13 @@ export async function HomeView({ locale }: { locale: Locale }) {
               </ButtonLink>
             </div>
           </div>
+          <Media
+            image={getImage("lightCanopyTable", locale)}
+            aspect="aspect-[16/10] sm:aspect-[4/3] lg:aspect-[3/4]"
+            sizes="(min-width: 1024px) 25vw, 100vw"
+            position="center 40%"
+            className="reveal lg:col-span-3 lg:col-start-10"
+          />
         </Container>
       </section>
 
@@ -114,6 +123,9 @@ export async function HomeView({ locale }: { locale: Locale }) {
               { image: getImage("weddingPavilion", locale), caption: wedding.label },
               { image: getImage("poolsideDusk", locale), caption: dinner?.label ?? wedding.label },
               { image: getImage("djCourtyard", locale), caption: festival.label },
+              { image: getImage("liveSinger", locale), caption: labelOf("privateParty") },
+              { image: getImage("congressAudience", locale), caption: labelOf("seminar") },
+              { image: getImage("poolNight", locale), caption: wedding.label },
             ]}
           />
         </Container>
@@ -125,6 +137,7 @@ export async function HomeView({ locale }: { locale: Locale }) {
         title={t.cta.title}
         text={t.cta.text}
         primary={{ href: contactHref, label: dict.cta.plan }}
+        image={getImage("candlelitDinner", locale)}
       />
     </>
   );
