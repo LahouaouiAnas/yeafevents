@@ -1,26 +1,113 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Warm blacks dominate; ivory carries the text; champagne is a rare, quiet accent. */
+  --color-night: #0a0908;
+  --color-coal: #12100e;
+  --color-graphite: #1d1a17;
+  --color-ivory: #f2ede5;
+  --color-stone: #a9a198;
+  --color-champagne: #c4b08b;
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-cormorant), ui-serif, Georgia, serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 6rem;
+    color-scheme: dark;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    background-color: var(--color-night);
+    color: var(--color-ivory);
+    font-family: var(--font-sans);
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: var(--color-champagne);
+    color: var(--color-night);
+  }
+
+  :focus-visible {
+    outline: 1px solid var(--color-ivory);
+    outline-offset: 4px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .eyebrow {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+  }
+
+  /* Fallback surface when no real media exists yet (never a fake photo). */
+  .media-fallback {
+    background-color: var(--color-graphite);
+    background-image:
+      radial-gradient(90% 70% at 70% 20%, rgb(196 176 139 / 0.12), transparent 65%),
+      linear-gradient(160deg, #1d1a17, #0a0908);
+  }
+}
+
+/* Scroll-linked reveal: pure CSS, ignored where unsupported or when motion is reduced. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 40%;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* One-off settle of the hero image: transform only, so LCP is unaffected. */
+  .settle {
+    animation: settle 2.4s var(--ease-out-soft) both;
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes hero-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes settle {
+  from {
+    transform: scale(1.06);
+  }
+  to {
+    transform: none;
+  }
 }
