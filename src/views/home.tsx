@@ -131,7 +131,12 @@ export async function HomeView({ locale }: { locale: Locale }) {
         </Container>
       </section>
 
-      <ApproachSteps eyebrow={t.why.eyebrow} title={t.why.title} steps={t.why.steps} />
+      <ApproachSteps
+        eyebrow={t.why.eyebrow}
+        title={t.why.title}
+        steps={t.why.steps}
+        image={getImage("pavilionStage", locale)}
+      />
 
       <CtaBanner
         title={t.cta.title}
