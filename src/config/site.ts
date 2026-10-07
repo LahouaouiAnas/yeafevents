@@ -17,6 +17,8 @@ export type SocialNetwork = "instagram" | "facebook" | "pinterest" | "linkedin" 
 
 type SiteConfig = {
   name: string;
+  /** Other spellings people type, so search engines tie them to this site. */
+  alternateNames?: string[];
   legalName?: string;
   url: string;
   indexable: boolean;
@@ -43,6 +45,7 @@ function readSiteUrl(): string {
 
 export const siteConfig: SiteConfig = {
   name: "Yeaf Events",
+  alternateNames: ["YeafEvents", "Yeaf"],
   url: readSiteUrl(),
   indexable: process.env.NEXT_PUBLIC_ALLOW_INDEXING === "true",
   logo: logoMarkPath,
@@ -52,9 +55,9 @@ export const siteConfig: SiteConfig = {
     whatsapp: "212660526681",
   },
   socials: {
-    instagram: "",
-    facebook: "",
-    pinterest: "",
+    instagram: "https://www.instagram.com/yeafevents",
+    facebook: "https://www.facebook.com/yeafevents",
+    pinterest: "https://www.pinterest.com/yeafevents",
   },
 };
 
