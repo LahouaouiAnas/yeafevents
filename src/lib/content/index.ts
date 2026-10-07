@@ -1,9 +1,14 @@
 import { getCategoryContent } from "@/content/categories";
 import { getServiceContent } from "@/content/services";
+import { getImage } from "@/content/media";
 import { getShowcaseContent } from "@/content/showcase";
+import { getDictionary } from "@/i18n/get-dictionary";
 import type { Locale } from "@/i18n/config";
 import {
   mergeCategory,
+  mergeHome,
+  type HomeContent,
+  type RawHome,
   toPost,
   toProject,
   toTestimonial,
@@ -12,7 +17,7 @@ import {
   type RawProject,
   type RawTestimonial,
 } from "@/lib/cms/mappers";
-import { categoriesQuery, postsQuery, projectsQuery, testimonialsQuery } from "@/lib/cms/queries";
+import { categoriesQuery, homeQuery, postsQuery, projectsQuery, testimonialsQuery } from "@/lib/cms/queries";
 import { sanityFetch } from "@/lib/cms/sanity";
 import {
   categoryKeyFromSlug,
@@ -89,4 +94,24 @@ export async function getTestimonials(locale: Locale, category?: CategoryKey): P
   const raw = await sanityFetch<RawTestimonial[]>(testimonialsQuery(locale), {}, ["testimonial"]);
   const testimonials = (raw ?? []).map(toTestimonial);
   return category ? testimonials.filter((item) => item.eventType === category) : testimonials;
+}
+
+/** Home page texts and photos as shipped (dictionary + media registry). */
+export function getDefaultHomeContent(locale: Locale): HomeContent {
+  const t = getDictionary(locale).home;
+  return {
+    seo: t.seo,
+    hero: { kicker: t.hero.kicker, title: t.hero.title, place: t.hero.place, photos: {} },
+    intro: { eyebrow: t.intro.eyebrow, text: t.intro.text, note: t.intro.note, photo: getImage("lightCanopyTable", locale) },
+    worlds: { eyebrow: t.categories.eyebrow, title: t.categories.title },
+    moments: { eyebrow: t.moments.eyebrow, title: t.moments.title },
+    why: { eyebrow: t.why.eyebrow, title: t.why.title, steps: t.why.steps, photo: getImage("congressStage", locale) },
+    cta: { title: t.cta.title, text: t.cta.text, photo: getImage("candlelitDinner", locale) },
+  };
+}
+
+/** Home page: shipped content overlaid with what is edited in Sanity. */
+export async function getHomeContent(locale: Locale): Promise<HomeContent> {
+  const raw = await sanityFetch<RawHome | null>(homeQuery(locale), {}, ["homePage"]);
+  return mergeHome(getDefaultHomeContent(locale), raw);
 }

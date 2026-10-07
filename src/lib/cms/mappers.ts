@@ -202,3 +202,94 @@ export function mergeCategory(base: EventCategory, raw: RawCategory | undefined)
     seo: { title: pick(raw.seoTitle, base.seo.title), description: pick(raw.seoDescription, base.seo.description) },
   };
 }
+
+type Text = string | null | undefined;
+
+export type RawHome = {
+  heroKicker?: Text;
+  heroTitle?: Text;
+  heroPlace?: Text;
+  heroPhotos?: Partial<Record<string, SanityImage | null>> | null;
+  introEyebrow?: Text;
+  introText?: Text;
+  introNote?: Text;
+  introPhoto?: SanityImage | null;
+  worldsEyebrow?: Text;
+  worldsTitle?: Text;
+  momentsEyebrow?: Text;
+  momentsTitle?: Text;
+  moments?: { photo?: SanityImage | null; caption?: Text }[] | null;
+  whyEyebrow?: Text;
+  whyTitle?: Text;
+  whySteps?: { title?: Text; text?: Text }[] | null;
+  whyPhoto?: SanityImage | null;
+  ctaTitle?: Text;
+  ctaText?: Text;
+  ctaPhoto?: SanityImage | null;
+  seoTitle?: Text;
+  seoDescription?: Text;
+};
+
+/** Home page content as the view uses it; `moments` is only set when edited in Sanity. */
+export type HomeContent = {
+  seo: { title: string; description: string };
+  hero: { kicker: string; title: string; place: string; photos: Partial<Record<string, ImageAsset>> };
+  intro: { eyebrow: string; text: string; note: string; photo: ImageAsset };
+  worlds: { eyebrow: string; title: string };
+  moments: { eyebrow: string; title: string; items?: { image: ImageAsset; caption: string }[] };
+  why: { eyebrow: string; title: string; steps: { title: string; text: string }[]; photo: ImageAsset };
+  cta: { title: string; text: string; photo: ImageAsset };
+};
+
+export function mergeHome(base: HomeContent, raw: RawHome | null | undefined): HomeContent {
+  if (!raw) return base;
+  const photos = Object.fromEntries(
+    Object.entries(raw.heroPhotos ?? {})
+      .map(([key, image]) => [key, toImage(image, base.hero.title)] as const)
+      .filter((entry): entry is readonly [string, ImageAsset] => Boolean(entry[1])),
+  );
+  const moments = (raw.moments ?? [])
+    .map((item) => {
+      const image = toImage(item.photo, item.caption ?? "");
+      return image ? { image, caption: item.caption?.trim() ?? "" } : null;
+    })
+    .filter((item): item is { image: ImageAsset; caption: string } => Boolean(item));
+  // The mosaic is built for 3 or 6 photos.
+  const usableMoments = moments.length >= 6 ? moments.slice(0, 6) : moments.length >= 3 ? moments.slice(0, 3) : undefined;
+  const steps = (raw.whySteps ?? [])
+    .map((step) => ({ title: step.title?.trim() ?? "", text: step.text?.trim() ?? "" }))
+    .filter((step) => step.title);
+
+  return {
+    seo: { title: pick(raw.seoTitle, base.seo.title), description: pick(raw.seoDescription, base.seo.description) },
+    hero: {
+      kicker: pick(raw.heroKicker, base.hero.kicker),
+      title: pick(raw.heroTitle, base.hero.title),
+      place: pick(raw.heroPlace, base.hero.place),
+      photos,
+    },
+    intro: {
+      eyebrow: pick(raw.introEyebrow, base.intro.eyebrow),
+      text: pick(raw.introText, base.intro.text),
+      note: pick(raw.introNote, base.intro.note),
+      photo: toImage(raw.introPhoto, base.intro.photo.alt) ?? base.intro.photo,
+    },
+    worlds: { eyebrow: pick(raw.worldsEyebrow, base.worlds.eyebrow), title: pick(raw.worldsTitle, base.worlds.title) },
+    moments: {
+      eyebrow: pick(raw.momentsEyebrow, base.moments.eyebrow),
+      title: pick(raw.momentsTitle, base.moments.title),
+      items: usableMoments,
+    },
+    why: {
+      eyebrow: pick(raw.whyEyebrow, base.why.eyebrow),
+      title: pick(raw.whyTitle, base.why.title),
+      steps: steps.length > 0 ? steps : base.why.steps,
+      photo: toImage(raw.whyPhoto, base.why.photo.alt) ?? base.why.photo,
+    },
+    cta: {
+      title: pick(raw.ctaTitle, base.cta.title),
+      text: pick(raw.ctaText, base.cta.text),
+      photo: toImage(raw.ctaPhoto, base.cta.photo.alt) ?? base.cta.photo,
+    },
+  };
+}

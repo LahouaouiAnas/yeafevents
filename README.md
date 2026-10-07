@@ -51,6 +51,10 @@ dataset `production`, public en lecture). Le reste du contenu est dans `src/cont
   sont créés par le site au démarrage (`src/instrumentation.ts` → `src/lib/cms/seed.ts`) à partir du
   contenu livré dans `src/content/categories.ts`, sans jamais écraser une modification. Un champ vidé
   reprend le texte d'origine. L'adresse des pages et les vidéos restent dans le code.
+- **Page d'accueil** : document unique `homePage` (titres, textes, photos du diaporama, « Quelques
+  moments », étapes, appel final, textes Google), créé au démarrage depuis le contenu livré
+  (`src/i18n/dictionaries`, `src/content/media.ts`). Les photos du diaporama restent vides : une photo
+  choisie remplace la photo et la vidéo de sa diapositive. Un champ vide reprend le texte d'origine.
 - **Premiers articles de blog** : `src/content/blog-drafts.ts` est importé une seule fois dans Sanity
   sous forme de **brouillons** (à relire et publier dans le Studio). Les articles déjà importés sont
   notés dans le document `seed.state` : un brouillon supprimé ne revient pas.
@@ -61,7 +65,7 @@ dataset `production`, public en lecture). Le reste du contenu est dans `src/cont
 - **Réglages sur sanity.io/manage** (projet `m721osum` → API) :
   - *CORS origins* : ajouter `https://yeafevents.com` (et `http://localhost:3000` en local), **Allow credentials** coché.
   - *Webhooks* : URL `https://yeafevents.com/api/revalidate`, dataset `production`, déclencheurs
-    Create / Update / Delete, filtre `_type in ["project", "post", "testimonial", "eventCategory"]`, projection `{_type}`,
+    Create / Update / Delete, filtre `_type in ["project", "post", "testimonial", "eventCategory", "homePage"]`, projection `{_type}`,
     méthode POST, *Secret* = la valeur de `SANITY_REVALIDATE_SECRET`.
 
 ## Demandes de devis

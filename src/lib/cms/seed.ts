@@ -4,6 +4,8 @@ import { createClient } from "next-sanity";
 import { blogDrafts, type BlogDraft, type DraftBlock } from "@/content/blog-drafts";
 import { getCategoryContent, getCategoryMedia } from "@/content/categories";
 import { getImageSource, type ImageId } from "@/content/media";
+import { getShowcaseContent } from "@/content/showcase";
+import { getDictionary } from "@/i18n/get-dictionary";
 import { locales, type Locale } from "@/i18n/config";
 import { categoryKeys } from "@/lib/routes";
 import { sanityConfig } from "./config";
@@ -56,6 +58,7 @@ export async function seedSanity(): Promise<void> {
   const imageField = imageUploader(client);
   await seedEventCategories(client, imageField);
   await renameFrenchPrivateParty(client);
+  await seedHomePage(client, imageField);
   await seedBlogDrafts(client, imageField);
 }
 
@@ -197,4 +200,79 @@ async function seedBlogDrafts(client: Client, imageField: ImageField): Promise<v
     .createIfNotExists({ _id: stateId, _type: "seedState", importedPosts: [] })
     .patch(stateId, (patch) => patch.setIfMissing({ importedPosts: [] }).append("importedPosts", pending.map((draft) => draft.id)))
     .commit();
+}
+
+/**
+ * First import of the home page (fixed ID `homePage`) with its shipped texts and photos.
+ * The slideshow photos are left empty on purpose: the shipped slides (with their mobile
+ * crops and video) stay until a photo is chosen in the Studio.
+ */
+async function seedHomePage(client: Client, imageField: ImageField): Promise<void> {
+  const exists = await client.fetch<string | null>(`*[_id == "homePage"][0]._id`);
+  if (exists) return;
+
+  const t = Object.fromEntries(locales.map((locale) => [locale, getDictionary(locale).home])) as Record<
+    Locale,
+    ReturnType<typeof getDictionary>["home"]
+  >;
+  const text = <T,>(type: string, read: (home: (typeof t)[Locale]) => T) => ({
+    _type: type,
+    ...Object.fromEntries(locales.map((locale) => [locale, read(t[locale])])),
+  });
+  const label = (locale: Locale, key: Parameters<typeof getCategoryContent>[0]) => getCategoryContent(key, locale).label;
+  const dinner = (locale: Locale) =>
+    getShowcaseContent(locale).find((item) => item.id === "diner-ciel-de-lumieres")?.label ?? label(locale, "wedding");
+  const caption = (read: (locale: Locale) => string) => ({
+    _type: "localeString",
+    ...Object.fromEntries(locales.map((locale) => [locale, read(locale)])),
+  });
+
+  // Same photos and captions as the shipped "Quelques moments" mosaic.
+  const moments: [ImageId, ReturnType<typeof caption>][] = [
+    ["weddingPavilion", caption((l) => label(l, "wedding"))],
+    ["poolsideDusk", caption(dinner)],
+    ["djCourtyard", caption((l) => label(l, "festival"))],
+    ["liveSinger", caption((l) => label(l, "privateParty"))],
+    ["congressAudience", caption((l) => label(l, "seminar"))],
+    ["poolNight", caption((l) => label(l, "wedding"))],
+  ];
+
+  await client.createIfNotExists({
+    _id: "homePage",
+    _type: "homePage",
+    heroKicker: text("localeString", (h) => h.hero.kicker),
+    heroTitle: text("localeString", (h) => h.hero.title),
+    heroPlace: text("localeString", (h) => h.hero.place),
+    introEyebrow: text("localeString", (h) => h.intro.eyebrow),
+    introText: text("localeText", (h) => h.intro.text),
+    introNote: text("localeText", (h) => h.intro.note),
+    introPhoto: await imageField("lightCanopyTable"),
+    worldsEyebrow: text("localeString", (h) => h.categories.eyebrow),
+    worldsTitle: text("localeString", (h) => h.categories.title),
+    momentsEyebrow: text("localeString", (h) => h.moments.eyebrow),
+    momentsTitle: text("localeString", (h) => h.moments.title),
+    moments: await Promise.all(
+      moments.map(async ([id, momentCaption], index) => ({
+        _type: "moment",
+        _key: `moment${index}`,
+        photo: await imageField(id),
+        caption: momentCaption,
+      })),
+    ),
+    whyEyebrow: text("localeString", (h) => h.why.eyebrow),
+    whyTitle: text("localeString", (h) => h.why.title),
+    whySteps: t.fr.why.steps.map((_, index) => ({
+      _type: "step",
+      _key: `step${index}`,
+      title: text("localeString", (h) => h.why.steps[index]?.title ?? ""),
+      text: text("localeText", (h) => h.why.steps[index]?.text ?? ""),
+    })),
+    whyPhoto: await imageField("congressStage"),
+    ctaTitle: text("localeString", (h) => h.cta.title),
+    ctaText: text("localeText", (h) => h.cta.text),
+    ctaPhoto: await imageField("candlelitDinner"),
+    seoTitle: text("localeString", (h) => h.seo.title),
+    seoDescription: text("localeText", (h) => h.seo.description),
+  });
+  console.log("[seed] home page imported into Sanity");
 }

@@ -25,6 +25,10 @@ export default defineConfig({
               .child(S.documentTypeList("quoteRequest").title("Demandes de devis").defaultOrdering([{ field: "receivedAt", direction: "desc" }])),
             S.divider(),
             S.listItem()
+              .title("Page d'accueil")
+              .id("homePage")
+              .child(S.document().schemaType("homePage").documentId("homePage").title("Page d'accueil")),
+            S.listItem()
               .title("Types d'événement")
               .id("eventCategories")
               .child(

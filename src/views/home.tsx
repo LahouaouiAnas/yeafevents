@@ -11,18 +11,18 @@ import { getHeroSlides } from "@/content/hero";
 import { getImage } from "@/content/media";
 import type { Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
-import { getCategories, getCategory, getShowcase } from "@/lib/content";
+import { getCategories, getCategory, getHomeContent, getShowcase } from "@/lib/content";
 import { categoryPath, routePath, routePaths } from "@/lib/routes";
 import { buildMetadata } from "@/lib/seo/metadata";
 
-export function homeMetadata(locale: Locale) {
-  const { seo } = getDictionary(locale).home;
+export async function homeMetadata(locale: Locale) {
+  const { seo, cta } = await getHomeContent(locale);
   return buildMetadata({
     locale,
     ...seo,
     paths: routePaths("home"),
     absoluteTitle: true,
-    image: getImage("candlelitDinner", locale),
+    image: cta.photo,
   });
 }
 
@@ -33,7 +33,8 @@ export function homeMetadata(locale: Locale) {
 export async function HomeView({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
   const t = dict.home;
-  const [categories, wedding, festival, showcase] = await Promise.all([
+  const [home, categories, wedding, festival, showcase] = await Promise.all([
+    getHomeContent(locale),
     getCategories(locale),
     getCategory("wedding", locale),
     getCategory("festival", locale),
@@ -47,11 +48,16 @@ export async function HomeView({ locale }: { locale: Locale }) {
     <>
       <HomeHero
         brand={t.hero.brand}
-        kicker={t.hero.kicker}
-        title={t.hero.title}
-        place={t.hero.place}
+        kicker={home.hero.kicker}
+        title={home.hero.title}
+        place={home.hero.place}
         labels={t.hero.carousel}
-        slides={getHeroSlides(locale).map((slide) => {
+        slides={getHeroSlides(locale).map((shipped) => {
+          // A photo chosen in the Studio replaces the slide's photos and its video.
+          const photo = home.hero.photos[shipped.category ?? "experience"];
+          const slide = photo
+            ? { ...shipped, desktop: photo, mobile: photo, desktopPosition: "center", mobilePosition: "center", video: undefined, alt: photo.alt }
+            : shipped;
           const category = slide.category ? categories.find((item) => item.key === slide.category) : undefined;
           return category
             ? { ...slide, label: category.label, href: categoryPath(category.key, locale) }
@@ -64,12 +70,12 @@ export async function HomeView({ locale }: { locale: Locale }) {
       <section className="relative isolate overflow-hidden py-20 sm:py-28">
         <ZelligePattern fade="right" className="opacity-[0.09]" />
         <Container className="grid gap-8 lg:grid-cols-12 lg:gap-8">
-          <h2 className="eyebrow text-ivory/50 lg:col-span-3 lg:pt-3">{t.intro.eyebrow}</h2>
+          <h2 className="eyebrow text-ivory/50 lg:col-span-3 lg:pt-3">{home.intro.eyebrow}</h2>
           <div className="lg:col-span-5">
             <p className="font-display text-[1.75rem] leading-[1.3] font-light text-balance sm:text-4xl sm:leading-[1.25]">
-              {t.intro.text}
+              {home.intro.text}
             </p>
-            <p className="mt-6 text-stone">{t.intro.note}</p>
+            <p className="mt-6 text-stone">{home.intro.note}</p>
             <div className="mt-8 flex flex-wrap gap-x-10 gap-y-4">
               <ButtonLink href={routePath("about", locale)} variant="text">
                 {dict.cta.story}
@@ -81,7 +87,7 @@ export async function HomeView({ locale }: { locale: Locale }) {
           </div>
           <ArchFrame className="reveal mx-auto mt-6 w-full max-w-xs sm:max-w-sm lg:col-span-3 lg:col-start-10 lg:mt-0 lg:max-w-none">
             <Media
-              image={getImage("lightCanopyTable", locale)}
+              image={home.intro.photo}
               aspect="aspect-[4/5] lg:aspect-[3/4]"
               sizes="(min-width: 1024px) 25vw, 384px"
               position="center 40%"
@@ -95,9 +101,9 @@ export async function HomeView({ locale }: { locale: Locale }) {
 
       <section id="univers" aria-labelledby="univers-title" className="scroll-mt-20 py-20 sm:py-28">
         <Container>
-          <p className="eyebrow text-ivory/50">{t.categories.eyebrow}</p>
+          <p className="eyebrow text-ivory/50">{home.worlds.eyebrow}</p>
           <h2 id="univers-title" className="mt-5 mb-12 font-display text-4xl font-light text-balance sm:mb-16 sm:text-5xl">
-            {t.categories.title}
+            {home.worlds.title}
           </h2>
           <CategoryExplorer
             items={categories.map((category) => ({
@@ -111,15 +117,15 @@ export async function HomeView({ locale }: { locale: Locale }) {
         </Container>
       </section>
 
-      <Marquee label={t.categories.title} items={categories.map((category) => category.label)} />
+      <Marquee label={home.worlds.title} items={categories.map((category) => category.label)} />
 
       <section aria-labelledby="moments-title" className="py-20 sm:py-28">
         <Container>
           <div className="mb-12 flex flex-col justify-between gap-6 sm:mb-16 sm:flex-row sm:items-end">
             <div>
-              <p className="eyebrow text-ivory/50">{t.moments.eyebrow}</p>
+              <p className="eyebrow text-ivory/50">{home.moments.eyebrow}</p>
               <h2 id="moments-title" className="mt-5 font-display text-4xl font-light sm:text-5xl">
-                {t.moments.title}
+                {home.moments.title}
               </h2>
             </div>
             <ButtonLink href={routePath("projects", locale)} variant="text">
@@ -127,7 +133,7 @@ export async function HomeView({ locale }: { locale: Locale }) {
             </ButtonLink>
           </div>
           <MomentsMosaic
-            moments={[
+            moments={(home.moments.items as Parameters<typeof MomentsMosaic>[0]["moments"] | undefined) ?? [
               { image: getImage("weddingPavilion", locale), caption: wedding.label },
               { image: getImage("poolsideDusk", locale), caption: dinner?.label ?? wedding.label },
               { image: getImage("djCourtyard", locale), caption: festival.label },
@@ -139,18 +145,13 @@ export async function HomeView({ locale }: { locale: Locale }) {
         </Container>
       </section>
 
-      <ApproachSteps
-        eyebrow={t.why.eyebrow}
-        title={t.why.title}
-        steps={t.why.steps}
-        image={getImage("congressStage", locale)}
-      />
+      <ApproachSteps eyebrow={home.why.eyebrow} title={home.why.title} steps={home.why.steps} image={home.why.photo} />
 
       <CtaBanner
-        title={t.cta.title}
-        text={t.cta.text}
+        title={home.cta.title}
+        text={home.cta.text}
         primary={{ href: contactHref, label: dict.cta.plan }}
-        image={getImage("candlelitDinner", locale)}
+        image={home.cta.photo}
       />
     </>
   );
