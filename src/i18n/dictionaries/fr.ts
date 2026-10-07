@@ -1,6 +1,8 @@
 export const fr = {
   a11y: {
     skipToContent: "Aller au contenu",
+    whatsapp: "Nous écrire sur WhatsApp",
+    whatsappMessage: "Bonjour Yeaf Events, je souhaite organiser un événement.",
     openMenu: "Ouvrir le menu",
     closeMenu: "Fermer le menu",
     menu: "Menu",
@@ -347,8 +349,12 @@ export const fr = {
       messagePlaceholder: "Décrivez votre événement, vos envies, vos contraintes…",
       required: "obligatoire",
       submit: "Envoyer ma demande",
-      pending:
-        "L'envoi en ligne sera activé très prochainement. En attendant, contactez-nous directement par email ou téléphone.",
+      sending: "Envoi en cours…",
+      success: "Merci ! Votre demande est bien partie. Nous vous recontactons très vite (un email de confirmation vient de vous être envoyé).",
+      invalid: "Merci de vérifier les champs signalés.",
+      rateLimited: "Vous avez déjà envoyé plusieurs demandes. Pour nous joindre tout de suite, appelez-nous ou écrivez-nous sur WhatsApp.",
+      unavailable:
+        "Votre demande n'a pas pu être envoyée. Merci de nous contacter directement par téléphone, WhatsApp ou email.",
     },
     faq: {
       eyebrow: "Questions fréquentes",

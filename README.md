@@ -33,6 +33,8 @@ Variables d'environnement à définir **avant le build** (les `NEXT_PUBLIC_*` so
 | `NEXT_PUBLIC_SANITY_PROJECT_ID` | `m721osum` (vide = build sans Sanity) |
 | `NEXT_PUBLIC_SANITY_DATASET` | `production` |
 | `SANITY_REVALIDATE_SECRET` | secret partagé avec le webhook Sanity (voir ci-dessous) |
+| `SANITY_API_WRITE_TOKEN` | jeton Sanity « Editor » : enregistre les demandes de devis et lit le contenu du dataset privé |
+| `SMTP_USER` / `SMTP_PASSWORD` | boîte mail d'envoi du formulaire (`contact@yeafevents.com`, serveur `smtp.hostinger.com:465`) |
 
 Les variables Cloudinary de `.env.example` peuvent rester vides tant que ce service n'est pas branché.
 Après toute modification d'une variable `NEXT_PUBLIC_*`, relancer un build.
@@ -53,6 +55,21 @@ dataset `production`, public en lecture). Le reste du contenu est dans `src/cont
   - *Webhooks* : URL `https://yeafevents.com/api/revalidate`, dataset `production`, déclencheurs
     Create / Update / Delete, filtre `_type in ["project", "post", "testimonial"]`, projection `{_type}`,
     méthode POST, *Secret* = la valeur de `SANITY_REVALIDATE_SECRET`.
+
+## Demandes de devis
+
+Le formulaire de contact (`src/components/sections/QuoteForm.tsx`) appelle une Server Action
+(`src/lib/quote/`) : validation côté serveur, pièges à spam (champ caché, envoi trop rapide),
+5 envois par heure et par IP, puis :
+
+- **email** à `contact@yeafevents.com` (répondre = répondre au client) + email de confirmation au client ;
+- **document Sanity** « Demande de devis » (statut, notes internes) si `SANITY_API_WRITE_TOKEN` est défini.
+
+La demande est acceptée si au moins un des deux canaux fonctionne ; sinon le visiteur est invité
+à appeler ou écrire sur WhatsApp. **Le dataset Sanity doit être privé** (sanity.io/manage → Datasets),
+car les demandes contiennent des données personnelles.
+
+Coordonnées affichées (pied de page, page contact, bouton WhatsApp, JSON-LD) : `src/config/site.ts`.
 
 ## Architecture
 
@@ -78,6 +95,7 @@ src/
   sanity/schemaTypes/        # types de documents du Studio (réalisation, article, témoignage)
   app/studio/                # Sanity Studio embarqué (/studio)
   app/api/revalidate/        # webhook Sanity → revalidation
+  lib/quote/                 # formulaire de devis : validation, anti-spam, envoi email / Sanity
   content/                   # univers, services, réalisations, hero, registre des médias
   config/site.ts             # infos entreprise (contact, adresse, réseaux) → JSON-LD
   views/                     # une vue par page, partagée entre dossiers FR/EN

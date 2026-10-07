@@ -1,20 +1,22 @@
 import { createImageUrlBuilder } from "@sanity/image-url";
 import { createClient } from "next-sanity";
+import { isSanityConfigured, sanityConfig } from "./config";
+
+export { isSanityConfigured, sanityConfig };
 
 /**
- * Sanity connection. Content is read through the public CDN API (the dataset is public;
- * no token needed). Without NEXT_PUBLIC_SANITY_PROJECT_ID the site keeps working with
+ * Sanity connection. Without NEXT_PUBLIC_SANITY_PROJECT_ID the site keeps working with
  * empty CMS collections.
+ *
+ * The dataset holds quote requests (personal data), so it should be private: reads then
+ * need a server-side token. SANITY_API_READ_TOKEN (Viewer) is used when set, otherwise the
+ * write token the contact form already needs. Neither is ever sent to the browser.
  */
-export const sanityConfig = {
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? "",
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET ?? "production",
-  apiVersion: "2026-01-01",
-} as const;
+const readToken = process.env.SANITY_API_READ_TOKEN || process.env.SANITY_API_WRITE_TOKEN || undefined;
 
-export const isSanityConfigured = sanityConfig.projectId.length > 0;
-
-const client = isSanityConfigured ? createClient({ ...sanityConfig, useCdn: true, perspective: "published" }) : null;
+const client = isSanityConfigured
+  ? createClient({ ...sanityConfig, token: readToken, useCdn: true, perspective: "published" })
+  : null;
 
 /**
  * Cache tags are the document types: the /api/revalidate webhook marks a type stale when

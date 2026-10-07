@@ -22,8 +22,8 @@ type SiteConfig = {
   logo?: string;
   contact: {
     email?: string;
-    /** International format, e.g. "+212 6 00 00 00 00". */
-    phone?: string;
+    /** International format, e.g. "+212 6 00 00 00 00". The first one is the main number. */
+    phones: string[];
     /** Digits only with country code, e.g. "212600000000". */
     whatsapp?: string;
   };
@@ -43,13 +43,27 @@ export const siteConfig: SiteConfig = {
   url: readSiteUrl(),
   indexable: process.env.NEXT_PUBLIC_ALLOW_INDEXING === "true",
   logo: logoMarkPath,
-  contact: {},
+  contact: {
+    email: "contact@yeafevents.com",
+    phones: ["+212 6 60 52 66 81", "+212 6 60 52 66 04"],
+    whatsapp: "212660526681",
+  },
   socials: {},
 };
 
 export const socialLinks = Object.entries(siteConfig.socials).filter(
   (entry): entry is [keyof SiteConfig["socials"], string] => Boolean(entry[1]),
 );
+
+/** `tel:` link for a number written in international format. */
+export function telHref(phone: string): string {
+  return `tel:${phone.replace(/\s/g, "")}`;
+}
+
+/** WhatsApp chat link, optionally with a pre-filled message. */
+export function whatsappHref(number: string, text?: string): string {
+  return `https://wa.me/${number}${text ? `?text=${encodeURIComponent(text)}` : ""}`;
+}
 
 export function absoluteUrl(path = ""): string {
   return `${siteConfig.url}${path}`;

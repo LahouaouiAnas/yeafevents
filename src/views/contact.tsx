@@ -3,7 +3,7 @@ import { FaqSection } from "@/components/sections/FaqSection";
 import { PageHero } from "@/components/sections/PageHero";
 import { QuoteForm } from "@/components/sections/QuoteForm";
 import { Container } from "@/components/ui/Container";
-import { siteConfig, socialLinks } from "@/config/site";
+import { siteConfig, socialLinks, telHref, whatsappHref } from "@/config/site";
 import type { Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { getCategories } from "@/lib/content";
@@ -19,8 +19,8 @@ export async function ContactView({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
   const t = dict.contact;
   const categories = await getCategories(locale);
-  const { email, phone, whatsapp } = siteConfig.contact;
-  const hasDirectContact = Boolean(email || phone || whatsapp || socialLinks.length);
+  const { email, phones, whatsapp } = siteConfig.contact;
+  const hasDirectContact = Boolean(email || phones.length || whatsapp || socialLinks.length);
 
   return (
     <>
@@ -40,6 +40,7 @@ export async function ContactView({ locale }: { locale: Locale }) {
           <div>
             <h2 className="mb-12 font-display text-4xl font-light">{t.form.title}</h2>
             <QuoteForm
+              locale={locale}
               labels={t.form}
               eventTypes={categories.map((category) => ({ value: category.key, label: category.singular }))}
             />
@@ -55,16 +56,16 @@ export async function ContactView({ locale }: { locale: Locale }) {
                     </a>
                   </li>
                 )}
-                {phone && (
-                  <li>
-                    <a href={`tel:${phone.replace(/\s/g, "")}`} className="hover:text-champagne">
+                {phones.map((phone) => (
+                  <li key={phone}>
+                    <a href={telHref(phone)} className="hover:text-champagne">
                       {phone}
                     </a>
                   </li>
-                )}
+                ))}
                 {whatsapp && (
                   <li>
-                    <a href={`https://wa.me/${whatsapp}`} target="_blank" rel="noopener noreferrer" className="hover:text-champagne">
+                    <a href={whatsappHref(whatsapp)} target="_blank" rel="noopener noreferrer" className="hover:text-champagne">
                       WhatsApp
                     </a>
                   </li>

@@ -38,7 +38,7 @@ export function organizationSchema(description?: string): JsonLdObject {
     logo: siteConfig.logo ? absoluteUrl(siteConfig.logo) : undefined,
     image: siteConfig.logo ? absoluteUrl(siteConfig.logo) : undefined,
     email: contact.email,
-    telephone: contact.phone,
+    telephone: contact.phones[0],
     foundingDate: siteConfig.foundingYear?.toString(),
     address: address ? { "@type": "PostalAddress", ...address } : undefined,
     geo: geo ? { "@type": "GeoCoordinates", ...geo } : undefined,
