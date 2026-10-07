@@ -51,6 +51,9 @@ dataset `production`, public en lecture). Le reste du contenu est dans `src/cont
   sont créés par le site au démarrage (`src/instrumentation.ts` → `src/lib/cms/seed.ts`) à partir du
   contenu livré dans `src/content/categories.ts`, sans jamais écraser une modification. Un champ vidé
   reprend le texte d'origine. L'adresse des pages et les vidéos restent dans le code.
+- **Premiers articles de blog** : `src/content/blog-drafts.ts` est importé une seule fois dans Sanity
+  sous forme de **brouillons** (à relire et publier dans le Studio). Les articles déjà importés sont
+  notés dans le document `seed.state` : un brouillon supprimé ne revient pas.
 - **Langues** : chaque champ traduisible a une valeur FR et EN. Un document n'existe dans une langue
   qu'une fois son titre et son adresse remplis dans cette langue.
 - **Mise à jour** : un webhook Sanity appelle `/api/revalidate` à chaque publication ; la page est à jour
