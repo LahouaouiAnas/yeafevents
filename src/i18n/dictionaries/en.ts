@@ -3,6 +3,8 @@ import type { Dictionary } from "./fr";
 export const en: Dictionary = {
   a11y: {
     skipToContent: "Skip to content",
+    whatsapp: "Message us on WhatsApp",
+    whatsappMessage: "Hello Yeaf Events, I would like to organise an event.",
     openMenu: "Open menu",
     closeMenu: "Close menu",
     menu: "Menu",
@@ -349,7 +351,11 @@ export const en: Dictionary = {
       messagePlaceholder: "Describe your event, your ideas, your constraints…",
       required: "required",
       submit: "Send my request",
-      pending: "Online sending will be enabled very soon. In the meantime, please contact us directly by email or phone.",
+      sending: "Sending…",
+      success: "Thank you! Your request is on its way. We will get back to you very soon (a confirmation email has just been sent to you).",
+      invalid: "Please check the highlighted fields.",
+      rateLimited: "You have already sent several requests. To reach us right away, call us or message us on WhatsApp.",
+      unavailable: "Your request could not be sent. Please contact us directly by phone, WhatsApp or email.",
     },
     faq: {
       eyebrow: "FAQ",

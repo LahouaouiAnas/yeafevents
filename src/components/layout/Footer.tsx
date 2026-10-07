@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { siteConfig, socialLinks } from "@/config/site";
+import { siteConfig, socialLinks, telHref, whatsappHref } from "@/config/site";
 import type { Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { getCategories } from "@/lib/content";
@@ -13,7 +13,7 @@ const linkClass = "inline-block py-1 text-stone transition-colors duration-300 h
 export async function Footer({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
   const categories = await getCategories(locale);
-  const { email, phone } = siteConfig.contact;
+  const { email, phones, whatsapp } = siteConfig.contact;
 
   const agency = [
     { href: routePath("about", locale), label: dict.nav.about },
@@ -76,10 +76,17 @@ export async function Footer({ locale }: { locale: Locale }) {
                 </a>
               </li>
             )}
-            {phone && (
-              <li>
-                <a href={`tel:${phone.replace(/\s/g, "")}`} className={linkClass}>
+            {phones.map((phone) => (
+              <li key={phone}>
+                <a href={telHref(phone)} className={linkClass}>
                   {phone}
+                </a>
+              </li>
+            ))}
+            {whatsapp && (
+              <li>
+                <a href={whatsappHref(whatsapp)} target="_blank" rel="noopener noreferrer" className={linkClass}>
+                  WhatsApp
                 </a>
               </li>
             )}
