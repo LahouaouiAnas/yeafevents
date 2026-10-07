@@ -204,6 +204,12 @@ export function getImage(id: ImageId, locale: Locale): ImageAsset {
   return { src: encodeURI(entry.path), width: entry.width, height: entry.height, alt: entry.alt[locale] };
 }
 
+/** Source file and both alt texts, for importing a photo into the CMS. */
+export function getImageSource(id: ImageId): { path: string; alt: Record<Locale, string> } {
+  const entry: ImageEntry = images[id];
+  return { path: entry.path, alt: entry.alt };
+}
+
 export function getVideo(id: VideoId, locale: Locale): VideoAsset {
   const entry: VideoEntry = videos[id];
   return {

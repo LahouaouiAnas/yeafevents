@@ -326,6 +326,11 @@ const content: Record<CategoryKey, Record<Locale, LocalizedCategory>> = {
   },
 };
 
+/** Photo IDs of a category as shipped, for the first import into Sanity. */
+export function getCategoryMedia(key: CategoryKey): { image?: ImageId; gallery: ImageId[] } {
+  return { image: media[key].image, gallery: media[key].gallery };
+}
+
 export function getCategoryContent(key: CategoryKey, locale: Locale): EventCategory {
   const { image, gallery, video, relatedServices } = media[key];
   return {

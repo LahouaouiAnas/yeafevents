@@ -75,3 +75,25 @@ export const testimonialsQuery = (l: Locale) => `
     eventType
   }
 `;
+
+/** The five event types; the key comes from the document (fixed ID `category.<key>`). */
+export const categoriesQuery = (l: Locale) => `
+  *[_type == "eventCategory"] {
+    "key": coalesce(key, string::split(_id, ".")[1]),
+    "label": label.${l},
+    "singular": singular.${l},
+    "title": title.${l},
+    "phrase": phrase.${l},
+    "lead": lead.${l},
+    "introTitle": introTitle.${l},
+    "intro": intro.${l},
+    "includes": includes.${l},
+    "occasions": occasions.${l},
+    relatedServices,
+    "image": select(defined(image.asset) => image${image(l)}),
+    "gallery": gallery[defined(asset)]${image(l)},
+    "seoTitle": seoTitle.${l},
+    "seoDescription": seoDescription.${l},
+    "serviceType": serviceType.${l}
+  }
+`;
