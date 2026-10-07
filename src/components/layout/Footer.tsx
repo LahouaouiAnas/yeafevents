@@ -1,11 +1,12 @@
 import Link from "next/link";
-import { siteConfig, socialLinks, telHref, whatsappHref } from "@/config/site";
+import { siteConfig, telHref, whatsappHref } from "@/config/site";
 import type { Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { getCategories } from "@/lib/content";
 import { categoryPath, routePath } from "@/lib/routes";
 import { Container } from "@/components/ui/Container";
 import { Logo } from "./Logo";
+import { SocialLinks } from "./SocialLinks";
 
 const linkClass = "inline-block py-1 text-stone transition-colors duration-300 hover:text-ivory";
 
@@ -90,14 +91,8 @@ export async function Footer({ locale }: { locale: Locale }) {
                 </a>
               </li>
             )}
-            {socialLinks.map(([network, url]) => (
-              <li key={network}>
-                <a href={url} target="_blank" rel="noopener noreferrer" className={`${linkClass} capitalize`}>
-                  {network}
-                </a>
-              </li>
-            ))}
           </ul>
+          <SocialLinks className="mt-5" />
           <Link
             href={routePath("contact", locale)}
             className="mt-6 inline-block border border-ivory/30 px-5 py-3 text-[0.7rem] tracking-[0.16em] uppercase transition-colors duration-500 hover:border-ivory hover:bg-ivory hover:text-night"

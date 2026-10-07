@@ -13,6 +13,8 @@ export type PostalAddress = {
   addressCountry: string;
 };
 
+export type SocialNetwork = "instagram" | "facebook" | "pinterest" | "linkedin" | "tiktok" | "youtube";
+
 type SiteConfig = {
   name: string;
   legalName?: string;
@@ -29,7 +31,8 @@ type SiteConfig = {
   };
   address?: PostalAddress;
   geo?: { latitude: number; longitude: number };
-  socials: Partial<Record<"instagram" | "facebook" | "linkedin" | "tiktok" | "youtube", string>>;
+  /** Full profile URLs; shown in this order. */
+  socials: Partial<Record<SocialNetwork, string>>;
   foundingYear?: number;
 };
 
@@ -48,11 +51,15 @@ export const siteConfig: SiteConfig = {
     phones: ["+212 6 60 52 66 81", "+212 6 60 52 66 04"],
     whatsapp: "212660526681",
   },
-  socials: {},
+  socials: {
+    instagram: "",
+    facebook: "",
+    pinterest: "",
+  },
 };
 
 export const socialLinks = Object.entries(siteConfig.socials).filter(
-  (entry): entry is [keyof SiteConfig["socials"], string] => Boolean(entry[1]),
+  (entry): entry is [SocialNetwork, string] => Boolean(entry[1]),
 );
 
 /** `tel:` link for a number written in international format. */
