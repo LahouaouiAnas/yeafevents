@@ -1,3 +1,4 @@
+import { SocialLinks } from "@/components/layout/SocialLinks";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { FaqSection } from "@/components/sections/FaqSection";
 import { PageHero } from "@/components/sections/PageHero";
@@ -70,14 +71,8 @@ export async function ContactView({ locale }: { locale: Locale }) {
                     </a>
                   </li>
                 )}
-                {socialLinks.map(([network, url]) => (
-                  <li key={network}>
-                    <a href={url} target="_blank" rel="noopener noreferrer" className="capitalize hover:text-champagne">
-                      {network}
-                    </a>
-                  </li>
-                ))}
               </ul>
+              <SocialLinks className="mt-8" />
             </aside>
           )}
         </Container>

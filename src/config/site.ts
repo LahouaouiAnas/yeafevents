@@ -13,8 +13,12 @@ export type PostalAddress = {
   addressCountry: string;
 };
 
+export type SocialNetwork = "instagram" | "facebook" | "pinterest" | "linkedin" | "tiktok" | "youtube";
+
 type SiteConfig = {
   name: string;
+  /** Other spellings people type, so search engines tie them to this site. */
+  alternateNames?: string[];
   legalName?: string;
   url: string;
   indexable: boolean;
@@ -29,7 +33,8 @@ type SiteConfig = {
   };
   address?: PostalAddress;
   geo?: { latitude: number; longitude: number };
-  socials: Partial<Record<"instagram" | "facebook" | "linkedin" | "tiktok" | "youtube", string>>;
+  /** Full profile URLs; shown in this order. */
+  socials: Partial<Record<SocialNetwork, string>>;
   foundingYear?: number;
 };
 
@@ -40,6 +45,7 @@ function readSiteUrl(): string {
 
 export const siteConfig: SiteConfig = {
   name: "Yeaf Events",
+  alternateNames: ["YeafEvents", "Yeaf"],
   url: readSiteUrl(),
   indexable: process.env.NEXT_PUBLIC_ALLOW_INDEXING === "true",
   logo: logoMarkPath,
@@ -48,11 +54,15 @@ export const siteConfig: SiteConfig = {
     phones: ["+212 6 60 52 66 81", "+212 6 60 52 66 04"],
     whatsapp: "212660526681",
   },
-  socials: {},
+  socials: {
+    instagram: "https://www.instagram.com/yeafevents",
+    facebook: "https://www.facebook.com/yeafevents",
+    pinterest: "https://www.pinterest.com/yeafevents",
+  },
 };
 
 export const socialLinks = Object.entries(siteConfig.socials).filter(
-  (entry): entry is [keyof SiteConfig["socials"], string] => Boolean(entry[1]),
+  (entry): entry is [SocialNetwork, string] => Boolean(entry[1]),
 );
 
 /** `tel:` link for a number written in international format. */
