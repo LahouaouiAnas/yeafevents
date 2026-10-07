@@ -5,7 +5,8 @@ export type Moment = { image: ImageAsset; caption: string };
 
 type MomentTrio = [Moment, Moment, Moment];
 
-const imageClassName = "transition-transform duration-[1.6s] ease-out-soft hover:scale-[1.03]";
+// Slightly enlarged so the scroll parallax (translate) never reveals an edge; hover zooms a touch more.
+const imageClassName = "parallax scale-110 transition-transform duration-[1.6s] ease-out-soft hover:scale-[1.14]";
 
 /**
  * Real photos in offset editorial compositions of three, with controlled sizes

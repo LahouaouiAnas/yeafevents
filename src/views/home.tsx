@@ -6,6 +6,7 @@ import { MomentsMosaic } from "@/components/sections/MomentsMosaic";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { Container } from "@/components/ui/Container";
 import { Media } from "@/components/ui/Media";
+import { ArchFrame, Marquee, OrnamentDivider, ZelligePattern } from "@/components/ui/Ornaments";
 import { getHeroSlides } from "@/content/hero";
 import { getImage } from "@/content/media";
 import type { Locale } from "@/i18n/config";
@@ -60,7 +61,8 @@ export async function HomeView({ locale }: { locale: Locale }) {
         secondaryCta={{ href: "#univers", label: dict.cta.discover }}
       />
 
-      <section className="py-20 sm:py-28">
+      <section className="relative isolate overflow-hidden py-20 sm:py-28">
+        <ZelligePattern fade="right" className="opacity-[0.09]" />
         <Container className="grid gap-8 lg:grid-cols-12 lg:gap-8">
           <h2 className="eyebrow text-ivory/50 lg:col-span-3 lg:pt-3">{t.intro.eyebrow}</h2>
           <div className="lg:col-span-5">
@@ -77,17 +79,21 @@ export async function HomeView({ locale }: { locale: Locale }) {
               </ButtonLink>
             </div>
           </div>
-          <Media
-            image={getImage("lightCanopyTable", locale)}
-            aspect="aspect-[16/10] sm:aspect-[4/3] lg:aspect-[3/4]"
-            sizes="(min-width: 1024px) 25vw, 100vw"
-            position="center 40%"
-            className="reveal lg:col-span-3 lg:col-start-10"
-          />
+          <ArchFrame className="reveal mx-auto mt-6 w-full max-w-xs sm:max-w-sm lg:col-span-3 lg:col-start-10 lg:mt-0 lg:max-w-none">
+            <Media
+              image={getImage("lightCanopyTable", locale)}
+              aspect="aspect-[4/5] lg:aspect-[3/4]"
+              sizes="(min-width: 1024px) 25vw, 384px"
+              position="center 40%"
+              className="h-full"
+            />
+          </ArchFrame>
         </Container>
       </section>
 
-      <section id="univers" aria-labelledby="univers-title" className="scroll-mt-20 border-t border-ivory/10 py-20 sm:py-28">
+      <OrnamentDivider className="px-4" />
+
+      <section id="univers" aria-labelledby="univers-title" className="scroll-mt-20 py-20 sm:py-28">
         <Container>
           <p className="eyebrow text-ivory/50">{t.categories.eyebrow}</p>
           <h2 id="univers-title" className="mt-5 mb-12 font-display text-4xl font-light text-balance sm:mb-16 sm:text-5xl">
@@ -105,7 +111,9 @@ export async function HomeView({ locale }: { locale: Locale }) {
         </Container>
       </section>
 
-      <section aria-labelledby="moments-title" className="border-t border-ivory/10 py-20 sm:py-28">
+      <Marquee label={t.categories.title} items={categories.map((category) => category.label)} />
+
+      <section aria-labelledby="moments-title" className="py-20 sm:py-28">
         <Container>
           <div className="mb-12 flex flex-col justify-between gap-6 sm:mb-16 sm:flex-row sm:items-end">
             <div>
