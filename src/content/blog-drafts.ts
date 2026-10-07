@@ -479,4 +479,157 @@ export const blogDrafts: BlogDraft[] = [
       },
     },
   },
+  {
+    id: "seminaire-marrakech-guide",
+    cover: "congressHall",
+    relatedCategories: ["seminar"],
+    content: {
+      fr: {
+        title: "Organiser un séminaire d'entreprise à Marrakech : le guide",
+        slug: "organiser-seminaire-entreprise-marrakech",
+        excerpt:
+          "Objectifs, lieu, programme, logistique et budget : les étapes pour réussir le séminaire de vos équipes à Marrakech.",
+        category: "Séminaire",
+        seoTitle: "Organiser un séminaire d'entreprise à Marrakech : le guide",
+        seoDescription:
+          "Choisir le lieu, construire le programme, gérer la logistique et la technique : notre guide pour organiser un séminaire d'entreprise réussi à Marrakech.",
+        body: [
+          [
+            "p",
+            "Marrakech s'est imposée comme l'une des destinations favorites des entreprises pour leurs séminaires, conventions et voyages incentive. Bien desservie par avion depuis l'Europe, ensoleillée une grande partie de l'année et riche en lieux d'exception, la ville permet d'allier travail, cohésion et dépaysement. Voici les étapes clés pour réussir votre séminaire.",
+          ],
+          ["h", "1. Clarifier les objectifs"],
+          [
+            "p",
+            "Tout part d'une question simple : que doivent retenir vos équipes en rentrant ? Présenter une stratégie, lancer un produit, fédérer après une réorganisation, récompenser une année réussie… L'objectif guide ensuite chaque choix : le lieu, le rythme du programme, la part de travail et de détente, le ton des soirées.",
+          ],
+          ["h", "2. Choisir le bon lieu"],
+          ["p", "Marrakech offre des cadres très différents selon le format :"],
+          ["li", "Les hôtels avec centre de conférences : pratiques pour les grands groupes, tout est sur place."],
+          ["li", "Les domaines et villas de la Palmeraie : idéals pour un comité de direction ou un groupe de taille moyenne, en toute discrétion."],
+          ["li", "Les riads privatisés : une atmosphère intime et typiquement marocaine pour les petits groupes."],
+          ["li", "Le désert d'Agafay et les contreforts de l'Atlas : pour une journée ou une soirée qui marque les esprits, à moins d'une heure de la ville."],
+          [
+            "p",
+            "Vérifiez la capacité des salles, la lumière naturelle, la qualité de la connexion internet, les espaces pour les ateliers en sous-groupes et la distance avec l'hébergement.",
+          ],
+          ["h", "3. Construire un programme équilibré"],
+          [
+            "p",
+            "Les séminaires les plus réussis alternent les temps forts. Une plénière le matin, quand l'attention est maximale, des ateliers en petits groupes, puis des activités de cohésion l'après-midi. Le soir, un dîner dans un lieu emblématique prolonge les échanges dans un cadre détendu. Évitez les journées trop chargées : les moments informels sont souvent ceux où les équipes se rapprochent le plus.",
+          ],
+          ["h", "4. Soigner la production technique"],
+          [
+            "p",
+            "Son, éclairage, écrans LED, régie, captation vidéo, traduction simultanée si votre public est international : la technique conditionne la qualité de vos prises de parole. Une répétition la veille avec les intervenants permet de régler chaque détail et d'aborder le jour J sereinement.",
+          ],
+          ["h", "5. Anticiper la logistique"],
+          ["p", "Pour un séminaire, la logistique fait la différence :"],
+          ["li", "L'accueil à l'aéroport et les transferts entre l'hôtel et les lieux du programme."],
+          ["li", "L'hébergement, avec des chambres regroupées autant que possible."],
+          ["li", "La restauration, en tenant compte des régimes alimentaires de chacun."],
+          ["li", "Un interlocuteur unique sur place, joignable à tout moment."],
+          ["h", "6. Maîtriser le budget"],
+          [
+            "p",
+            "Le budget dépend surtout du nombre de participants, de la durée, de la saison, du niveau d'hébergement et du programme d'activités. Fixez tôt une enveloppe globale et vos priorités : cela permet de construire une proposition sur mesure et d'éviter les mauvaises surprises.",
+          ],
+          [
+            "p",
+            "Vous préparez un séminaire à Marrakech ou ailleurs au Maroc ? Parlez-nous de vos objectifs : nous prenons en charge le lieu, la production technique, la logistique et le programme, pour que vous puissiez vous concentrer sur vos équipes.",
+          ],
+        ],
+        faq: [
+          {
+            question: "Combien de temps à l'avance organiser un séminaire à Marrakech ?",
+            answer:
+              "Idéalement trois à six mois avant pour un groupe important, afin de réserver les meilleurs lieux et hébergements. Pour un petit comité, quelques semaines peuvent suffire selon les disponibilités.",
+          },
+          {
+            question: "Quelle est la meilleure période pour un séminaire à Marrakech ?",
+            answer:
+              "Le printemps et l'automne offrent des températures idéales. L'hiver est doux en journée ; en été, on privilégie les activités tôt le matin et en soirée.",
+          },
+          {
+            question: "Pouvez-vous gérer la partie technique de nos plénières ?",
+            answer:
+              "Oui : son, éclairage, écrans, régie et captation vidéo. Nous coordonnons aussi la répétition avec vos intervenants la veille de l'événement.",
+          },
+        ],
+      },
+      en: {
+        title: "Planning a corporate seminar in Marrakech: the guide",
+        slug: "corporate-seminar-marrakech-guide",
+        excerpt:
+          "Objectives, venue, programme, logistics and budget: the steps to a successful seminar for your teams in Marrakech.",
+        category: "Seminar",
+        seoTitle: "Planning a corporate seminar in Marrakech: the guide",
+        seoDescription:
+          "Choosing the venue, building the programme, handling logistics and technical production: our guide to a successful corporate seminar in Marrakech.",
+        body: [
+          [
+            "p",
+            "Marrakech has become one of companies' favourite destinations for seminars, conventions and incentive trips. Well connected by air to Europe, sunny for much of the year and full of exceptional venues, the city combines work, team spirit and a change of scene. Here are the key steps to a successful seminar.",
+          ],
+          ["h", "1. Clarify your objectives"],
+          [
+            "p",
+            "It all starts with one simple question: what should your teams take home? Presenting a strategy, launching a product, bringing people together after a reorganisation, rewarding a successful year… The objective then guides every choice: the venue, the pace of the programme, the balance between work and relaxation, the tone of the evenings.",
+          ],
+          ["h", "2. Choose the right venue"],
+          ["p", "Marrakech offers very different settings depending on the format:"],
+          ["li", "Hotels with conference centres: practical for large groups, with everything on site."],
+          ["li", "Estates and villas in the Palm Grove: ideal for a leadership team or a mid-sized group, in complete privacy."],
+          ["li", "Privately booked riads: an intimate, typically Moroccan atmosphere for small groups."],
+          ["li", "The Agafay desert and the Atlas foothills: for a day or an evening to remember, less than an hour from the city."],
+          [
+            "p",
+            "Check room capacity, natural light, internet quality, breakout spaces for workshops and the distance from the accommodation.",
+          ],
+          ["h", "3. Build a balanced programme"],
+          [
+            "p",
+            "The most successful seminars alternate key moments: a plenary session in the morning, when attention is at its peak, small-group workshops, then team activities in the afternoon. In the evening, dinner at an iconic venue keeps the conversation going in a relaxed setting. Avoid overloaded days: informal moments are often when teams grow closest.",
+          ],
+          ["h", "4. Get the technical production right"],
+          [
+            "p",
+            "Sound, lighting, LED screens, control room, video capture, simultaneous interpreting for an international audience: technical production shapes the quality of every talk. A rehearsal the day before with the speakers fine-tunes every detail so the big day runs smoothly.",
+          ],
+          ["h", "5. Plan the logistics"],
+          ["p", "For a seminar, logistics make the difference:"],
+          ["li", "Airport welcome and transfers between the hotel and programme venues."],
+          ["li", "Accommodation, with rooms grouped together wherever possible."],
+          ["li", "Catering that takes everyone's dietary requirements into account."],
+          ["li", "A single point of contact on site, reachable at any time."],
+          ["h", "6. Control the budget"],
+          [
+            "p",
+            "The budget depends mainly on the number of participants, the length of stay, the season, the standard of accommodation and the activity programme. Set an overall envelope and your priorities early: it makes a tailored proposal possible and avoids unpleasant surprises.",
+          ],
+          [
+            "p",
+            "Planning a seminar in Marrakech or elsewhere in Morocco? Tell us about your objectives: we take care of the venue, technical production, logistics and programme, so you can focus on your teams.",
+          ],
+        ],
+        faq: [
+          {
+            question: "How far in advance should you plan a seminar in Marrakech?",
+            answer:
+              "Ideally three to six months ahead for a large group, to secure the best venues and accommodation. For a small team, a few weeks can be enough depending on availability.",
+          },
+          {
+            question: "What is the best time of year for a seminar in Marrakech?",
+            answer:
+              "Spring and autumn bring ideal temperatures. Winter days are mild; in summer, activities are best scheduled early in the morning and in the evening.",
+          },
+          {
+            question: "Can you handle the technical side of our plenary sessions?",
+            answer:
+              "Yes: sound, lighting, screens, control room and video capture. We also coordinate the rehearsal with your speakers the day before the event.",
+          },
+        ],
+      },
+    },
+  },
 ];
