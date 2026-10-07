@@ -47,6 +47,17 @@ const images = {
       en: "Long table set beneath a sky of string lights and candle chandeliers",
     },
   },
+  // Rotated web export of "event design 2.jpeg" (same file as weedings/weeding.jpeg),
+  // whose original is stored sideways without an EXIF orientation tag.
+  lightCanopyTable: {
+    path: "/media/events/event managment/light-canopy-table.jpg",
+    width: 1800,
+    height: 2400,
+    alt: {
+      fr: "Longue table dressée sous une canopée de guirlandes lumineuses, sur une terrasse dominant la ville la nuit",
+      en: "Long table set beneath a canopy of fairy lights, on a terrace overlooking the city at night",
+    },
+  },
   // weedings/
   weddingTable: {
     path: "/media/events/weedings/IMG_2248.jpg",
