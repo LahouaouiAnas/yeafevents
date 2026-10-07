@@ -4,6 +4,9 @@ import { resolveLocale } from "@/i18n/params";
 import { getPostBySlug, getPosts } from "@/lib/content";
 import { PostView, postMetadata } from "@/views/blog";
 
+// Documents published in Sanity after the build are rendered on their first visit.
+export const dynamicParams = true;
+
 export async function generateStaticParams() {
   const perLocale = await Promise.all(
     locales.map(async (lang) => (await getPosts(lang)).map((post) => ({ lang, slug: post.slug }))),

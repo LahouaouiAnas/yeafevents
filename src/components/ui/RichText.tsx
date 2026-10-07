@@ -1,6 +1,6 @@
 import type { RichTextBlock } from "@/lib/content/types";
 
-/** Minimal renderer; will be replaced by Portable Text once Sanity is connected. */
+/** Minimal renderer for headings, paragraphs and lists (Sanity bodies are mapped onto these blocks). */
 export function RichText({ blocks }: { blocks: RichTextBlock[] }) {
   return (
     <div className="space-y-6 text-lg leading-relaxed text-ivory/85">
