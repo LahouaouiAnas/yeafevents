@@ -1,5 +1,5 @@
 import type { Locale } from "@/i18n/config";
-import type { BlogPost, ImageAsset, Project, RichTextBlock, SeoFields, Testimonial } from "@/lib/content/types";
+import type { BlogPost, EventCategory, ImageAsset, Project, RichTextBlock, SeoFields, Testimonial } from "@/lib/content/types";
 import type { CategoryKey, ServiceKey } from "@/lib/routes";
 import { categoryKeys, serviceKeys } from "@/lib/routes";
 import { sanityImageUrl, type SanityImage } from "./sanity";
@@ -148,5 +148,57 @@ export function toTestimonial(raw: RawTestimonial): Testimonial {
     author: raw.author,
     role: raw.role ?? undefined,
     eventType: isCategory(raw.eventType) ? raw.eventType : undefined,
+  };
+}
+
+export type RawCategory = {
+  key: string;
+  label?: string | null;
+  singular?: string | null;
+  title?: string | null;
+  phrase?: string | null;
+  lead?: string | null;
+  introTitle?: string | null;
+  intro?: (string | null)[] | null;
+  includes?: (string | null)[] | null;
+  occasions?: (string | null)[] | null;
+  relatedServices?: string[] | null;
+  image?: SanityImage | null;
+  gallery?: SanityImage[] | null;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+  serviceType?: string | null;
+};
+
+/** Edited text wins; an empty field keeps the text the site shipped with, so a page never breaks. */
+const pick = (value: string | null | undefined, fallback: string) => (value?.trim() ? value.trim() : fallback);
+const pickList = (value: (string | null)[] | null | undefined, fallback: string[]) => {
+  const items = (value ?? []).map((item) => item?.trim()).filter((item): item is string => Boolean(item));
+  return items.length > 0 ? items : fallback;
+};
+
+export function mergeCategory(base: EventCategory, raw: RawCategory | undefined): EventCategory {
+  if (!raw) return base;
+  const label = pick(raw.label, base.label);
+  const relatedServices = (raw.relatedServices ?? []).filter(isService);
+  return {
+    ...base,
+    label,
+    singular: pick(raw.singular, base.singular),
+    title: pick(raw.title, base.title),
+    phrase: pick(raw.phrase, base.phrase),
+    lead: pick(raw.lead, base.lead),
+    introTitle: pick(raw.introTitle, base.introTitle),
+    intro: pickList(raw.intro, base.intro),
+    includes: pickList(raw.includes, base.includes),
+    occasions: pickList(raw.occasions, base.occasions),
+    serviceType: pick(raw.serviceType, base.serviceType),
+    relatedServices: relatedServices.length > 0 ? relatedServices : base.relatedServices,
+    image: toImage(raw.image, label) ?? base.image,
+    // A gallery emptied on purpose stays empty; a missing one keeps the shipped photos.
+    gallery: raw.gallery
+      ? raw.gallery.map((image) => toImage(image, label)).filter((image): image is ImageAsset => Boolean(image))
+      : base.gallery,
+    seo: { title: pick(raw.seoTitle, base.seo.title), description: pick(raw.seoDescription, base.seo.description) },
   };
 }

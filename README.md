@@ -46,6 +46,11 @@ dataset `production`, public en lecture). Le reste du contenu est dans `src/cont
 
 - **Studio** : `/studio` sur le site (ex. `https://yeafevents.com/studio`), connexion avec un compte Sanity.
   Schémas : `src/sanity/schemaTypes/`, configuration : `sanity.config.ts`.
+- **Types d'événement** : les 5 pages (mariages, soirées privées…) sont modifiables dans le Studio
+  (textes, listes, photos, galerie, textes Google). Les documents ont un ID fixe (`category.<clé>`) et
+  sont créés par le site au démarrage (`src/instrumentation.ts` → `src/lib/cms/seed.ts`) à partir du
+  contenu livré dans `src/content/categories.ts`, sans jamais écraser une modification. Un champ vidé
+  reprend le texte d'origine. L'adresse des pages et les vidéos restent dans le code.
 - **Langues** : chaque champ traduisible a une valeur FR et EN. Un document n'existe dans une langue
   qu'une fois son titre et son adresse remplis dans cette langue.
 - **Mise à jour** : un webhook Sanity appelle `/api/revalidate` à chaque publication ; la page est à jour
@@ -53,7 +58,7 @@ dataset `production`, public en lecture). Le reste du contenu est dans `src/cont
 - **Réglages sur sanity.io/manage** (projet `m721osum` → API) :
   - *CORS origins* : ajouter `https://yeafevents.com` (et `http://localhost:3000` en local), **Allow credentials** coché.
   - *Webhooks* : URL `https://yeafevents.com/api/revalidate`, dataset `production`, déclencheurs
-    Create / Update / Delete, filtre `_type in ["project", "post", "testimonial"]`, projection `{_type}`,
+    Create / Update / Delete, filtre `_type in ["project", "post", "testimonial", "eventCategory"]`, projection `{_type}`,
     méthode POST, *Secret* = la valeur de `SANITY_REVALIDATE_SECRET`.
 
 ## Demandes de devis

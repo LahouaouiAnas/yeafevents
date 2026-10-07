@@ -48,6 +48,31 @@ export const localeRichText = defineType({
   ),
 });
 
+/** A list of short lines per language (e.g. "what's included"). */
+export const localeStringList = defineType({
+  name: "localeStringList",
+  title: "Liste (FR / EN)",
+  type: "object",
+  fields: locales.map((locale) =>
+    defineField({ name: locale, title: localeTitles[locale], type: "array", of: [defineArrayMember({ type: "string" })] }),
+  ),
+});
+
+/** Paragraphs per language, one text box per paragraph. */
+export const localeParagraphs = defineType({
+  name: "localeParagraphs",
+  title: "Paragraphes (FR / EN)",
+  type: "object",
+  fields: locales.map((locale) =>
+    defineField({
+      name: locale,
+      title: localeTitles[locale],
+      type: "array",
+      of: [defineArrayMember({ type: "text", rows: 4 })],
+    }),
+  ),
+});
+
 /** One URL slug per language; leave a language empty to not publish that version. */
 export const localeSlug = defineType({
   name: "localeSlug",

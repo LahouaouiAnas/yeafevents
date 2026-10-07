@@ -2,8 +2,17 @@ import { getCategoryContent } from "@/content/categories";
 import { getServiceContent } from "@/content/services";
 import { getShowcaseContent } from "@/content/showcase";
 import type { Locale } from "@/i18n/config";
-import { toPost, toProject, toTestimonial, type RawPost, type RawProject, type RawTestimonial } from "@/lib/cms/mappers";
-import { postsQuery, projectsQuery, testimonialsQuery } from "@/lib/cms/queries";
+import {
+  mergeCategory,
+  toPost,
+  toProject,
+  toTestimonial,
+  type RawCategory,
+  type RawPost,
+  type RawProject,
+  type RawTestimonial,
+} from "@/lib/cms/mappers";
+import { categoriesQuery, postsQuery, projectsQuery, testimonialsQuery } from "@/lib/cms/queries";
 import { sanityFetch } from "@/lib/cms/sanity";
 import {
   categoryKeyFromSlug,
@@ -21,17 +30,21 @@ import type { BlogPost, EventCategory, Project, Service, ShowcaseItem, Testimoni
  * rather than filled with invented content); the rest is local.
  */
 
+/** Event types: shipped content (src/content/categories.ts) overlaid with what is edited in Sanity. */
 export async function getCategories(locale: Locale): Promise<EventCategory[]> {
-  return categoryKeys.map((key) => getCategoryContent(key, locale));
+  const raw = await sanityFetch<RawCategory[]>(categoriesQuery(locale), {}, ["eventCategory"]);
+  const edited = new Map((raw ?? []).map((category) => [category.key, category]));
+  return categoryKeys.map((key) => mergeCategory(getCategoryContent(key, locale), edited.get(key)));
 }
 
 export async function getCategory(key: CategoryKey, locale: Locale): Promise<EventCategory> {
-  return getCategoryContent(key, locale);
+  const categories = await getCategories(locale);
+  return categories.find((category) => category.key === key) ?? getCategoryContent(key, locale);
 }
 
 export async function getCategoryBySlug(slug: string, locale: Locale): Promise<EventCategory | null> {
   const key = categoryKeyFromSlug(slug, locale);
-  return key ? getCategoryContent(key, locale) : null;
+  return key ? getCategory(key, locale) : null;
 }
 
 export async function getServices(locale: Locale): Promise<Service[]> {
