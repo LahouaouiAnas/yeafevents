@@ -28,7 +28,9 @@ const nextConfig: NextConfig = {
     return [
       { source: "/fr/services/mariage", destination: "/fr/mariages", permanent: true },
       { source: "/en/services/weddings", destination: "/en/weddings", permanent: true },
-      { source: "/fr/services/soiree-privee", destination: "/fr/private-parties", permanent: true },
+      { source: "/fr/services/soiree-privee", destination: "/fr/soirees-privees", permanent: true },
+      // French private-party page renamed from its English slug.
+      { source: "/fr/private-parties", destination: "/fr/soirees-privees", permanent: true },
       { source: "/en/services/private-parties", destination: "/en/private-parties", permanent: true },
       { source: "/fr/services/evenement-entreprise", destination: "/fr/seminaires", permanent: true },
       { source: "/en/services/corporate-events", destination: "/en/seminars", permanent: true },

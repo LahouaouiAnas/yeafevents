@@ -27,7 +27,7 @@ export type StaticRouteKey = keyof typeof staticRoutes;
  */
 export const categorySlugs = {
   wedding: { fr: "mariages", en: "weddings" },
-  privateParty: { fr: "private-parties", en: "private-parties" },
+  privateParty: { fr: "soirees-privees", en: "private-parties" },
   birthday: { fr: "anniversaires", en: "birthdays" },
   festival: { fr: "festivals", en: "festivals" },
   seminar: { fr: "seminaires", en: "seminars" },
