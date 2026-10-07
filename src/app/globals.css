@@ -111,3 +111,76 @@
     transform: none;
   }
 }
+
+/* ---- Ornaments (src/components/ui/Ornaments.tsx) ---- */
+
+/* Fine film grain over the whole site: depth without weight. Fixed and non-interactive. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .spin-slow {
+    animation: spin-slow 140s linear infinite;
+  }
+
+  .marquee {
+    animation: marquee 60s linear infinite;
+  }
+
+  .marquee:hover {
+    animation-play-state: paused;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* Photos drift slightly against the scroll; `translate` composes with hover `scale`. */
+    .parallax {
+      animation: parallax linear both;
+      animation-timeline: view();
+    }
+
+    .draw-line {
+      animation: draw-line linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 40%;
+    }
+  }
+}
+
+@keyframes spin-slow {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes parallax {
+  from {
+    translate: 0 -4%;
+  }
+  to {
+    translate: 0 4%;
+  }
+}
+
+@keyframes draw-line {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: none;
+  }
+}
