@@ -97,3 +97,37 @@ export const categoriesQuery = (l: Locale) => `
     "serviceType": serviceType.${l}
   }
 `;
+
+/** The home page singleton (fixed ID `homePage`). */
+export const homeQuery = (l: Locale) => `
+  *[_id == "homePage"][0] {
+    "heroKicker": heroKicker.${l},
+    "heroTitle": heroTitle.${l},
+    "heroPlace": heroPlace.${l},
+    "heroPhotos": {
+      "experience": select(defined(heroPhotos.experience.asset) => heroPhotos.experience${image(l)}),
+      "wedding": select(defined(heroPhotos.wedding.asset) => heroPhotos.wedding${image(l)}),
+      "privateParty": select(defined(heroPhotos.privateParty.asset) => heroPhotos.privateParty${image(l)}),
+      "festival": select(defined(heroPhotos.festival.asset) => heroPhotos.festival${image(l)}),
+      "seminar": select(defined(heroPhotos.seminar.asset) => heroPhotos.seminar${image(l)})
+    },
+    "introEyebrow": introEyebrow.${l},
+    "introText": introText.${l},
+    "introNote": introNote.${l},
+    "introPhoto": select(defined(introPhoto.asset) => introPhoto${image(l)}),
+    "worldsEyebrow": worldsEyebrow.${l},
+    "worldsTitle": worldsTitle.${l},
+    "momentsEyebrow": momentsEyebrow.${l},
+    "momentsTitle": momentsTitle.${l},
+    "moments": moments[defined(photo.asset)]{ "photo": photo${image(l)}, "caption": caption.${l} },
+    "whyEyebrow": whyEyebrow.${l},
+    "whyTitle": whyTitle.${l},
+    "whySteps": whySteps[]{ "title": title.${l}, "text": text.${l} },
+    "whyPhoto": select(defined(whyPhoto.asset) => whyPhoto${image(l)}),
+    "ctaTitle": ctaTitle.${l},
+    "ctaText": ctaText.${l},
+    "ctaPhoto": select(defined(ctaPhoto.asset) => ctaPhoto${image(l)}),
+    "seoTitle": seoTitle.${l},
+    "seoDescription": seoDescription.${l}
+  }
+`;
