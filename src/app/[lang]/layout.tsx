@@ -10,8 +10,6 @@ import { getDictionary } from "@/i18n/get-dictionary";
 import { resolveLocale } from "@/i18n/params";
 import { organizationSchema, websiteSchema } from "@/lib/seo/json-ld";
 
-export const dynamicParams = false;
-
 export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
 }

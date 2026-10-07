@@ -2,6 +2,9 @@ import { getCategoryContent } from "@/content/categories";
 import { getServiceContent } from "@/content/services";
 import { getShowcaseContent } from "@/content/showcase";
 import type { Locale } from "@/i18n/config";
+import { toPost, toProject, toTestimonial, type RawPost, type RawProject, type RawTestimonial } from "@/lib/cms/mappers";
+import { postsQuery, projectsQuery, testimonialsQuery } from "@/lib/cms/queries";
+import { sanityFetch } from "@/lib/cms/sanity";
 import {
   categoryKeyFromSlug,
   categoryKeys,
@@ -14,8 +17,8 @@ import type { BlogPost, EventCategory, Project, Service, ShowcaseItem, Testimoni
 
 /**
  * Content access layer. Pages only talk to these functions.
- * Projects, posts and testimonials will come from Sanity; until then they are
- * intentionally empty rather than filled with invented content.
+ * Projects, posts and testimonials come from Sanity (empty when it is not configured,
+ * rather than filled with invented content); the rest is local.
  */
 
 export async function getCategories(locale: Locale): Promise<EventCategory[]> {
@@ -44,8 +47,9 @@ export async function getServiceBySlug(slug: string, locale: Locale): Promise<Se
   return key ? getServiceContent(key, locale) : null;
 }
 
-export async function getProjects(_locale: Locale): Promise<Project[]> {
-  return [];
+export async function getProjects(locale: Locale): Promise<Project[]> {
+  const raw = await sanityFetch<RawProject[]>(projectsQuery(locale), {}, ["project"]);
+  return (raw ?? []).map(toProject).filter((project): project is Project => Boolean(project));
 }
 
 export async function getProjectBySlug(slug: string, locale: Locale): Promise<Project | null> {
@@ -58,8 +62,9 @@ export async function getShowcase(locale: Locale): Promise<ShowcaseItem[]> {
   return getShowcaseContent(locale);
 }
 
-export async function getPosts(_locale: Locale): Promise<BlogPost[]> {
-  return [];
+export async function getPosts(locale: Locale): Promise<BlogPost[]> {
+  const raw = await sanityFetch<RawPost[]>(postsQuery(locale), {}, ["post"]);
+  return (raw ?? []).map((post) => toPost(post, locale));
 }
 
 export async function getPostBySlug(slug: string, locale: Locale): Promise<BlogPost | null> {
@@ -67,7 +72,8 @@ export async function getPostBySlug(slug: string, locale: Locale): Promise<BlogP
   return posts.find((post) => post.slug === slug) ?? null;
 }
 
-export async function getTestimonials(_locale: Locale, category?: CategoryKey): Promise<Testimonial[]> {
-  const testimonials: Testimonial[] = [];
+export async function getTestimonials(locale: Locale, category?: CategoryKey): Promise<Testimonial[]> {
+  const raw = await sanityFetch<RawTestimonial[]>(testimonialsQuery(locale), {}, ["testimonial"]);
+  const testimonials = (raw ?? []).map(toTestimonial);
   return category ? testimonials.filter((item) => item.eventType === category) : testimonials;
 }

@@ -5,6 +5,9 @@ import { ProjectView, projectMetadata } from "@/views/projects";
 
 const LOCALE = "en" as const;
 
+// Documents published in Sanity after the build are rendered on their first visit.
+export const dynamicParams = true;
+
 export async function generateStaticParams() {
   const projects = await getProjects(LOCALE);
   return projects.map((project) => ({ lang: LOCALE, slug: project.slug }));

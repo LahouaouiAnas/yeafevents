@@ -7,7 +7,8 @@ import { routePath } from "@/lib/routes";
 
 export default async function NotFound() {
   const value = await lang();
-  const locale = hasLocale(value) ? value : defaultLocale;
+  // Undefined under /studio, the other root layout.
+  const locale = value && hasLocale(value) ? value : defaultLocale;
   const dict = getDictionary(locale);
 
   return (

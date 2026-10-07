@@ -135,7 +135,7 @@ export async function HomeView({ locale }: { locale: Locale }) {
         eyebrow={t.why.eyebrow}
         title={t.why.title}
         steps={t.why.steps}
-        image={getImage("pavilionStage", locale)}
+        image={getImage("congressStage", locale)}
       />
 
       <CtaBanner
