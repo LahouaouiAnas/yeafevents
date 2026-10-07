@@ -102,8 +102,8 @@ const content: Record<CategoryKey, Record<Locale, LocalizedCategory>> = {
   },
   privateParty: {
     fr: {
-      label: "Private Parties",
-      singular: "Private party",
+      label: "Soirées privées",
+      singular: "Soirée privée",
       title: "Soirées privées à Marrakech",
       phrase: "Des soirées sur mesure, à votre image.",
       lead: "Villa, riad, désert d'Agafay ou lieu d'exception : nous concevons des soirées privées dont vos invités se souviendront.",

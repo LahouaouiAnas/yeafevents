@@ -55,7 +55,27 @@ export async function seedSanity(): Promise<void> {
   if (!client) return;
   const imageField = imageUploader(client);
   await seedEventCategories(client, imageField);
+  await renameFrenchPrivateParty(client);
   await seedBlogDrafts(client, imageField);
+}
+
+/**
+ * The French private-party label shipped in English ("Private Parties"). Fixes the imported
+ * copy, only while it still holds that original value: a label edited in the Studio is kept.
+ */
+async function renameFrenchPrivateParty(client: Client): Promise<void> {
+  const id = "category.privateParty";
+  const current = await client.fetch<{ label?: string; singular?: string } | null>(
+    `*[_id == $id][0]{ "label": label.fr, "singular": singular.fr }`,
+    { id },
+  );
+  if (!current) return;
+  const patch: Record<string, string> = {};
+  if (current.label === "Private Parties") patch["label.fr"] = "Soirées privées";
+  if (current.singular === "Private party") patch["singular.fr"] = "Soirée privée";
+  if (Object.keys(patch).length === 0) return;
+  await client.patch(id).set(patch).commit();
+  console.log("[seed] French private-party label renamed to « Soirées privées »");
 }
 
 type ImageField = ReturnType<typeof imageUploader>;
