@@ -4,6 +4,7 @@ import { createClient } from "next-sanity";
 import { blogDrafts, type BlogDraft, type DraftBlock } from "@/content/blog-drafts";
 import { getCategoryContent, getCategoryMedia } from "@/content/categories";
 import { getImageSource, type ImageId } from "@/content/media";
+import { pricingDrafts } from "@/content/pricing-drafts";
 import { getShowcaseContent } from "@/content/showcase";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { locales, type Locale } from "@/i18n/config";
@@ -58,6 +59,7 @@ export async function seedSanity(): Promise<void> {
   const imageField = imageUploader(client);
   await seedEventCategories(client, imageField);
   await renameFrenchPrivateParty(client);
+  await seedFormulas(client);
   await seedHomePage(client, imageField);
   await upgradeHomeHero(client, imageField);
   await seedBlogDrafts(client, imageField);
@@ -80,6 +82,41 @@ async function renameFrenchPrivateParty(client: Client): Promise<void> {
   if (Object.keys(patch).length === 0) return;
   await client.patch(id).set(patch).commit();
   console.log("[seed] French private-party label renamed to « Soirées privées »");
+}
+
+/**
+ * Fills the "Formules & prix" tab of each event type once, with formula names and what they
+ * include but no price: they stay off the site until the agency enters its prices. Only where
+ * the tab was never touched (no `formulas` field at all), so Studio edits are never replaced.
+ */
+async function seedFormulas(client: Client): Promise<void> {
+  const ids = await client.fetch<string[]>(`*[_type == "eventCategory" && !defined(formulas)]._id`);
+  for (const id of ids) {
+    const key = id.replace(/^category\./, "") as keyof typeof pricingDrafts;
+    const draft = pricingDrafts[key];
+    if (!draft) continue;
+    const localized = (type: string, value: Record<Locale, string>) => ({ _type: type, ...value });
+    await client
+      .patch(id)
+      .setIfMissing({
+        pricingTitle: localized("localeString", draft.title),
+        pricingNote: localized("localeText", draft.note),
+        formulas: draft.formulas.map((formula, index) => ({
+          _type: "formula",
+          _key: `formula${index}`,
+          name: localized("localeString", formula.name),
+          featured: formula.featured ?? false,
+          onRequest: false,
+          inclusions: formula.inclusions.map((label, row) => ({
+            _type: "inclusion",
+            _key: `inc${index}-${row}`,
+            label: localized("localeString", label),
+          })),
+        })),
+      })
+      .commit();
+    console.log(`[seed] price formulas (without prices) added to "${key}"`);
+  }
 }
 
 type ImageField = ReturnType<typeof imageUploader>;

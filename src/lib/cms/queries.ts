@@ -102,6 +102,7 @@ export const categoriesQuery = (l: Locale) => `
       "audience": audience.${l},
       priceEur,
       priceMad,
+      onRequest,
       featured,
       "inclusions": inclusions[]{ "label": label.${l}, "detail": detail.${l} }
     }

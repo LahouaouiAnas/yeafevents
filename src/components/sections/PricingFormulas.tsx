@@ -5,104 +5,105 @@ import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/get-dictionary";
 import type { PricingFormula } from "@/lib/content/types";
 
+type Labels = Dictionary["category"]["pricing"];
+
+const numberLocale: Record<Locale, string> = { fr: "fr-FR", en: "en-GB" };
+
+/** "dès 4 500 €" / "≈ 48 000 MAD" / "Sur devis" for one formula. */
+function priceLines(formula: PricingFormula, labels: Labels, locale: Locale) {
+  const format = (value: number) => new Intl.NumberFormat(numberLocale[locale], { maximumFractionDigits: 0 }).format(value);
+  if (!formula.priceEur && !formula.priceMad) return { main: labels.onRequest, from: false };
+  const main = formula.priceEur ? `${format(formula.priceEur)} €` : `${format(formula.priceMad!)} MAD`;
+  const secondary = formula.priceEur && formula.priceMad ? `${labels.approx} ${format(formula.priceMad)} MAD` : undefined;
+  return { main, secondary, from: true };
+}
+
+/** Lowest displayed starting price of a list of formulas, e.g. for a card "dès 2 500 €". */
+export function startingPrice(formulas: PricingFormula[] | undefined, labels: Labels, locale: Locale): string | undefined {
+  // Compared in euros when any formula has a euro price, otherwise in dirhams.
+  const list = formulas ?? [];
+  const currency = list.some((formula) => formula.priceEur) ? "priceEur" : "priceMad";
+  const cheapest = list
+    .filter((formula) => formula[currency])
+    .sort((a, b) => a[currency]! - b[currency]!)[0];
+  if (!cheapest) return undefined;
+  return `${labels.from} ${priceLines(cheapest, labels, locale).main}`;
+}
+
+/**
+ * Formulas side by side: name, price, then everything included, visible at once. The
+ * featured formula gets a gold frame. Edited in the Studio (Types d'événement → Formules & prix).
+ */
+export function FormulaCards({ formulas, labels, locale }: { formulas: PricingFormula[]; labels: Labels; locale: Locale }) {
+  const columns = formulas.length >= 3 ? "lg:grid-cols-3" : formulas.length === 2 ? "md:grid-cols-2" : "max-w-xl";
+  return (
+    <ul className={`grid gap-6 ${columns}`}>
+      {formulas.map((formula) => {
+        const price = priceLines(formula, labels, locale);
+        return (
+          <li
+            key={formula.name}
+            className={`reveal relative flex flex-col border p-7 sm:p-8 ${
+              formula.featured ? "border-champagne bg-champagne/[0.06]" : "border-ivory/12 bg-coal/40"
+            }`}
+          >
+            {formula.featured && (
+              <p className="absolute -top-3 left-7 bg-champagne px-3 py-1 text-[0.62rem] font-medium tracking-[0.2em] text-night uppercase">
+                {labels.featured}
+              </p>
+            )}
+            <h3 className="font-display text-2xl font-normal sm:text-[1.7rem]">{formula.name}</h3>
+            <p className="mt-4 font-display text-3xl text-gold-soft sm:text-4xl">
+              {price.from && <span className="mr-1 text-[0.6em] text-ivory/70">{labels.from}</span>}
+              {price.main}
+            </p>
+            {price.secondary && <p className="mt-1 text-sm text-ivory/60">{price.secondary}</p>}
+            {formula.audience && <p className="mt-4 text-ivory/80">{formula.audience}</p>}
+            {formula.inclusions.length > 0 && (
+              <>
+                <p className="eyebrow mt-7 border-t border-ivory/10 pt-6 text-champagne">{labels.included}</p>
+                <ul className="mt-4 space-y-3">
+                  {formula.inclusions.map((row) => (
+                    <li key={row.label} className="flex gap-3">
+                      <StarBullet className="mt-[0.45rem] size-2.5 shrink-0" />
+                      <span>
+                        {row.label}
+                        {row.detail && <span className="block text-sm text-stone">{row.detail}</span>}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
 type PricingFormulasProps = {
   title: string;
   note?: string;
   formulas: PricingFormula[];
-  labels: Dictionary["category"]["pricing"];
+  labels: Labels;
   locale: Locale;
   quoteHref: string;
 };
 
-const numberLocale: Record<Locale, string> = { fr: "fr-FR", en: "en-GB" };
-
-/**
- * Priced packages, as a list: name and "from" price on one line, the audience below, and the
- * inclusions in a table behind a native disclosure (works without JavaScript).
- */
+/** Pricing section of an event-type page. */
 export function PricingFormulas({ title, note, formulas, labels, locale, quoteHref }: PricingFormulasProps) {
-  const format = (value: number) => new Intl.NumberFormat(numberLocale[locale], { maximumFractionDigits: 0 }).format(value);
-
   return (
-    <section aria-labelledby="pricing-title" className="relative isolate border-t border-ivory/10 py-20 sm:py-28">
-      <Container size="narrow">
-        <StarBullet className="size-6" />
-        <h2 id="pricing-title" className="mt-5 font-display text-4xl font-normal text-balance sm:text-5xl">
+    <section id="tarifs" aria-labelledby="pricing-title" className="scroll-mt-20 border-t border-ivory/10 py-20 sm:py-28">
+      <Container>
+        <h2 id="pricing-title" className="font-display text-4xl font-normal text-balance sm:text-5xl">
           {title}
         </h2>
         <GoldRule className="mt-6" />
-        {note && <p className="mt-6 max-w-3xl text-lg leading-relaxed text-ivory/85">{note}</p>}
-
-        <ul className="mt-12 border-t border-ivory/10">
-          {formulas.map((formula) => {
-            const main = formula.priceEur ? `${format(formula.priceEur)} €` : `${format(formula.priceMad!)} MAD`;
-            const secondary = formula.priceEur && formula.priceMad ? `${labels.approx} ${format(formula.priceMad)} MAD` : undefined;
-            return (
-              <li key={formula.name} className="reveal border-b border-ivory/10 py-10">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-8">
-                  <div className="flex items-start gap-4">
-                    <StarBullet className="mt-3 size-5 shrink-0" />
-                    <div>
-                      <h3 className={`font-display text-3xl font-normal sm:text-4xl ${formula.featured ? "text-gold-soft" : ""}`}>
-                        {formula.name}
-                      </h3>
-                      {formula.featured && (
-                        <p className="mt-2 inline-block border border-champagne/50 px-3 py-0.5 text-[0.65rem] font-medium tracking-[0.2em] text-gold-soft uppercase">
-                          {labels.featured}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="pl-10 sm:pl-0 sm:text-right">
-                    <p className="font-display text-3xl whitespace-nowrap text-gold-soft sm:text-4xl">
-                      <span className="text-[0.75em]">{labels.from}</span> {main}
-                    </p>
-                    {secondary && <p className="mt-1 text-sm tracking-wider text-ivory/70">{secondary}</p>}
-                  </div>
-                </div>
-
-                <div className="pl-10">
-                  {formula.audience && <p className="mt-4 text-lg text-ivory/85">{formula.audience}</p>}
-                  {formula.inclusions.length > 0 && (
-                    <details className="group mt-5">
-                      <summary className="inline-flex cursor-pointer list-none items-center gap-3 font-medium text-gold-soft [&::-webkit-details-marker]:hidden">
-                        {labels.included}
-                        <span aria-hidden="true" className="text-lg transition-transform duration-300 group-open:rotate-45">
-                          +
-                        </span>
-                      </summary>
-                      <div className="mt-5 overflow-hidden rounded-2xl border border-ivory/10">
-                        <table className="w-full text-left">
-                          <thead className="bg-coal">
-                            <tr>
-                              <th scope="col" className="eyebrow px-5 py-4 text-champagne">
-                                {labels.itemColumn}
-                              </th>
-                              <th scope="col" className="eyebrow px-5 py-4 text-champagne">
-                                {labels.detailColumn}
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-ivory/10">
-                            {formula.inclusions.map((row) => (
-                              <tr key={row.label}>
-                                <th scope="row" className="w-1/3 px-5 py-4 align-top font-medium">
-                                  {row.label}
-                                </th>
-                                <td className="px-5 py-4 text-ivory/85">{row.detail}</td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </details>
-                  )}
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-
+        {note && <p className="mt-6 max-w-2xl text-ivory/80">{note}</p>}
+        <div className="mt-14">
+          <FormulaCards formulas={formulas} labels={labels} locale={locale} />
+        </div>
         <div className="mt-12">
           <ButtonLink href={quoteHref}>{labels.quote}</ButtonLink>
         </div>

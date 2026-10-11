@@ -22,9 +22,11 @@ export const fr = {
     blog: "Journal",
     about: "À propos",
     contact: "Contact",
+    pricing: "Tarifs",
   },
   cta: {
     plan: "Planifier mon événement",
+    pricing: "Voir tous nos tarifs",
     discover: "Découvrir nos univers",
     contact: "Nous contacter",
     learnMore: "Découvrir",
@@ -123,19 +125,11 @@ export const fr = {
       from: "dès",
       approx: "≈",
       included: "Ce qui est inclus",
-      itemColumn: "Inclus",
-      detailColumn: "Détail",
       featured: "La plus demandée",
+      onRequest: "Sur devis",
       quote: "Demander mon devis",
     },
-    includesTitle: "Ce que nous prenons en charge",
-    occasionsTitle: "Pour quelles occasions",
-    relatedServices: "Nos savoir-faire associés",
-    otherCategories: "Nos autres univers",
     testimonials: "Ils nous ont fait confiance",
-    localTitle: "À Marrakech et partout au Maroc",
-    localText:
-      "Basés à Marrakech, nous connaissons ses lieux et ses prestataires, et nous accompagnons vos événements dans tout le pays.",
   },
   marrakech: {
     seo: {
@@ -425,6 +419,17 @@ export const fr = {
             "Le plus tôt est le mieux, surtout en haute saison à Marrakech. Pour un mariage ou un grand événement d'entreprise, comptez idéalement plusieurs mois ; pour une soirée privée, quelques semaines peuvent suffire selon la disponibilité des lieux.",
         },
       ],
+    },
+  },
+  pricingPage: {
+    eyebrow: "Tarifs",
+    title: "Nos tarifs",
+    lead: "Des formules claires pour chaque type d'événement. Chaque devis est ensuite ajusté à votre projet.",
+    onRequest: "Tarifs sur devis : décrivez-nous votre projet, nous vous répondons rapidement.",
+    seeEvent: "Voir la page",
+    seo: {
+      title: "Tarifs événementiels à Marrakech | Yeaf Events",
+      description: "Formules et prix de départ pour mariages, soirées privées, anniversaires, festivals et séminaires à Marrakech et au Maroc.",
     },
   },
   notFound: {

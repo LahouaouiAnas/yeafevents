@@ -17,6 +17,7 @@ export async function Footer({ locale }: { locale: Locale }) {
   const { email, phones, whatsapp } = siteConfig.contact;
 
   const agency = [
+    { href: routePath("pricing", locale), label: dict.nav.pricing },
     { href: routePath("about", locale), label: dict.nav.about },
     { href: routePath("projects", locale), label: dict.nav.projects },
     { href: routePath("services", locale), label: dict.nav.services },

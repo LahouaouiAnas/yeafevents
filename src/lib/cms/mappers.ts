@@ -176,13 +176,14 @@ export type RawCategory = {
         audience?: string | null;
         priceEur?: number | null;
         priceMad?: number | null;
+        onRequest?: boolean | null;
         featured?: boolean | null;
         inclusions?: { label?: string | null; detail?: string | null }[] | null;
       }[]
     | null;
 };
 
-/** Formulas with a name and at least one price; anything incomplete stays off the site. */
+/** Formulas with a name and a price (or marked "on request"); anything incomplete stays off the site. */
 function toFormulas(raw: RawCategory["formulas"]): PricingFormula[] {
   const price = (value: number | null | undefined) => (typeof value === "number" && value > 0 ? value : undefined);
   return (raw ?? [])
@@ -191,12 +192,13 @@ function toFormulas(raw: RawCategory["formulas"]): PricingFormula[] {
       audience: formula.audience?.trim() || undefined,
       priceEur: price(formula.priceEur),
       priceMad: price(formula.priceMad),
+      onRequest: formula.onRequest ?? false,
       featured: formula.featured ?? false,
       inclusions: (formula.inclusions ?? [])
-        .map((row) => ({ label: row.label?.trim() ?? "", detail: row.detail?.trim() ?? "" }))
-        .filter((row) => row.label && row.detail),
+        .map((row) => ({ label: row.label?.trim() ?? "", detail: row.detail?.trim() || undefined }))
+        .filter((row) => row.label),
     }))
-    .filter((formula) => formula.name && (formula.priceEur || formula.priceMad));
+    .filter((formula) => formula.name && (formula.priceEur || formula.priceMad || formula.onRequest));
 }
 
 /** Edited text wins; an empty field keeps the text the site shipped with, so a page never breaks. */

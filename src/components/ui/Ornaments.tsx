@@ -63,17 +63,6 @@ export function StarMark({ className = "", spin = false }: { className?: string;
   );
 }
 
-/** Thin gold rule with a small star at its center; the lines draw in when scrolled into view. */
-export function OrnamentDivider({ className = "" }: { className?: string }) {
-  return (
-    <div aria-hidden="true" className={`flex items-center justify-center gap-5 ${className}`}>
-      <span className="draw-line h-px w-full max-w-48 origin-right bg-gradient-to-l from-champagne/50 to-transparent" />
-      <StarMark className="size-5 shrink-0 opacity-70" />
-      <span className="draw-line h-px w-full max-w-48 origin-left bg-gradient-to-r from-champagne/50 to-transparent" />
-    </div>
-  );
-}
-
 /** Outline of the pointed arch drawn by the `.arch` utility, same proportions. */
 const ARCH = "M0 100 V40 C0 22 20 10 50 0 C80 10 100 22 100 40 V100 Z";
 
@@ -95,31 +84,6 @@ export function ArchFrame({ children, className = "" }: { children: ReactNode; c
     <div className={`relative isolate ${className}`}>
       <ArchOutline className="absolute inset-0 -z-10 size-full translate-x-3 translate-y-3 opacity-50 sm:translate-x-4 sm:translate-y-4" />
       <div className="arch h-full">{children}</div>
-    </div>
-  );
-}
-
-/** Slow horizontal band of words separated by stars; static when motion is reduced. */
-export function Marquee({ items, label }: { items: string[]; label: string }) {
-  const row = (hidden: boolean) => (
-    <ul aria-hidden={hidden || undefined} className="flex shrink-0 items-center">
-      {items.map((item) => (
-        <li key={item} className="flex items-center">
-          <span className="px-8 font-display text-4xl font-normal whitespace-nowrap text-ivory/80 italic sm:px-12 sm:text-6xl">
-            {item}
-          </span>
-          <StarMark className="size-6 shrink-0 opacity-60 sm:size-8" />
-        </li>
-      ))}
-    </ul>
-  );
-
-  return (
-    <div className="overflow-hidden border-y border-ivory/10 py-8 sm:py-10" role="region" aria-label={label}>
-      <div className="marquee flex w-max">
-        {row(false)}
-        {row(true)}
-      </div>
     </div>
   );
 }
