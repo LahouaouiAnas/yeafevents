@@ -56,7 +56,7 @@ export async function CategoryView({ category, locale }: { category: EventCatego
               href={whatsappHref(siteConfig.contact.whatsapp, dict.a11y.whatsappMessage)}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 border-b border-ivory/25 pb-1 font-bold text-ivory transition-colors hover:border-champagne hover:text-gold-soft"
+              className="inline-flex items-center gap-3 border-b border-ivory/25 pb-1 font-medium text-ivory transition-colors hover:border-champagne hover:text-gold-soft"
             >
               <span aria-hidden="true" className="size-2 rounded-full bg-[#25d366]" />
               {dict.a11y.whatsapp}

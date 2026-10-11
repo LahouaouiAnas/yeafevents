@@ -1,22 +1,22 @@
 @import "tailwindcss";
 
 @theme {
-  /* Deep plum-black grounds, cream text, and the gold of the logo as the single accent. */
-  --color-night: #170e11;
-  --color-coal: #1f1418;
-  --color-graphite: #2b1d22;
-  --color-ivory: #f6ecdd;
-  --color-stone: #cdbcab;
-  --color-champagne: #d9a94e;
+  /* The black and gold of the Yeaf logo: warm ink grounds, parchment text, one gold accent. */
+  --color-night: #0f0c09;
+  --color-coal: #17130f;
+  --color-graphite: #231d17;
+  --color-ivory: #f3ece1;
+  --color-stone: #bdb2a1;
+  --color-champagne: #d0a046;
   /* Lighter gold for italic accents and prices on dark grounds. */
-  --color-gold-soft: #efc77a;
+  --color-gold-soft: #ecc469;
 
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @theme inline {
-  --font-sans: var(--font-karla), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-sans: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bodoni), ui-serif, Georgia, serif;
 }
 
 @layer base {
@@ -37,7 +37,8 @@
     color: var(--color-ivory);
     font-family: var(--font-sans);
     font-size: 1.0625rem;
-    line-height: 1.7;
+    font-weight: 350;
+    line-height: 1.75;
     text-rendering: optimizeLegibility;
   }
 
@@ -54,36 +55,70 @@
 
 @layer components {
   .eyebrow {
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.24em;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.3em;
     text-transform: uppercase;
   }
 
-  /* Gold pill button with a soft glow (primary actions). */
+  /* Square-cornered gold button with a fine inner frame (primary actions). */
   .btn-gold {
-    border-radius: 9999px;
+    position: relative;
     background-color: var(--color-champagne);
     color: var(--color-night);
-    box-shadow: 0 14px 40px -14px rgb(217 169 78 / 0.75);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
     transition:
       background-color 0.4s,
-      box-shadow 0.4s,
       transform 0.4s;
+  }
+
+  .btn-gold::after {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    border: 1px solid rgb(15 12 9 / 0.28);
+    pointer-events: none;
   }
 
   .btn-gold:hover {
     background-color: var(--color-gold-soft);
-    box-shadow: 0 18px 50px -12px rgb(239 199 122 / 0.8);
-    transform: translateY(-1px);
+  }
+
+  .btn-line {
+    border: 1px solid rgb(208 160 70 / 0.55);
+    color: var(--color-ivory);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    transition:
+      border-color 0.4s,
+      color 0.4s,
+      background-color 0.4s;
+  }
+
+  .btn-line:hover {
+    border-color: var(--color-gold-soft);
+    background-color: rgb(208 160 70 / 0.08);
+    color: var(--color-gold-soft);
+  }
+
+  /* Pointed Moroccan arch (ogee-like), stretched to the element's box. */
+  .arch {
+    mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'><path d='M0 100 V40 C0 22 20 10 50 0 C80 10 100 22 100 40 V100 Z'/></svg>");
+    mask-size: 100% 100%;
+    mask-repeat: no-repeat;
   }
 
   /* Fallback surface when no real media exists yet (never a fake photo). */
   .media-fallback {
     background-color: var(--color-graphite);
     background-image:
-      radial-gradient(90% 70% at 70% 20%, rgb(217 169 78 / 0.12), transparent 65%),
-      linear-gradient(160deg, #2b1d22, #170e11);
+      radial-gradient(90% 70% at 70% 20%, rgb(208 160 70 / 0.12), transparent 65%),
+      linear-gradient(160deg, #231d17, #0f0c09);
   }
 }
 

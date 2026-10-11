@@ -6,7 +6,7 @@ import { MomentsMosaic } from "@/components/sections/MomentsMosaic";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { Container } from "@/components/ui/Container";
 import { Media } from "@/components/ui/Media";
-import { ArchFrame, Marquee, OrnamentDivider, Wave, ZelligePattern } from "@/components/ui/Ornaments";
+import { ArchFrame, Marquee, GoldRule, OrnamentDivider, ZelligePattern } from "@/components/ui/Ornaments";
 import { siteConfig, whatsappHref } from "@/config/site";
 import { getImage } from "@/content/media";
 import type { Locale } from "@/i18n/config";
@@ -39,16 +39,16 @@ export async function HomeView({ locale }: { locale: Locale }) {
     getCategory("festival", locale),
     getShowcase(locale),
   ]);
-  const contactHref = routePath("contact", locale);
+  const contactHref = `${routePath("contact", locale)}#composer`;
   const dinner = showcase.find((item) => item.id === "diner-ciel-de-lumieres");
   const labelOf = (key: string) => categories.find((category) => category.key === key)?.label ?? wedding.label;
 
   return (
     <>
       <ArchHero
+        kicker={home.hero.kicker}
         title={home.hero.title}
         accent={home.hero.accent}
-        subtitle={home.hero.kicker}
         text={home.hero.text}
         image={home.hero.photo}
         primary={{ href: contactHref, label: dict.cta.plan }}
@@ -98,7 +98,7 @@ export async function HomeView({ locale }: { locale: Locale }) {
             <h2 id="univers-title" className="mt-5 font-display text-4xl font-normal text-balance sm:text-5xl">
               {home.worlds.title}
             </h2>
-            <Wave className="mx-auto mt-6" />
+            <GoldRule centered className="mt-6" />
           </div>
           <ArchCards
             linkLabel={dict.cta.learnMore}

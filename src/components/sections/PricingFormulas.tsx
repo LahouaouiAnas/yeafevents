@@ -1,6 +1,6 @@
 import { ButtonLink } from "@/components/ui/ButtonLink";
 import { Container } from "@/components/ui/Container";
-import { StarBullet, Wave } from "@/components/ui/Ornaments";
+import { GoldRule, StarBullet } from "@/components/ui/Ornaments";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/get-dictionary";
 import type { PricingFormula } from "@/lib/content/types";
@@ -30,7 +30,7 @@ export function PricingFormulas({ title, note, formulas, labels, locale, quoteHr
         <h2 id="pricing-title" className="mt-5 font-display text-4xl font-normal text-balance sm:text-5xl">
           {title}
         </h2>
-        <Wave className="mt-6" />
+        <GoldRule className="mt-6" />
         {note && <p className="mt-6 max-w-3xl text-lg leading-relaxed text-ivory/85">{note}</p>}
 
         <ul className="mt-12 border-t border-ivory/10">
@@ -47,7 +47,7 @@ export function PricingFormulas({ title, note, formulas, labels, locale, quoteHr
                         {formula.name}
                       </h3>
                       {formula.featured && (
-                        <p className="mt-2 inline-block rounded-full border border-champagne/50 px-3 py-0.5 text-xs font-bold tracking-wider text-gold-soft uppercase">
+                        <p className="mt-2 inline-block border border-champagne/50 px-3 py-0.5 text-[0.65rem] font-medium tracking-[0.2em] text-gold-soft uppercase">
                           {labels.featured}
                         </p>
                       )}
@@ -65,7 +65,7 @@ export function PricingFormulas({ title, note, formulas, labels, locale, quoteHr
                   {formula.audience && <p className="mt-4 text-lg text-ivory/85">{formula.audience}</p>}
                   {formula.inclusions.length > 0 && (
                     <details className="group mt-5">
-                      <summary className="inline-flex cursor-pointer list-none items-center gap-3 font-bold text-gold-soft [&::-webkit-details-marker]:hidden">
+                      <summary className="inline-flex cursor-pointer list-none items-center gap-3 font-medium text-gold-soft [&::-webkit-details-marker]:hidden">
                         {labels.included}
                         <span aria-hidden="true" className="text-lg transition-transform duration-300 group-open:rotate-45">
                           +
@@ -86,7 +86,7 @@ export function PricingFormulas({ title, note, formulas, labels, locale, quoteHr
                           <tbody className="divide-y divide-ivory/10">
                             {formula.inclusions.map((row) => (
                               <tr key={row.label}>
-                                <th scope="row" className="w-1/3 px-5 py-4 align-top font-bold">
+                                <th scope="row" className="w-1/3 px-5 py-4 align-top font-medium">
                                   {row.label}
                                 </th>
                                 <td className="px-5 py-4 text-ivory/85">{row.detail}</td>

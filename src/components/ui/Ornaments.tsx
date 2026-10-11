@@ -74,18 +74,27 @@ export function OrnamentDivider({ className = "" }: { className?: string }) {
   );
 }
 
+/** Outline of the pointed arch drawn by the `.arch` utility, same proportions. */
+const ARCH = "M0 100 V40 C0 22 20 10 50 0 C80 10 100 22 100 40 V100 Z";
+
+/** Thin gold outline of the pointed arch, stretched to its box (the stroke keeps its width). */
+export function ArchOutline({ className = "" }: { className?: string }) {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none" className={`pointer-events-none text-champagne ${className}`}>
+      <path d={ARCH} fill="none" stroke="currentColor" strokeWidth="1" vectorEffect="non-scaling-stroke" />
+    </svg>
+  );
+}
+
 /**
- * Moroccan arch frame: the content gets a rounded top, with a thin gold outline of the same
- * arch offset behind it.
+ * Pointed Moroccan arch frame: the content is cut to the arch, with a thin gold outline of the
+ * same arch offset behind it.
  */
 export function ArchFrame({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
     <div className={`relative isolate ${className}`}>
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 -z-10 translate-x-3 translate-y-3 rounded-t-full border border-champagne/35 sm:translate-x-4 sm:translate-y-4"
-      />
-      <div className="h-full overflow-hidden rounded-t-full">{children}</div>
+      <ArchOutline className="absolute inset-0 -z-10 size-full translate-x-3 translate-y-3 opacity-50 sm:translate-x-4 sm:translate-y-4" />
+      <div className="arch h-full">{children}</div>
     </div>
   );
 }
@@ -115,18 +124,14 @@ export function Marquee({ items, label }: { items: string[]; label: string }) {
   );
 }
 
-/** Fine gold wavy line with a dot at its crest, drawn under titles. */
-export function Wave({ className = "" }: { className?: string }) {
+/** Short gold rule ending in a small solid star, drawn under titles. */
+export function GoldRule({ className = "", centered = false }: { className?: string; centered?: boolean }) {
   return (
-    <svg aria-hidden="true" viewBox="0 0 240 24" className={`h-6 w-48 text-champagne sm:w-60 ${className}`} fill="none">
-      <path
-        d="M2 14 C 22 4, 38 4, 58 12 S 98 22, 120 12 S 162 2, 182 12 S 218 20, 238 8"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-      />
-      <circle cx="120" cy="12" r="2" fill="currentColor" />
-    </svg>
+    <div aria-hidden="true" className={`flex items-center gap-3 ${centered ? "justify-center" : ""} ${className}`}>
+      {centered && <span className="h-px w-14 bg-gradient-to-l from-champagne to-transparent" />}
+      <StarBullet className="size-3 shrink-0" />
+      <span className={`h-px bg-gradient-to-r from-champagne to-transparent ${centered ? "w-14" : "w-20"}`} />
+    </div>
   );
 }
 

@@ -73,7 +73,7 @@ dataset `production`, public en lecture). Le reste du contenu est dans `src/cont
 
 ## Demandes de devis
 
-Le formulaire de contact (`src/components/sections/QuoteForm.tsx`) appelle une Server Action
+Le formulaire de contact (`src/components/sections/EventComposer.tsx`, une question par étape) appelle une Server Action
 (`src/lib/quote/`) : validation côté serveur, pièges à spam (champ caché, envoi trop rapide),
 5 envois par heure et par IP, puis :
 
