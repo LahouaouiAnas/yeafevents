@@ -1,19 +1,19 @@
-import { Fraunces, Karla } from "next/font/google";
+import { Bodoni_Moda, Jost } from "next/font/google";
 
-/** Body text: a warm, very legible grotesque. */
-export const karla = Karla({
+/** Body text and labels: a clean geometric sans that reads well at every size. */
+export const jost = Jost({
   subsets: ["latin"],
-  variable: "--font-karla",
+  variable: "--font-jost",
   display: "swap",
 });
 
-/** Titles and prices: a soft, high-contrast serif with a lively italic for accents. */
-export const fraunces = Fraunces({
+/** Titles and prices: a high-contrast Didone, with an elegant italic for accents. */
+export const bodoni = Bodoni_Moda({
   subsets: ["latin"],
   style: ["normal", "italic"],
-  axes: ["opsz", "SOFT"],
-  variable: "--font-fraunces",
+  axes: ["opsz"],
+  variable: "--font-bodoni",
   display: "swap",
 });
 
-export const fontVariables = `${karla.variable} ${fraunces.variable}`;
+export const fontVariables = `${jost.variable} ${bodoni.variable}`;

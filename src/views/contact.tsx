@@ -2,7 +2,7 @@ import { SocialLinks } from "@/components/layout/SocialLinks";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { FaqSection } from "@/components/sections/FaqSection";
 import { PageHero } from "@/components/sections/PageHero";
-import { QuoteForm } from "@/components/sections/QuoteForm";
+import { EventComposer } from "@/components/sections/EventComposer";
 import { Container } from "@/components/ui/Container";
 import { siteConfig, socialLinks, telHref, whatsappHref } from "@/config/site";
 import type { Locale } from "@/i18n/config";
@@ -36,20 +36,25 @@ export async function ContactView({ locale }: { locale: Locale }) {
           />
         }
       />
-      <section className="border-t border-ivory/10 py-16 sm:py-24">
-        <Container className="grid gap-16 lg:grid-cols-[2fr_1fr] lg:gap-24">
+      <section id="composer" className="scroll-mt-20 border-t border-ivory/10 py-16 sm:py-24">
+        <Container className="grid gap-20">
           <div>
-            <h2 className="mb-12 font-display text-4xl font-normal">{t.form.title}</h2>
-            <QuoteForm
+            <p className="eyebrow text-champagne">{t.composer.eyebrow}</p>
+            <h2 className="mt-4 font-display text-4xl font-normal sm:text-5xl">{t.composer.title}</h2>
+            <p className="mt-4 mb-14 max-w-xl text-stone">{t.composer.intro}</p>
+            <EventComposer
               locale={locale}
               labels={t.form}
-              eventTypes={categories.map((category) => ({ value: category.key, label: category.singular }))}
+              composer={t.composer}
+              whatsapp={whatsapp ?? ""}
+              eventTypes={categories.map((category) => ({ value: category.key, label: category.singular, image: category.image }))}
             />
           </div>
           {hasDirectContact && (
-            <aside className="lg:border-l lg:border-ivory/10 lg:pl-12">
+            <aside className="grid gap-8 border-t border-ivory/10 pt-12 lg:grid-cols-[1fr_3fr] lg:items-start">
               <h2 className="eyebrow text-champagne">{t.direct}</h2>
-              <ul className="mt-6 space-y-4 font-display text-2xl font-normal">
+              <div>
+              <ul className="flex flex-wrap gap-x-10 gap-y-4 text-xl">
                 {email && (
                   <li>
                     <a href={`mailto:${email}`} className="hover:text-champagne">
@@ -72,7 +77,8 @@ export async function ContactView({ locale }: { locale: Locale }) {
                   </li>
                 )}
               </ul>
-              <SocialLinks className="mt-8" />
+                <SocialLinks className="mt-8" />
+              </div>
             </aside>
           )}
         </Container>

@@ -100,7 +100,7 @@ export function HeaderBar({ locale, items, secondary, homeHref, cta, labels, log
           <LanguageSwitcher locale={locale} label={labels.languageSwitcher} />
           <Link
             href={cta.href}
-            className="btn-gold hidden px-6 py-3 text-sm font-bold whitespace-nowrap md:inline-block"
+            className="btn-gold hidden px-6 py-3 whitespace-nowrap md:inline-block"
           >
             {cta.label}
           </Link>
@@ -169,7 +169,7 @@ export function HeaderBar({ locale, items, secondary, homeHref, cta, labels, log
             <Link
               href={cta.href}
               onClick={closeMenu}
-              className="btn-gold block px-6 py-4 text-center text-base font-bold"
+              className="btn-gold block px-6 py-4 text-center"
             >
               {cta.label}
             </Link>

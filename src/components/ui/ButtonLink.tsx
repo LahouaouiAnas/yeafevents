@@ -4,9 +4,9 @@ import type { ComponentProps } from "react";
 type Variant = "solid" | "outline" | "text";
 
 const variants: Record<Variant, string> = {
-  solid: "btn-gold px-8 py-4 text-base font-bold",
-  outline: "rounded-full border border-ivory/30 px-8 py-4 text-base font-bold text-ivory hover:border-champagne hover:text-gold-soft",
-  text: "text-gold-soft font-bold",
+  solid: "btn-gold px-8 py-4 whitespace-nowrap",
+  outline: "btn-line px-8 py-4 whitespace-nowrap",
+  text: "text-gold-soft font-medium",
 };
 
 const textLabel =
