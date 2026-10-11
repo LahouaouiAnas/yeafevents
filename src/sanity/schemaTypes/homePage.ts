@@ -4,16 +4,6 @@ import { defineArrayMember, defineField, defineType } from "sanity";
  * The home page: one document with a fixed ID (`homePage`), created by the site itself.
  * Every field is optional: an empty one keeps the text or photo the site shipped with.
  */
-const heroSlides = [
-  { name: "experience", title: "Diapositive 1 : l'expérience Yeaf (avec vidéo)" },
-  { name: "wedding", title: "Diapositive 2 : Mariages" },
-  { name: "privateParty", title: "Diapositive 3 : Soirées privées" },
-  { name: "festival", title: "Diapositive 4 : Festivals" },
-  { name: "seminar", title: "Diapositive 5 : Séminaires" },
-] as const;
-
-export const heroSlideKeys = heroSlides.map((slide) => slide.name);
-
 export const homePage = defineType({
   name: "homePage",
   title: "Page d'accueil",
@@ -28,19 +18,11 @@ export const homePage = defineType({
     { name: "seo", title: "Google" },
   ],
   fields: [
-    defineField({ name: "heroKicker", title: "Sous-titre (au-dessus du titre)", type: "localeString", group: "hero" }),
-    defineField({ name: "heroTitle", title: "Grand titre", type: "localeString", group: "hero" }),
-    defineField({ name: "heroPlace", title: "Lieu (ex. « Marrakech • Maroc »)", type: "localeString", group: "hero" }),
-    defineField({
-      name: "heroPhotos",
-      title: "Photos du diaporama",
-      description:
-        "Laissez une case vide pour garder la photo actuelle. Une photo ajoutée remplace aussi la vidéo de cette diapositive.",
-      type: "object",
-      group: "hero",
-      options: { collapsible: true, collapsed: false },
-      fields: heroSlides.map((slide) => defineField({ name: slide.name, title: slide.title, type: "localizedImage" })),
-    }),
+    defineField({ name: "heroTitle", title: "Grand titre (1re ligne)", type: "localeString", group: "hero" }),
+    defineField({ name: "heroAccent", title: "Grand titre (2e ligne, en italique doré)", type: "localeString", group: "hero" }),
+    defineField({ name: "heroKicker", title: "Sous-titre (en italique)", type: "localeString", group: "hero" }),
+    defineField({ name: "heroText", title: "Texte de présentation", type: "localeText", group: "hero" }),
+    defineField({ name: "heroPhoto", title: "Photo (en arche, au centre)", type: "localizedImage", group: "hero" }),
 
     defineField({ name: "introEyebrow", title: "Petit titre", type: "localeString", group: "intro" }),
     defineField({ name: "introText", title: "Texte principal", type: "localeText", group: "intro" }),

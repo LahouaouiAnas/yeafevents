@@ -51,7 +51,9 @@ export const fr = {
     hero: {
       brand: "Yeaf Events",
       kicker: "Agence événementielle à Marrakech & au Maroc",
-      title: "Des moments élégants, intemporels et inoubliables.",
+      title: "Des moments élégants,",
+      accent: "intemporels et inoubliables.",
+      text: "Mariages, soirées privées, anniversaires, festivals et séminaires : nous imaginons et orchestrons vos événements sur mesure, à Marrakech et partout au Maroc.",
       place: "Marrakech • Maroc",
       carousel: {
         carousel: "carrousel",
@@ -117,6 +119,15 @@ export const fr = {
   },
   category: {
     galleryTitle: "En images",
+    pricing: {
+      from: "dès",
+      approx: "≈",
+      included: "Ce qui est inclus",
+      itemColumn: "Inclus",
+      detailColumn: "Détail",
+      featured: "La plus demandée",
+      quote: "Demander mon devis",
+    },
     includesTitle: "Ce que nous prenons en charge",
     occasionsTitle: "Pour quelles occasions",
     relatedServices: "Nos savoir-faire associés",

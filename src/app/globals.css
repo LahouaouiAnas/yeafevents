@@ -1,20 +1,22 @@
 @import "tailwindcss";
 
 @theme {
-  /* Warm blacks dominate; ivory carries the text; champagne is a rare, quiet accent. */
-  --color-night: #0a0908;
-  --color-coal: #12100e;
-  --color-graphite: #1d1a17;
-  --color-ivory: #f2ede5;
-  --color-stone: #a9a198;
-  --color-champagne: #c4b08b;
+  /* Deep plum-black grounds, cream text, and the gold of the logo as the single accent. */
+  --color-night: #170e11;
+  --color-coal: #1f1418;
+  --color-graphite: #2b1d22;
+  --color-ivory: #f6ecdd;
+  --color-stone: #cdbcab;
+  --color-champagne: #d9a94e;
+  /* Lighter gold for italic accents and prices on dark grounds. */
+  --color-gold-soft: #efc77a;
 
   --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @theme inline {
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-cormorant), ui-serif, Georgia, serif;
+  --font-sans: var(--font-karla), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
 }
 
 @layer base {
@@ -34,6 +36,8 @@
     background-color: var(--color-night);
     color: var(--color-ivory);
     font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.7;
     text-rendering: optimizeLegibility;
   }
 
@@ -50,18 +54,36 @@
 
 @layer components {
   .eyebrow {
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.28em;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.24em;
     text-transform: uppercase;
+  }
+
+  /* Gold pill button with a soft glow (primary actions). */
+  .btn-gold {
+    border-radius: 9999px;
+    background-color: var(--color-champagne);
+    color: var(--color-night);
+    box-shadow: 0 14px 40px -14px rgb(217 169 78 / 0.75);
+    transition:
+      background-color 0.4s,
+      box-shadow 0.4s,
+      transform 0.4s;
+  }
+
+  .btn-gold:hover {
+    background-color: var(--color-gold-soft);
+    box-shadow: 0 18px 50px -12px rgb(239 199 122 / 0.8);
+    transform: translateY(-1px);
   }
 
   /* Fallback surface when no real media exists yet (never a fake photo). */
   .media-fallback {
     background-color: var(--color-graphite);
     background-image:
-      radial-gradient(90% 70% at 70% 20%, rgb(196 176 139 / 0.12), transparent 65%),
-      linear-gradient(160deg, #1d1a17, #0a0908);
+      radial-gradient(90% 70% at 70% 20%, rgb(217 169 78 / 0.12), transparent 65%),
+      linear-gradient(160deg, #2b1d22, #170e11);
   }
 }
 

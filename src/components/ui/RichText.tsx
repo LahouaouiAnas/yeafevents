@@ -8,7 +8,7 @@ export function RichText({ blocks }: { blocks: RichTextBlock[] }) {
         switch (block.type) {
           case "heading":
             return (
-              <h2 key={index} className="pt-6 font-display text-3xl font-light text-ivory">
+              <h2 key={index} className="pt-6 font-display text-3xl font-normal text-ivory">
                 {block.text}
               </h2>
             );

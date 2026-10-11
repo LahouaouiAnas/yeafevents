@@ -15,8 +15,8 @@ export default function GlobalNotFound() {
       <body className="bg-night text-ivory">
         <main className="mx-auto flex min-h-svh max-w-4xl flex-col justify-center px-5 sm:px-8">
           <p className="eyebrow text-champagne">404</p>
-          <h1 className="mt-6 font-display text-5xl font-light sm:text-6xl">Page introuvable</h1>
-          <p lang="en" className="mt-3 font-display text-2xl font-light text-ivory/60">
+          <h1 className="mt-6 font-display text-5xl font-normal sm:text-6xl">Page introuvable</h1>
+          <p lang="en" className="mt-3 font-display text-2xl font-normal text-ivory/60">
             Page not found
           </p>
           <ul className="mt-12 flex gap-8 text-sm">

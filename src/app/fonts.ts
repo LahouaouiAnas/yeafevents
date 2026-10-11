@@ -1,17 +1,19 @@
-import { Cormorant_Garamond, Inter } from "next/font/google";
+import { Fraunces, Karla } from "next/font/google";
 
-export const inter = Inter({
+/** Body text: a warm, very legible grotesque. */
+export const karla = Karla({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-karla",
   display: "swap",
 });
 
-export const cormorant = Cormorant_Garamond({
+/** Titles and prices: a soft, high-contrast serif with a lively italic for accents. */
+export const fraunces = Fraunces({
   subsets: ["latin"],
-  weight: ["300", "400", "500"],
   style: ["normal", "italic"],
-  variable: "--font-cormorant",
+  axes: ["opsz", "SOFT"],
+  variable: "--font-fraunces",
   display: "swap",
 });
 
-export const fontVariables = `${inter.variable} ${cormorant.variable}`;
+export const fontVariables = `${karla.variable} ${fraunces.variable}`;

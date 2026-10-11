@@ -94,7 +94,17 @@ export const categoriesQuery = (l: Locale) => `
     "gallery": gallery[defined(asset)]${image(l)},
     "seoTitle": seoTitle.${l},
     "seoDescription": seoDescription.${l},
-    "serviceType": serviceType.${l}
+    "serviceType": serviceType.${l},
+    "pricingTitle": pricingTitle.${l},
+    "pricingNote": pricingNote.${l},
+    "formulas": formulas[]{
+      "name": name.${l},
+      "audience": audience.${l},
+      priceEur,
+      priceMad,
+      featured,
+      "inclusions": inclusions[]{ "label": label.${l}, "detail": detail.${l} }
+    }
   }
 `;
 
@@ -103,14 +113,9 @@ export const homeQuery = (l: Locale) => `
   *[_id == "homePage"][0] {
     "heroKicker": heroKicker.${l},
     "heroTitle": heroTitle.${l},
-    "heroPlace": heroPlace.${l},
-    "heroPhotos": {
-      "experience": select(defined(heroPhotos.experience.asset) => heroPhotos.experience${image(l)}),
-      "wedding": select(defined(heroPhotos.wedding.asset) => heroPhotos.wedding${image(l)}),
-      "privateParty": select(defined(heroPhotos.privateParty.asset) => heroPhotos.privateParty${image(l)}),
-      "festival": select(defined(heroPhotos.festival.asset) => heroPhotos.festival${image(l)}),
-      "seminar": select(defined(heroPhotos.seminar.asset) => heroPhotos.seminar${image(l)})
-    },
+    "heroAccent": heroAccent.${l},
+    "heroText": heroText.${l},
+    "heroPhoto": select(defined(heroPhoto.asset) => heroPhoto${image(l)}),
     "introEyebrow": introEyebrow.${l},
     "introText": introText.${l},
     "introNote": introNote.${l},

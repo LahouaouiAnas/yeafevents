@@ -48,7 +48,7 @@ export function QuoteForm({ locale, labels, eventTypes }: QuoteFormProps) {
 
   if (state.status === "success") {
     return (
-      <p role="status" className="max-w-xl border-l border-champagne pl-6 font-display text-2xl leading-snug font-light text-ivory">
+      <p role="status" className="max-w-xl border-l border-champagne pl-6 font-display text-2xl leading-snug font-normal text-ivory">
         {labels.success}
       </p>
     );

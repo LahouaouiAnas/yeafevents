@@ -13,6 +13,7 @@ export const eventCategory = defineType({
   type: "document",
   groups: [
     { name: "text", title: "Textes", default: true },
+    { name: "pricing", title: "Formules & prix" },
     { name: "media", title: "Photos" },
     { name: "seo", title: "Google" },
   ],
@@ -46,6 +47,66 @@ export const eventCategory = defineType({
       of: [defineArrayMember({ type: "string" })],
       options: { list: serviceOptions },
       group: "text",
+    }),
+    defineField({
+      name: "pricingTitle",
+      title: "Titre de la section",
+      description: "Ex. « Nos 3 formules de mariage tout compris ». La section n'apparaît que si au moins une formule est remplie.",
+      type: "localeString",
+      group: "pricing",
+    }),
+    defineField({
+      name: "pricingNote",
+      title: "Texte d'introduction",
+      description: "Ex. « Prix de départ, hors vols et hébergement des invités. Chaque devis est ensuite ajusté. »",
+      type: "localeText",
+      group: "pricing",
+    }),
+    defineField({
+      name: "formulas",
+      title: "Formules",
+      type: "array",
+      group: "pricing",
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "formula",
+          fields: [
+            defineField({ name: "name", title: "Nom (ex. « Formule Signature »)", type: "localeString" }),
+            defineField({
+              name: "audience",
+              title: "Pour qui (ex. « Pour 100 à 150 invités. Notre formule la plus demandée. »)",
+              type: "localeText",
+            }),
+            defineField({ name: "priceEur", title: "Prix de départ en €", type: "number", validation: (rule) => rule.min(0) }),
+            defineField({ name: "priceMad", title: "Prix de départ en MAD", type: "number", validation: (rule) => rule.min(0) }),
+            defineField({ name: "featured", title: "Mettre en avant (la plus demandée)", type: "boolean", initialValue: false }),
+            defineField({
+              name: "inclusions",
+              title: "Ce qui est inclus",
+              type: "array",
+              of: [
+                defineArrayMember({
+                  type: "object",
+                  name: "inclusion",
+                  fields: [
+                    defineField({ name: "label", title: "Poste (ex. « Lieu », « Traiteur »)", type: "localeString" }),
+                    defineField({ name: "detail", title: "Détail", type: "localeText" }),
+                  ],
+                  preview: { select: { title: "label.fr", subtitle: "detail.fr" } },
+                }),
+              ],
+            }),
+          ],
+          preview: {
+            select: { title: "name.fr", eur: "priceEur", mad: "priceMad" },
+            prepare: ({ title, eur, mad }) => ({
+              title: title ?? "Formule",
+              subtitle: [eur ? `dès ${eur} €` : null, mad ? `${mad} MAD` : null].filter(Boolean).join(" · "),
+            }),
+          },
+        }),
+      ],
     }),
     defineField({
       name: "image",

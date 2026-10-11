@@ -51,15 +51,15 @@ export function ShowcaseFeature({ item, index, related, playLabel }: ShowcaseFea
 
         <div className={`lg:self-center ${flipped ? layout.textFlipped : layout.text}`}>
           <p className="font-display text-lg text-ivory/40">{String(index + 1).padStart(2, "0")}</p>
-          <p className="mt-5 eyebrow text-ivory/50">{item.label}</p>
-          <h2 className="mt-4 font-display text-4xl leading-tight font-light sm:text-5xl">{item.title}</h2>
+          <p className="mt-5 eyebrow text-champagne">{item.label}</p>
+          <h2 className="mt-4 font-display text-4xl leading-tight font-normal sm:text-5xl">{item.title}</h2>
           <p className="mt-5 leading-relaxed text-stone">{item.description}</p>
           {related && (
             <div className="mt-8">
-              <p className="eyebrow text-ivory/50">{related.label}</p>
+              <p className="eyebrow text-champagne">{related.label}</p>
               <Link
                 href={related.href}
-                className="mt-3 inline-block font-display text-2xl font-light underline decoration-ivory/30 underline-offset-8 hover:decoration-champagne"
+                className="mt-3 inline-block font-display text-2xl font-normal underline decoration-ivory/30 underline-offset-8 hover:decoration-champagne"
               >
                 {related.title}
               </Link>

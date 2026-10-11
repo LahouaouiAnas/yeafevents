@@ -1,5 +1,5 @@
 import type { Locale } from "@/i18n/config";
-import type { BlogPost, EventCategory, ImageAsset, Project, RichTextBlock, SeoFields, Testimonial } from "@/lib/content/types";
+import type { BlogPost, EventCategory, ImageAsset, PricingFormula, Project, RichTextBlock, SeoFields, Testimonial } from "@/lib/content/types";
 import type { CategoryKey, ServiceKey } from "@/lib/routes";
 import { categoryKeys, serviceKeys } from "@/lib/routes";
 import { sanityImageUrl, type SanityImage } from "./sanity";
@@ -168,7 +168,36 @@ export type RawCategory = {
   seoTitle?: string | null;
   seoDescription?: string | null;
   serviceType?: string | null;
+  pricingTitle?: string | null;
+  pricingNote?: string | null;
+  formulas?:
+    | {
+        name?: string | null;
+        audience?: string | null;
+        priceEur?: number | null;
+        priceMad?: number | null;
+        featured?: boolean | null;
+        inclusions?: { label?: string | null; detail?: string | null }[] | null;
+      }[]
+    | null;
 };
+
+/** Formulas with a name and at least one price; anything incomplete stays off the site. */
+function toFormulas(raw: RawCategory["formulas"]): PricingFormula[] {
+  const price = (value: number | null | undefined) => (typeof value === "number" && value > 0 ? value : undefined);
+  return (raw ?? [])
+    .map((formula) => ({
+      name: formula.name?.trim() ?? "",
+      audience: formula.audience?.trim() || undefined,
+      priceEur: price(formula.priceEur),
+      priceMad: price(formula.priceMad),
+      featured: formula.featured ?? false,
+      inclusions: (formula.inclusions ?? [])
+        .map((row) => ({ label: row.label?.trim() ?? "", detail: row.detail?.trim() ?? "" }))
+        .filter((row) => row.label && row.detail),
+    }))
+    .filter((formula) => formula.name && (formula.priceEur || formula.priceMad));
+}
 
 /** Edited text wins; an empty field keeps the text the site shipped with, so a page never breaks. */
 const pick = (value: string | null | undefined, fallback: string) => (value?.trim() ? value.trim() : fallback);
@@ -200,7 +229,14 @@ export function mergeCategory(base: EventCategory, raw: RawCategory | undefined)
       ? raw.gallery.map((image) => toImage(image, label)).filter((image): image is ImageAsset => Boolean(image))
       : base.gallery,
     seo: { title: pick(raw.seoTitle, base.seo.title), description: pick(raw.seoDescription, base.seo.description) },
+    pricing: pricingOf(raw, label),
   };
+}
+
+function pricingOf(raw: RawCategory, label: string): EventCategory["pricing"] {
+  const formulas = toFormulas(raw.formulas);
+  if (formulas.length === 0) return undefined;
+  return { title: raw.pricingTitle?.trim() || label, note: raw.pricingNote?.trim() || undefined, formulas };
 }
 
 type Text = string | null | undefined;
@@ -208,8 +244,9 @@ type Text = string | null | undefined;
 export type RawHome = {
   heroKicker?: Text;
   heroTitle?: Text;
-  heroPlace?: Text;
-  heroPhotos?: Partial<Record<string, SanityImage | null>> | null;
+  heroAccent?: Text;
+  heroText?: Text;
+  heroPhoto?: SanityImage | null;
   introEyebrow?: Text;
   introText?: Text;
   introNote?: Text;
@@ -233,7 +270,7 @@ export type RawHome = {
 /** Home page content as the view uses it; `moments` is only set when edited in Sanity. */
 export type HomeContent = {
   seo: { title: string; description: string };
-  hero: { kicker: string; title: string; place: string; photos: Partial<Record<string, ImageAsset>> };
+  hero: { kicker: string; title: string; accent: string; text: string; photo: ImageAsset };
   intro: { eyebrow: string; text: string; note: string; photo: ImageAsset };
   worlds: { eyebrow: string; title: string };
   moments: { eyebrow: string; title: string; items?: { image: ImageAsset; caption: string }[] };
@@ -243,11 +280,6 @@ export type HomeContent = {
 
 export function mergeHome(base: HomeContent, raw: RawHome | null | undefined): HomeContent {
   if (!raw) return base;
-  const photos = Object.fromEntries(
-    Object.entries(raw.heroPhotos ?? {})
-      .map(([key, image]) => [key, toImage(image, base.hero.title)] as const)
-      .filter((entry): entry is readonly [string, ImageAsset] => Boolean(entry[1])),
-  );
   const moments = (raw.moments ?? [])
     .map((item) => {
       const image = toImage(item.photo, item.caption ?? "");
@@ -265,8 +297,9 @@ export function mergeHome(base: HomeContent, raw: RawHome | null | undefined): H
     hero: {
       kicker: pick(raw.heroKicker, base.hero.kicker),
       title: pick(raw.heroTitle, base.hero.title),
-      place: pick(raw.heroPlace, base.hero.place),
-      photos,
+      accent: pick(raw.heroAccent, base.hero.accent),
+      text: pick(raw.heroText, base.hero.text),
+      photo: toImage(raw.heroPhoto, base.hero.photo.alt) ?? base.hero.photo,
     },
     intro: {
       eyebrow: pick(raw.introEyebrow, base.intro.eyebrow),

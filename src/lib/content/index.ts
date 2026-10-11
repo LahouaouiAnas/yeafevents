@@ -101,7 +101,13 @@ export function getDefaultHomeContent(locale: Locale): HomeContent {
   const t = getDictionary(locale).home;
   return {
     seo: t.seo,
-    hero: { kicker: t.hero.kicker, title: t.hero.title, place: t.hero.place, photos: {} },
+    hero: {
+      kicker: t.hero.kicker,
+      title: t.hero.title,
+      accent: t.hero.accent,
+      text: t.hero.text,
+      photo: getImage("poolNight", locale),
+    },
     intro: { eyebrow: t.intro.eyebrow, text: t.intro.text, note: t.intro.note, photo: getImage("lightCanopyTable", locale) },
     worlds: { eyebrow: t.categories.eyebrow, title: t.categories.title },
     moments: { eyebrow: t.moments.eyebrow, title: t.moments.title },

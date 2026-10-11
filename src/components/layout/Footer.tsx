@@ -37,7 +37,7 @@ export async function Footer({ locale }: { locale: Locale }) {
         </div>
 
         <nav aria-label={dict.footer.events}>
-          <h2 className="eyebrow text-ivory/50">{dict.footer.events}</h2>
+          <h2 className="eyebrow text-champagne">{dict.footer.events}</h2>
           <ul className="mt-5 space-y-1 text-sm">
             {categories.map((category) => (
               <li key={category.key}>
@@ -50,7 +50,7 @@ export async function Footer({ locale }: { locale: Locale }) {
         </nav>
 
         <nav aria-label={dict.footer.agency}>
-          <h2 className="eyebrow text-ivory/50">{dict.footer.agency}</h2>
+          <h2 className="eyebrow text-champagne">{dict.footer.agency}</h2>
           <ul className="mt-5 space-y-1 text-sm">
             {agency.map((item) => (
               <li key={item.href}>
@@ -63,7 +63,7 @@ export async function Footer({ locale }: { locale: Locale }) {
         </nav>
 
         <div>
-          <h2 className="eyebrow text-ivory/50">{dict.footer.contact}</h2>
+          <h2 className="eyebrow text-champagne">{dict.footer.contact}</h2>
           <ul className="mt-5 space-y-1 text-sm">
             <li>
               <Link href={routePath("contact", locale)} className={linkClass}>

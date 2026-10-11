@@ -15,7 +15,7 @@ export default async function NotFound() {
     <section className="bg-night">
       <Container className="flex min-h-[80svh] flex-col justify-center py-40">
         <p className="eyebrow text-champagne">404</p>
-        <h1 className="mt-6 max-w-3xl font-display text-5xl font-light sm:text-7xl">{dict.notFound.title}</h1>
+        <h1 className="mt-6 max-w-3xl font-display text-5xl font-normal sm:text-7xl">{dict.notFound.title}</h1>
         <p className="mt-6 text-lg text-stone">{dict.notFound.text}</p>
         <div className="mt-12 flex flex-col gap-4 sm:flex-row">
           <ButtonLink href={routePath("home", locale)}>{dict.notFound.back}</ButtonLink>

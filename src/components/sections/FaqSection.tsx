@@ -23,7 +23,7 @@ export function FaqSection({ eyebrow, title, items, structuredData = true }: Faq
         <div className="border-t border-ivory/10">
           {items.map((item) => (
             <details key={item.question} className="group border-b border-ivory/10">
-              <summary className="flex cursor-pointer list-none items-start justify-between gap-6 py-7 font-display text-2xl font-light [&::-webkit-details-marker]:hidden">
+              <summary className="flex cursor-pointer list-none items-start justify-between gap-6 py-7 font-display text-2xl font-normal [&::-webkit-details-marker]:hidden">
                 <h3>{item.question}</h3>
                 <span aria-hidden="true" className="mt-1 text-champagne transition-transform duration-300 group-open:rotate-45">
                   +

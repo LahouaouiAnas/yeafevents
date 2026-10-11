@@ -54,7 +54,7 @@ export async function MoroccoView({ locale }: { locale: Locale }) {
               // Marrakech links to its dedicated page; other cities get one only once they have unique content.
               <li className="bg-coal sm:col-span-2 lg:col-span-1">
                 <Link href={routePath("marrakech", locale)} className="group block h-full p-8 sm:p-10">
-                  <h3 className="font-display text-3xl font-light">{marrakech.name}</h3>
+                  <h3 className="font-display text-3xl font-normal">{marrakech.name}</h3>
                   <p className="mt-3 leading-relaxed text-stone">{marrakech.text}</p>
                   <span className="mt-8 inline-flex items-center gap-3 text-xs tracking-[0.18em] uppercase">
                     <span className="underline decoration-ivory/30 underline-offset-[10px] group-hover:decoration-champagne">
@@ -67,7 +67,7 @@ export async function MoroccoView({ locale }: { locale: Locale }) {
             )}
             {otherRegions.map((region) => (
               <li key={region.name} className="reveal bg-night p-8 sm:p-10">
-                <h3 className="font-display text-3xl font-light">{region.name}</h3>
+                <h3 className="font-display text-3xl font-normal">{region.name}</h3>
                 <p className="mt-3 leading-relaxed text-stone">{region.text}</p>
               </li>
             ))}
