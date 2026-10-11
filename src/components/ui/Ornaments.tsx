@@ -96,7 +96,7 @@ export function Marquee({ items, label }: { items: string[]; label: string }) {
     <ul aria-hidden={hidden || undefined} className="flex shrink-0 items-center">
       {items.map((item) => (
         <li key={item} className="flex items-center">
-          <span className="px-8 font-display text-4xl font-light whitespace-nowrap text-ivory/80 italic sm:px-12 sm:text-6xl">
+          <span className="px-8 font-display text-4xl font-normal whitespace-nowrap text-ivory/80 italic sm:px-12 sm:text-6xl">
             {item}
           </span>
           <StarMark className="size-6 shrink-0 opacity-60 sm:size-8" />
@@ -112,5 +112,30 @@ export function Marquee({ items, label }: { items: string[]; label: string }) {
         {row(true)}
       </div>
     </div>
+  );
+}
+
+/** Fine gold wavy line with a dot at its crest, drawn under titles. */
+export function Wave({ className = "" }: { className?: string }) {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 240 24" className={`h-6 w-48 text-champagne sm:w-60 ${className}`} fill="none">
+      <path
+        d="M2 14 C 22 4, 38 4, 58 12 S 98 22, 120 12 S 162 2, 182 12 S 218 20, 238 8"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+      />
+      <circle cx="120" cy="12" r="2" fill="currentColor" />
+    </svg>
+  );
+}
+
+/** Solid eight-pointed star, used as a bullet. */
+export function StarBullet({ className = "" }: { className?: string }) {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 100 100" className={`text-gold-soft ${className}`} fill="currentColor">
+      <path d={SQUARE_A} />
+      <path d={SQUARE_B} />
+    </svg>
   );
 }

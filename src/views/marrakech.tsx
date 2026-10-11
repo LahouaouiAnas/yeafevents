@@ -74,7 +74,7 @@ export async function MarrakechView({ locale }: { locale: Locale }) {
             {t.venues.items.map((venue, index) => (
               <li key={venue.name} className="reveal bg-night p-8 sm:p-10">
                 <span className="font-display text-lg text-ivory/40">{String(index + 1).padStart(2, "0")}</span>
-                <h3 className="mt-5 font-display text-3xl font-light">{venue.name}</h3>
+                <h3 className="mt-5 font-display text-3xl font-normal">{venue.name}</h3>
                 <p className="mt-3 max-w-md leading-relaxed text-stone">{venue.text}</p>
               </li>
             ))}

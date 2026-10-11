@@ -113,17 +113,17 @@ export async function ServiceView({ service, locale }: { service: Service; local
       <section className="border-t border-ivory/10 py-20 sm:py-28">
         <Container className="grid gap-14 lg:grid-cols-12 lg:gap-8">
           <div className="lg:col-span-6">
-            <h2 className="font-display text-4xl font-light sm:text-5xl">{t.includesTitle}</h2>
+            <h2 className="font-display text-4xl font-normal sm:text-5xl">{t.includesTitle}</h2>
             <ul className="mt-10 border-t border-ivory/10">
               {service.includes.map((item) => (
-                <li key={item} className="border-b border-ivory/10 py-4 font-display text-xl font-light sm:text-2xl">
+                <li key={item} className="border-b border-ivory/10 py-4 font-display text-xl font-normal sm:text-2xl">
                   {item}
                 </li>
               ))}
             </ul>
           </div>
           <div className="lg:col-span-5 lg:col-start-8">
-            <h2 className="eyebrow text-ivory/50">{t.occasionsTitle}</h2>
+            <h2 className="eyebrow text-champagne">{t.occasionsTitle}</h2>
             <ul className="mt-6 flex flex-wrap gap-3">
               {service.occasions.map((occasion) => (
                 <li key={occasion} className="border border-ivory/20 px-4 py-2 text-sm text-ivory/85">

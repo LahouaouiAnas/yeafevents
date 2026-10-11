@@ -23,7 +23,7 @@ export function CtaBanner({ title, text, primary, secondary, image }: CtaBannerP
         </>
       )}
       <Container className={`grid gap-10 py-20 sm:py-28 lg:grid-cols-12 lg:items-end lg:gap-8 ${image ? "sm:pt-48" : ""}`}>
-        <h2 className="font-display text-4xl leading-[1.04] font-light text-balance sm:text-6xl lg:col-span-7">{title}</h2>
+        <h2 className="font-display text-4xl leading-[1.04] font-normal text-balance sm:text-6xl lg:col-span-7">{title}</h2>
         <div className="lg:col-span-4 lg:col-start-9">
           <p className={`leading-relaxed ${image ? "text-ivory/80" : "text-stone"}`}>{text}</p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row lg:flex-col xl:flex-row">

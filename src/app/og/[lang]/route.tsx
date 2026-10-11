@@ -25,15 +25,15 @@ export async function GET(_request: Request, { params }: RouteContext<"/og/[lang
           flexDirection: "column",
           justifyContent: "space-between",
           padding: "72px 80px",
-          color: "#f6f1ea",
-          backgroundColor: "#100e0c",
+          color: "#f6ecdd",
+          backgroundColor: "#170e11",
           backgroundImage:
             "radial-gradient(circle at 80% 15%, rgba(217,140,84,0.45), transparent 55%), radial-gradient(circle at 10% 95%, rgba(163,80,47,0.55), transparent 60%)",
         }}
       >
         <div style={{ display: "flex", alignItems: "baseline", gap: 16 }}>
           <span style={{ fontSize: 64, fontFamily: "serif" }}>Yeaf</span>
-          <span style={{ fontSize: 22, letterSpacing: 8, textTransform: "uppercase", color: "#d9bb88" }}>Events</span>
+          <span style={{ fontSize: 22, letterSpacing: 8, textTransform: "uppercase", color: "#d9a94e" }}>Events</span>
         </div>
         <div style={{ display: "flex", fontSize: 68, lineHeight: 1.05, fontFamily: "serif", maxWidth: 980 }}>
           {hero.title}

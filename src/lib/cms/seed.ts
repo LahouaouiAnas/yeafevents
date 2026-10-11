@@ -59,6 +59,7 @@ export async function seedSanity(): Promise<void> {
   await seedEventCategories(client, imageField);
   await renameFrenchPrivateParty(client);
   await seedHomePage(client, imageField);
+  await upgradeHomeHero(client, imageField);
   await seedBlogDrafts(client, imageField);
 }
 
@@ -204,8 +205,6 @@ async function seedBlogDrafts(client: Client, imageField: ImageField): Promise<v
 
 /**
  * First import of the home page (fixed ID `homePage`) with its shipped texts and photos.
- * The slideshow photos are left empty on purpose: the shipped slides (with their mobile
- * crops and video) stay until a photo is chosen in the Studio.
  */
 async function seedHomePage(client: Client, imageField: ImageField): Promise<void> {
   const exists = await client.fetch<string | null>(`*[_id == "homePage"][0]._id`);
@@ -242,7 +241,9 @@ async function seedHomePage(client: Client, imageField: ImageField): Promise<voi
     _type: "homePage",
     heroKicker: text("localeString", (h) => h.hero.kicker),
     heroTitle: text("localeString", (h) => h.hero.title),
-    heroPlace: text("localeString", (h) => h.hero.place),
+    heroAccent: text("localeString", (h) => h.hero.accent),
+    heroText: text("localeText", (h) => h.hero.text),
+    heroPhoto: await imageField("poolNight"),
     introEyebrow: text("localeString", (h) => h.intro.eyebrow),
     introText: text("localeText", (h) => h.intro.text),
     introNote: text("localeText", (h) => h.intro.note),
@@ -275,4 +276,54 @@ async function seedHomePage(client: Client, imageField: ImageField): Promise<voi
     seoDescription: text("localeText", (h) => h.seo.description),
   });
   console.log("[seed] home page imported into Sanity");
+}
+
+/** Shipped one-line hero titles, before the title was split into a line and a gold accent. */
+const formerHeroTitles: Record<Locale, string> = {
+  fr: "Des moments élégants, intemporels et inoubliables.",
+  en: "Elegant, timeless and unforgettable moments.",
+};
+
+/**
+ * The home hero changed from a slideshow to a single arched photo with a two-line title.
+ * Upgrades a home page imported before that: splits the title where it is still the shipped
+ * one (an edited title is kept), fills the new fields only when missing, and drops the
+ * slideshow fields. Runs once: nothing to do when `heroPlace` and `heroPhotos` are gone.
+ */
+async function upgradeHomeHero(client: Client, imageField: ImageField): Promise<void> {
+  const home = await client.fetch<{
+    heroTitle?: Partial<Record<Locale, string>>;
+    heroAccent?: unknown;
+    heroText?: unknown;
+    heroPhoto?: unknown;
+    legacy: boolean;
+  } | null>(`*[_id == "homePage"][0]{ heroTitle, heroAccent, heroText, heroPhoto, "legacy": defined(heroPlace) || defined(heroPhotos) }`);
+  if (!home?.legacy) return;
+
+  // Whole objects are written (not `heroTitle.fr` paths), so missing parents are never an issue.
+  const set: Record<string, unknown> = {};
+  const title: Record<string, unknown> = { _type: "localeString", ...home.heroTitle };
+  const accent: Record<string, unknown> = { _type: "localeString", ...(home.heroAccent as object | undefined) };
+  let split = false;
+  for (const locale of locales) {
+    const hero = getDictionary(locale).home.hero;
+    if (home.heroTitle?.[locale] === formerHeroTitles[locale]) {
+      title[locale] = hero.title;
+      accent[locale] = hero.accent;
+      split = true;
+    }
+  }
+  if (split) {
+    set.heroTitle = title;
+    set.heroAccent = accent;
+  }
+  if (!home.heroText) {
+    set.heroText = { _type: "localeText", ...Object.fromEntries(locales.map((l) => [l, getDictionary(l).home.hero.text])) };
+  }
+  if (!home.heroPhoto) {
+    const photo = await imageField("poolNight");
+    if (photo) set.heroPhoto = photo;
+  }
+  await client.patch("homePage").set(set).unset(["heroPlace", "heroPhotos"]).commit();
+  console.log("[seed] home hero upgraded to the arched layout");
 }

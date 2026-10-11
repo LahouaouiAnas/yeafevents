@@ -134,7 +134,7 @@ export async function ProjectView({ project, locale }: { project: Project; local
             {facts.map((fact) => (
               <div key={fact.label}>
                 <dt className="eyebrow text-stone">{fact.label}</dt>
-                <dd className="mt-2 font-display text-2xl font-light">{fact.value}</dd>
+                <dd className="mt-2 font-display text-2xl font-normal">{fact.value}</dd>
               </div>
             ))}
           </dl>

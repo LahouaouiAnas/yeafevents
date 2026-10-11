@@ -17,7 +17,7 @@ export function ProjectCard({ project, locale, headingLevel: Heading = "h3" }: {
         {project.city}
         {project.venue ? ` · ${project.venue}` : ""}
       </p>
-      <Heading className="mt-3 font-display text-3xl font-light">{project.title}</Heading>
+      <Heading className="mt-3 font-display text-3xl font-normal">{project.title}</Heading>
       <p className="mt-3 leading-relaxed text-stone">{project.excerpt}</p>
     </Link>
   );

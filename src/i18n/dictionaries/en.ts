@@ -53,7 +53,9 @@ export const en: Dictionary = {
     hero: {
       brand: "Yeaf Events",
       kicker: "Event agency in Marrakech & across Morocco",
-      title: "Elegant, timeless and unforgettable moments.",
+      title: "Elegant, timeless",
+      accent: "and unforgettable moments.",
+      text: "Weddings, private parties, birthdays, festivals and seminars: we design and orchestrate bespoke events in Marrakech and across Morocco.",
       place: "Marrakech • Morocco",
       carousel: {
         carousel: "carousel",
@@ -119,6 +121,15 @@ export const en: Dictionary = {
   },
   category: {
     galleryTitle: "In pictures",
+    pricing: {
+      from: "from",
+      approx: "≈",
+      included: "What's included",
+      itemColumn: "Included",
+      detailColumn: "Details",
+      featured: "Most requested",
+      quote: "Request my quote",
+    },
     includesTitle: "What we take care of",
     occasionsTitle: "Occasions",
     relatedServices: "Related expertise",

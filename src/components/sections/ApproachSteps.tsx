@@ -19,8 +19,8 @@ export function ApproachSteps({ eyebrow, title, lead, steps, image }: ApproachSt
       <StarMark spin className="pointer-events-none absolute -top-56 -right-56 -z-10 size-[34rem] opacity-[0.07] sm:-top-72 sm:-right-72 sm:size-[46rem]" />
       <Container className="grid gap-12 lg:grid-cols-12 lg:gap-8">
         <div className="lg:col-span-4">
-          <p className="eyebrow text-ivory/50">{eyebrow}</p>
-          <h2 className="mt-5 font-display text-4xl leading-[1.08] font-light text-balance sm:text-5xl">{title}</h2>
+          <p className="eyebrow text-champagne">{eyebrow}</p>
+          <h2 className="mt-5 font-display text-4xl leading-[1.08] font-normal text-balance sm:text-5xl">{title}</h2>
           {lead && <p className="mt-5 leading-relaxed text-stone">{lead}</p>}
           {image && (
             <ArchFrame className="reveal mx-auto mt-12 w-full max-w-xs sm:max-w-sm lg:mx-0 lg:max-w-none">
@@ -32,7 +32,7 @@ export function ApproachSteps({ eyebrow, title, lead, steps, image }: ApproachSt
           {steps.map((step, index) => (
             <li key={step.title} className="reveal border-t border-ivory/15 pt-6">
               <span className="font-display text-lg text-champagne">{String(index + 1).padStart(2, "0")}</span>
-              <h3 className="mt-3 font-display text-2xl font-light">{step.title}</h3>
+              <h3 className="mt-3 font-display text-2xl font-normal">{step.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-stone">{step.text}</p>
             </li>
           ))}

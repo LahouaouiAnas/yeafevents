@@ -18,7 +18,7 @@ export function SectionHeading({ id, eyebrow, title, lead, as: Heading = "h2", a
       {eyebrow && (
         <p className="eyebrow mb-5 text-ivory/50">{eyebrow}</p>
       )}
-      <Heading id={id} className="font-display text-4xl leading-[1.05] font-light text-balance sm:text-5xl">
+      <Heading id={id} className="font-display text-4xl leading-[1.05] font-normal text-balance sm:text-5xl">
         {title}
       </Heading>
       {lead && <p className="mt-6 text-lg leading-relaxed text-pretty text-stone">{lead}</p>}

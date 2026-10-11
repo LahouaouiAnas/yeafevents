@@ -15,7 +15,7 @@ export function StoryIntro({ eyebrow, title, body, children }: StoryIntroProps) 
       <Container className="grid gap-12 lg:grid-cols-12 lg:gap-8">
         <div className="lg:col-span-6">
           {eyebrow && <p className="eyebrow mb-5 text-ivory/50">{eyebrow}</p>}
-          <h2 className="font-display text-4xl leading-[1.05] font-light text-balance sm:text-5xl">{title}</h2>
+          <h2 className="font-display text-4xl leading-[1.05] font-normal text-balance sm:text-5xl">{title}</h2>
         </div>
         <div className="space-y-6 text-lg leading-relaxed text-stone lg:col-span-5 lg:col-start-8 lg:pt-10">
           {body.map((paragraph) => (

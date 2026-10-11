@@ -14,7 +14,7 @@ export function Testimonials({ eyebrow, title, items }: { eyebrow: string; title
           {items.map((item) => (
             <li key={item.author} className="reveal">
               <figure>
-                <blockquote className="font-display text-2xl leading-snug font-light">“{item.quote}”</blockquote>
+                <blockquote className="font-display text-2xl leading-snug font-normal">“{item.quote}”</blockquote>
                 <figcaption className="mt-6 text-sm text-stone">
                   <span className="font-medium text-ivory">{item.author}</span>
                   {item.role && <>, {item.role}</>}

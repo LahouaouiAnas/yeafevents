@@ -75,7 +75,7 @@ export function HeaderBar({ locale, items, secondary, homeHref, cta, labels, log
         </Link>
 
         <nav aria-label={labels.mainNav} className="hidden xl:block">
-          <ul className="flex items-center gap-6 text-[0.7rem] tracking-[0.14em] whitespace-nowrap uppercase 2xl:gap-8">
+          <ul className="flex items-center gap-6 text-[0.95rem] whitespace-nowrap 2xl:gap-8">
             {items.map((item) => {
               const current = isCurrent(item);
               return (
@@ -100,7 +100,7 @@ export function HeaderBar({ locale, items, secondary, homeHref, cta, labels, log
           <LanguageSwitcher locale={locale} label={labels.languageSwitcher} />
           <Link
             href={cta.href}
-            className="hidden border border-ivory/30 px-5 py-3 text-[0.7rem] tracking-[0.14em] whitespace-nowrap uppercase transition-colors duration-500 hover:border-ivory hover:bg-ivory hover:text-night md:inline-block"
+            className="btn-gold hidden px-6 py-3 text-sm font-bold whitespace-nowrap md:inline-block"
           >
             {cta.label}
           </Link>
@@ -145,7 +145,7 @@ export function HeaderBar({ locale, items, secondary, homeHref, cta, labels, log
                     href={item.href}
                     onClick={closeMenu}
                     aria-current={current ? "page" : undefined}
-                    className={`flex items-baseline justify-between gap-4 py-4 font-display text-3xl font-light ${current ? "text-ivory" : "text-ivory/75"}`}
+                    className={`flex items-baseline justify-between gap-4 py-4 font-display text-3xl font-normal ${current ? "text-ivory" : "text-ivory/75"}`}
                   >
                     {item.label}
                     <span aria-hidden="true" className={`text-sm ${current ? "text-champagne" : "text-ivory/30"}`}>
@@ -169,7 +169,7 @@ export function HeaderBar({ locale, items, secondary, homeHref, cta, labels, log
             <Link
               href={cta.href}
               onClick={closeMenu}
-              className="block bg-ivory px-6 py-4 text-center text-xs font-medium tracking-[0.16em] text-night uppercase"
+              className="btn-gold block px-6 py-4 text-center text-base font-bold"
             >
               {cta.label}
             </Link>

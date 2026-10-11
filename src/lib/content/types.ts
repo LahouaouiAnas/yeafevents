@@ -35,6 +35,17 @@ export type SeoFields = {
   noindex?: boolean;
 };
 
+/** A priced package ("formule") of an event category. */
+export type PricingFormula = {
+  name: string;
+  audience?: string;
+  /** Starting prices; at least one is set. */
+  priceEur?: number;
+  priceMad?: number;
+  featured: boolean;
+  inclusions: { label: string; detail: string }[];
+};
+
 /** One of the five event categories of the main navigation (weddings, private parties…). */
 export type EventCategory = {
   key: CategoryKey;
@@ -56,6 +67,8 @@ export type EventCategory = {
   gallery: ImageAsset[];
   video?: VideoAsset;
   relatedServices: ServiceKey[];
+  /** Set only once formulas are entered in Sanity: prices are never invented. */
+  pricing?: { title: string; note?: string; formulas: PricingFormula[] };
   seo: { title: string; description: string };
 };
 
