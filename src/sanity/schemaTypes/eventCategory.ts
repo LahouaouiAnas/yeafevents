@@ -12,8 +12,8 @@ export const eventCategory = defineType({
   title: "Type d'événement",
   type: "document",
   groups: [
-    { name: "text", title: "Textes", default: true },
-    { name: "pricing", title: "Formules & prix" },
+    { name: "pricing", title: "Formules & prix", default: true },
+    { name: "text", title: "Textes" },
     { name: "media", title: "Photos" },
     { name: "seo", title: "Google" },
   ],
@@ -38,8 +38,9 @@ export const eventCategory = defineType({
     defineField({ name: "lead", title: "Chapeau (sous le titre)", type: "localeText", group: "text" }),
     defineField({ name: "introTitle", title: "Titre de l'introduction", type: "localeString", group: "text" }),
     defineField({ name: "intro", title: "Introduction", type: "localeParagraphs", group: "text" }),
-    defineField({ name: "includes", title: "Ce qui est compris", type: "localeStringList", group: "text" }),
-    defineField({ name: "occasions", title: "Occasions", type: "localeStringList", group: "text" }),
+    // No longer shown on the site (pages were shortened); kept hidden so stored text is not flagged.
+    defineField({ name: "includes", title: "Ce qui est compris", type: "localeStringList", group: "text", hidden: true }),
+    defineField({ name: "occasions", title: "Occasions", type: "localeStringList", group: "text", hidden: true }),
     defineField({
       name: "relatedServices",
       title: "Services associés",
@@ -47,6 +48,7 @@ export const eventCategory = defineType({
       of: [defineArrayMember({ type: "string" })],
       options: { list: serviceOptions },
       group: "text",
+      hidden: true,
     }),
     defineField({
       name: "pricingTitle",
@@ -80,6 +82,13 @@ export const eventCategory = defineType({
             }),
             defineField({ name: "priceEur", title: "Prix de départ en €", type: "number", validation: (rule) => rule.min(0) }),
             defineField({ name: "priceMad", title: "Prix de départ en MAD", type: "number", validation: (rule) => rule.min(0) }),
+            defineField({
+              name: "onRequest",
+              title: "Prix sur demande",
+              description: "Affiche « Sur devis » à la place du prix. Une formule sans prix et sans cette case reste cachée.",
+              type: "boolean",
+              initialValue: false,
+            }),
             defineField({ name: "featured", title: "Mettre en avant (la plus demandée)", type: "boolean", initialValue: false }),
             defineField({
               name: "inclusions",
@@ -91,7 +100,7 @@ export const eventCategory = defineType({
                   name: "inclusion",
                   fields: [
                     defineField({ name: "label", title: "Poste (ex. « Lieu », « Traiteur »)", type: "localeString" }),
-                    defineField({ name: "detail", title: "Détail", type: "localeText" }),
+                    defineField({ name: "detail", title: "Précision (facultatif)", type: "localeText" }),
                   ],
                   preview: { select: { title: "label.fr", subtitle: "detail.fr" } },
                 }),
@@ -99,10 +108,12 @@ export const eventCategory = defineType({
             }),
           ],
           preview: {
-            select: { title: "name.fr", eur: "priceEur", mad: "priceMad" },
-            prepare: ({ title, eur, mad }) => ({
+            select: { title: "name.fr", eur: "priceEur", mad: "priceMad", onRequest: "onRequest" },
+            prepare: ({ title, eur, mad, onRequest }) => ({
               title: title ?? "Formule",
-              subtitle: [eur ? `dès ${eur} €` : null, mad ? `${mad} MAD` : null].filter(Boolean).join(" · "),
+              subtitle:
+                [eur ? `dès ${eur} €` : null, mad ? `${mad} MAD` : null].filter(Boolean).join(" · ") ||
+                (onRequest ? "Sur devis" : "Cachée : ajoutez un prix ou cochez « Prix sur demande »"),
             }),
           },
         }),

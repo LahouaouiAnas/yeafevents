@@ -39,11 +39,13 @@ export type SeoFields = {
 export type PricingFormula = {
   name: string;
   audience?: string;
-  /** Starting prices; at least one is set. */
+  /** Starting prices; at least one is set unless `onRequest`. */
   priceEur?: number;
   priceMad?: number;
+  /** Shown as "on request" instead of a price. */
+  onRequest: boolean;
   featured: boolean;
-  inclusions: { label: string; detail: string }[];
+  inclusions: { label: string; detail?: string }[];
 };
 
 /** One of the five event categories of the main navigation (weddings, private parties…). */

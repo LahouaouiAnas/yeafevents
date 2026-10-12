@@ -9,10 +9,11 @@ export async function Header({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
   const categories = await getCategories(locale);
 
-  // Main navigation = home + the five event categories. Everything else lives in the footer and CTAs.
+  // Main navigation = home + the five event categories + pricing. Everything else lives in the footer and CTAs.
   const items: NavItem[] = [
     { href: routePath("home", locale), label: dict.nav.home, exact: true },
     ...categories.map((category) => ({ href: categoryPath(category.key, locale), label: category.label })),
+    { href: routePath("pricing", locale), label: dict.nav.pricing },
   ];
 
   const secondary: NavItem[] = [

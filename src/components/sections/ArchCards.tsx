@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Media } from "@/components/ui/Media";
 import type { ImageAsset } from "@/lib/content/types";
 
-export type ArchCard = { key: string; href: string; label: string; phrase: string; image?: ImageAsset };
+export type ArchCard = { key: string; href: string; label: string; phrase: string; image?: ImageAsset; price?: string };
 
 /**
  * Event types as arched photo cards: title, gold italic phrase, link. Three per row on large
@@ -23,6 +23,7 @@ export function ArchCards({ items, linkLabel }: { items: ArchCard[]; linkLabel: 
             />
             <h3 className="mt-7 font-display text-3xl font-normal sm:text-[2rem]">{item.label}</h3>
             <p className="mt-1 font-display text-lg text-gold-soft italic">{item.phrase}</p>
+            {item.price && <p className="mt-3 font-display text-2xl text-ivory">{item.price}</p>}
             <span className="mt-4 inline-flex items-center gap-2 text-sm font-medium tracking-[0.18em] text-gold-soft uppercase">
               <span className="underline decoration-champagne/50 underline-offset-[6px] transition-colors duration-500 group-hover:decoration-gold-soft">
                 {linkLabel}

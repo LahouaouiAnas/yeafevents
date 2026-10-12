@@ -24,9 +24,11 @@ export const en: Dictionary = {
     blog: "Journal",
     about: "About",
     contact: "Contact",
+    pricing: "Pricing",
   },
   cta: {
     plan: "Plan my event",
+    pricing: "See all our pricing",
     discover: "Explore our worlds",
     contact: "Contact us",
     learnMore: "Discover",
@@ -125,19 +127,11 @@ export const en: Dictionary = {
       from: "from",
       approx: "≈",
       included: "What's included",
-      itemColumn: "Included",
-      detailColumn: "Details",
       featured: "Most requested",
+      onRequest: "On request",
       quote: "Request my quote",
     },
-    includesTitle: "What we take care of",
-    occasionsTitle: "Occasions",
-    relatedServices: "Related expertise",
-    otherCategories: "Our other worlds",
     testimonials: "They trusted us",
-    localTitle: "In Marrakech and across Morocco",
-    localText:
-      "Based in Marrakech, we know its venues and suppliers, and we support your events throughout the country.",
   },
   marrakech: {
     seo: {
@@ -425,6 +419,17 @@ export const en: Dictionary = {
             "The earlier the better, especially during Marrakech's high season. For a wedding or a large corporate event, ideally allow several months; for a private party, a few weeks may be enough depending on venue availability.",
         },
       ],
+    },
+  },
+  pricingPage: {
+    eyebrow: "Pricing",
+    title: "Our pricing",
+    lead: "Clear packages for every type of event. Each quote is then tailored to your project.",
+    onRequest: "Pricing on request: tell us about your project and we will reply quickly.",
+    seeEvent: "See the page",
+    seo: {
+      title: "Event pricing in Marrakech | Yeaf Events",
+      description: "Packages and starting prices for weddings, private parties, birthdays, festivals and seminars in Marrakech and Morocco.",
     },
   },
   notFound: {

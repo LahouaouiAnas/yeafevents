@@ -55,9 +55,12 @@ dataset `production`, public en lecture). Le reste du contenu est dans `src/cont
   moments », étapes, appel final, textes Google), créé au démarrage depuis le contenu livré
   (`src/i18n/dictionaries`, `src/content/media.ts`). Les photos du diaporama restent vides : une photo
   choisie remplace la photo et la vidéo de sa diapositive. Un champ vide reprend le texte d'origine.
-- **Formules & prix** : chaque type d'événement a un onglet « Formules & prix » (nom, public, prix de
-  départ en € et/ou MAD, « la plus demandée », tableau « Ce qui est inclus »). La section n'apparaît sur
-  la page qu'avec au moins une formule nommée et chiffrée : aucun prix n'est inventé.
+- **Formules & prix** : premier onglet de chaque type d'événement (nom, prix de départ en € et/ou
+  MAD, case « Prix sur demande », « la plus demandée », liste « Ce qui est inclus »). Trois formules
+  sans prix (`src/content/pricing-drafts.ts`) y sont ajoutées une seule fois, si l'onglet n'a jamais
+  été rempli. Une formule n'apparaît qu'avec un prix ou « Prix sur demande » : aucun prix n'est
+  inventé. Les formules s'affichent sur la page du type d'événement, sur la page Tarifs
+  (`/fr/tarifs`, `/en/pricing`) et, en « dès … », sur les cartes de l'accueil.
 - **Premiers articles de blog** : `src/content/blog-drafts.ts` est importé une seule fois dans Sanity
   sous forme de **brouillons** (à relire et publier dans le Studio). Les articles déjà importés sont
   notés dans le document `seed.state` : un brouillon supprimé ne revient pas.
