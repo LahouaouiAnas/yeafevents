@@ -4,7 +4,7 @@ import { createClient } from "next-sanity";
 import { blogDrafts, type BlogDraft, type DraftBlock } from "@/content/blog-drafts";
 import { getCategoryContent, getCategoryMedia } from "@/content/categories";
 import { getImageSource, type ImageId } from "@/content/media";
-import { formerWeddingDraft, pricingDrafts, type PricingDraft } from "@/content/pricing-drafts";
+import { formerWeddingDraft, formerWeddingNote, pricingDrafts, type PricingDraft } from "@/content/pricing-drafts";
 import { getShowcaseContent } from "@/content/showcase";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { locales, type Locale } from "@/i18n/config";
@@ -61,6 +61,7 @@ export async function seedSanity(): Promise<void> {
   await renameFrenchPrivateParty(client);
   await seedFormulas(client);
   await applyWeddingGuide(client);
+  await rewordWeddingNote(client);
   await seedHomePage(client, imageField);
   await upgradeHomeHero(client, imageField);
   await seedBlogDrafts(client, imageField);
@@ -156,6 +157,18 @@ async function applyWeddingGuide(client: Client): Promise<void> {
     .commit()
     .then(() => console.log("[seed] wedding formulas replaced with the wedding guide plans"))
     .catch(() => console.log("[seed] wedding formulas edited meanwhile: kept as they are"));
+}
+
+/**
+ * Prices are now hidden by default, so the wedding introduction no longer speaks of "starting
+ * prices". Replaced only while it is still the text shipped with the guide.
+ */
+async function rewordWeddingNote(client: Client): Promise<void> {
+  const id = "category.wedding";
+  const note = await client.fetch<string | null>(`*[_id == $id][0].pricingNote.fr`, { id });
+  if (note !== formerWeddingNote) return;
+  await client.patch(id).set({ pricingNote: localized("localeText", pricingDrafts.wedding.note) }).commit();
+  console.log("[seed] wedding pricing introduction reworded without prices");
 }
 
 type ImageField = ReturnType<typeof imageUploader>;

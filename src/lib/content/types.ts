@@ -73,7 +73,8 @@ export type EventCategory = {
   video?: VideoAsset;
   relatedServices: ServiceKey[];
   /** Set only once formulas are entered in Sanity: prices are never invented. */
-  pricing?: { title: string; note?: string; formulas: PricingFormula[] };
+  /** Prices are removed from `formulas` unless `showPrices` (ticked in the Studio). */
+  pricing?: { title: string; note?: string; showPrices: boolean; formulas: PricingFormula[] };
   seo: { title: string; description: string };
 };
 

@@ -17,7 +17,7 @@ export const staticRoutes = {
   blog: { fr: "/blog", en: "/blog" },
   about: { fr: "/a-propos", en: "/about" },
   contact: { fr: "/contact", en: "/contact" },
-  pricing: { fr: "/tarifs", en: "/pricing" },
+  pricing: { fr: "/formules", en: "/packages" },
 } as const satisfies Record<string, Record<Locale, string>>;
 
 export type StaticRouteKey = keyof typeof staticRoutes;

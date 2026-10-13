@@ -17,9 +17,9 @@ export function pricingMetadata(locale: Locale) {
 }
 
 /**
- * Every event type with its formulas, one after the other. Prices and inclusions are edited in
- * the Studio (Types d'événement → Formules & prix); a type without a priced formula shows
- * "on request" with a quote link.
+ * Every event type with its formulas, one after the other. Formulas, inclusions and whether
+ * prices are shown are edited in the Studio (Types d'événement → Formules & prix); a type with no
+ * formula to show gets a quote link instead.
  */
 export async function PricingView({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);

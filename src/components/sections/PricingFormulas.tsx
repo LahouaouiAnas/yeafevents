@@ -24,7 +24,7 @@ function formatPrice(field: PriceField, value: number, locale: Locale): string {
 /** "dès 4 500 €" / "≈ 48 000 MAD" / "Sur devis" for one formula. */
 function priceLines(formula: PricingFormula, labels: Labels, locale: Locale) {
   const [first, ...others] = priceFields.filter((field) => formula[field]);
-  if (!first) return { main: labels.onRequest, from: false };
+  if (!first) return formula.onRequest ? { main: labels.onRequest, from: false } : undefined;
   const secondary = others.map((field) => `${labels.approx} ${formatPrice(field, formula[field]!, locale)}`).join(" · ");
   return { main: formatPrice(first, formula[first]!, locale), secondary: secondary || undefined, from: true };
 }
@@ -63,11 +63,13 @@ export function FormulaCards({ formulas, labels, locale }: { formulas: PricingFo
             )}
             <h3 className="font-display text-2xl font-normal sm:text-[1.7rem]">{formula.name}</h3>
             {/* Prices in the text face: Bodoni's hairline digits (4, 1) read poorly at this size. */}
-            <p className="mt-4 text-3xl font-light tracking-tight text-gold-soft tabular-nums sm:text-4xl">
-              {price.from && <span className="mr-1.5 text-[0.55em] tracking-normal text-ivory/70">{labels.from}</span>}
-              {price.main}
-            </p>
-            {price.secondary && <p className="mt-1 text-sm text-ivory/60">{price.secondary}</p>}
+            {price && (
+              <p className="mt-4 text-3xl font-light tracking-tight text-gold-soft tabular-nums sm:text-4xl">
+                {price.from && <span className="mr-1.5 text-[0.55em] tracking-normal text-ivory/70">{labels.from}</span>}
+                {price.main}
+              </p>
+            )}
+            {price?.secondary && <p className="mt-1 text-sm text-ivory/60">{price.secondary}</p>}
             {formula.audience && <p className="mt-4 text-ivory/80">{formula.audience}</p>}
             {formula.inclusions.length > 0 && (
               <>
@@ -105,7 +107,7 @@ type PricingFormulasProps = {
 /** Pricing section of an event-type page. */
 export function PricingFormulas({ title, note, formulas, labels, locale, quoteHref }: PricingFormulasProps) {
   return (
-    <section id="tarifs" aria-labelledby="pricing-title" className="scroll-mt-20 border-t border-ivory/10 py-20 sm:py-28">
+    <section id="formules" aria-labelledby="pricing-title" className="scroll-mt-20 border-t border-ivory/10 py-20 sm:py-28">
       <Container>
         <h2 id="pricing-title" className="font-display text-4xl font-normal text-balance sm:text-5xl">
           {title}

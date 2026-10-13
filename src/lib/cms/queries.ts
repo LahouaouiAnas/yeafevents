@@ -97,6 +97,7 @@ export const categoriesQuery = (l: Locale) => `
     "serviceType": serviceType.${l},
     "pricingTitle": pricingTitle.${l},
     "pricingNote": pricingNote.${l},
+    showPrices,
     "formulas": formulas[]{
       "name": name.${l},
       "audience": audience.${l},

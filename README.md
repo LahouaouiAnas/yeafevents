@@ -55,13 +55,15 @@ dataset `production`, public en lecture). Le reste du contenu est dans `src/cont
   moments », étapes, appel final, textes Google), créé au démarrage depuis le contenu livré
   (`src/i18n/dictionaries`, `src/content/media.ts`). Les photos du diaporama restent vides : une photo
   choisie remplace la photo et la vidéo de sa diapositive. Un champ vide reprend le texte d'origine.
-- **Formules & prix** : premier onglet de chaque type d'événement (nom, public, prix de départ en €,
-  £ et/ou MAD, case « Prix sur demande », « la plus demandée », liste « Ce qui est inclus », options et
-  conditions). `src/content/pricing-drafts.ts` y est importé une seule fois, si l'onglet n'a jamais
-  été rempli : les mariages reprennent les trois formules du guide mariage Yeaf (prix en £), les
-  autres types n'ont pas encore de prix. Une formule n'apparaît qu'avec un prix ou « Prix sur
-  demande » : aucun prix n'est inventé. Les formules s'affichent sur la page du type d'événement,
-  sur la page Tarifs (`/fr/tarifs`, `/en/pricing`) et, en « dès … », sur les cartes de l'accueil.
+- **Formules & prix** : premier onglet de chaque type d'événement. Case « Afficher les prix sur le
+  site » (décochée par défaut : les formules s'affichent sans aucun prix, qui n'est même pas envoyé
+  à la page). Par formule : nom, public, prix de départ en €, £ et/ou MAD, case « Afficher sans prix
+  (sur devis) », « la plus demandée », liste « Ce qui est inclus », options et conditions.
+  `src/content/pricing-drafts.ts` y est importé une seule fois, si l'onglet n'a jamais été rempli :
+  les mariages reprennent les trois formules du guide mariage Yeaf, les autres types n'ont pas encore
+  de prix. Une formule n'apparaît qu'avec un prix ou « Afficher sans prix » : aucun prix n'est inventé.
+  Les formules s'affichent sur la page du type d'événement et sur la page Formules (`/fr/formules`,
+  `/en/packages`) ; avec les prix affichés, les cartes de l'accueil indiquent aussi « dès … ».
 - **Premiers articles de blog** : `src/content/blog-drafts.ts` est importé une seule fois dans Sanity
   sous forme de **brouillons** (à relire et publier dans le Studio). Les articles déjà importés sont
   notés dans le document `seed.state` : un brouillon supprimé ne revient pas.
