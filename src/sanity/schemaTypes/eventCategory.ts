@@ -81,6 +81,7 @@ export const eventCategory = defineType({
               type: "localeText",
             }),
             defineField({ name: "priceEur", title: "Prix de départ en €", type: "number", validation: (rule) => rule.min(0) }),
+            defineField({ name: "priceGbp", title: "Prix de départ en £", type: "number", validation: (rule) => rule.min(0) }),
             defineField({ name: "priceMad", title: "Prix de départ en MAD", type: "number", validation: (rule) => rule.min(0) }),
             defineField({
               name: "onRequest",
@@ -106,13 +107,19 @@ export const eventCategory = defineType({
                 }),
               ],
             }),
+            defineField({
+              name: "extras",
+              title: "Options et conditions (facultatif)",
+              description: "Ex. « En option : photographe, orchestre live… ». Affiché sous « Ce qui est inclus ».",
+              type: "localeText",
+            }),
           ],
           preview: {
-            select: { title: "name.fr", eur: "priceEur", mad: "priceMad", onRequest: "onRequest" },
-            prepare: ({ title, eur, mad, onRequest }) => ({
+            select: { title: "name.fr", eur: "priceEur", gbp: "priceGbp", mad: "priceMad", onRequest: "onRequest" },
+            prepare: ({ title, eur, gbp, mad, onRequest }) => ({
               title: title ?? "Formule",
               subtitle:
-                [eur ? `dès ${eur} €` : null, mad ? `${mad} MAD` : null].filter(Boolean).join(" · ") ||
+                [eur ? `dès ${eur} €` : null, gbp ? `dès ${gbp} £` : null, mad ? `${mad} MAD` : null].filter(Boolean).join(" · ") ||
                 (onRequest ? "Sur devis" : "Cachée : ajoutez un prix ou cochez « Prix sur demande »"),
             }),
           },

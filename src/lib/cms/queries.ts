@@ -101,10 +101,12 @@ export const categoriesQuery = (l: Locale) => `
       "name": name.${l},
       "audience": audience.${l},
       priceEur,
+      priceGbp,
       priceMad,
       onRequest,
       featured,
-      "inclusions": inclusions[]{ "label": label.${l}, "detail": detail.${l} }
+      "inclusions": inclusions[]{ "label": label.${l}, "detail": detail.${l} },
+      "extras": extras.${l}
     }
   }
 `;

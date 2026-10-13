@@ -41,11 +41,14 @@ export type PricingFormula = {
   audience?: string;
   /** Starting prices; at least one is set unless `onRequest`. */
   priceEur?: number;
+  priceGbp?: number;
   priceMad?: number;
   /** Shown as "on request" instead of a price. */
   onRequest: boolean;
   featured: boolean;
   inclusions: { label: string; detail?: string }[];
+  /** Options and conditions, shown under the inclusions. */
+  extras?: string;
 };
 
 /** One of the five event categories of the main navigation (weddings, private parties…). */

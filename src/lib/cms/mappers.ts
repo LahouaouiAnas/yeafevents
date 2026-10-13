@@ -175,10 +175,12 @@ export type RawCategory = {
         name?: string | null;
         audience?: string | null;
         priceEur?: number | null;
+        priceGbp?: number | null;
         priceMad?: number | null;
         onRequest?: boolean | null;
         featured?: boolean | null;
         inclusions?: { label?: string | null; detail?: string | null }[] | null;
+        extras?: string | null;
       }[]
     | null;
 };
@@ -191,14 +193,16 @@ function toFormulas(raw: RawCategory["formulas"]): PricingFormula[] {
       name: formula.name?.trim() ?? "",
       audience: formula.audience?.trim() || undefined,
       priceEur: price(formula.priceEur),
+      priceGbp: price(formula.priceGbp),
       priceMad: price(formula.priceMad),
       onRequest: formula.onRequest ?? false,
       featured: formula.featured ?? false,
       inclusions: (formula.inclusions ?? [])
         .map((row) => ({ label: row.label?.trim() ?? "", detail: row.detail?.trim() || undefined }))
         .filter((row) => row.label),
+      extras: formula.extras?.trim() || undefined,
     }))
-    .filter((formula) => formula.name && (formula.priceEur || formula.priceMad || formula.onRequest));
+    .filter((formula) => formula.name && (formula.priceEur || formula.priceGbp || formula.priceMad || formula.onRequest));
 }
 
 /** Edited text wins; an empty field keeps the text the site shipped with, so a page never breaks. */
