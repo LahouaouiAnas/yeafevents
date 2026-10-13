@@ -13,6 +13,8 @@ type Localized = Record<Locale, string>;
 
 export type FormulaDraft = {
   name: Localized;
+  guestsMin?: number;
+  guestsMax?: number;
   audience?: Localized;
   priceGbp?: number;
   featured?: boolean;
@@ -62,7 +64,9 @@ const weddingGuide: PricingDraft = {
   formulas: [
     {
       name: tiers.essential,
-      audience: item("60 à 80 invités · une journée et une soirée", "60-80 guests · one wedding day and evening"),
+      guestsMin: 60,
+      guestsMax: 80,
+      audience: item("Une journée et une soirée", "One wedding day and evening"),
       priceGbp: 10900,
       inclusions: [
         item("Riad privatisé ou villa standard", "Private riad or standard villa"),
@@ -78,7 +82,9 @@ const weddingGuide: PricingDraft = {
     },
     {
       name: tiers.signature,
-      audience: item("100 à 150 invités · location de la villa sur deux jours", "100-150 guests · two-day villa hire"),
+      guestsMin: 100,
+      guestsMax: 150,
+      audience: item("Location de la villa sur deux jours", "Two-day villa hire"),
       priceGbp: 21030,
       featured: true,
       inclusions: [
@@ -97,7 +103,9 @@ const weddingGuide: PricingDraft = {
     },
     {
       name: tiers.prestige,
-      audience: item("150 à 250 invités · deux à trois jours de célébrations", "150-250 guests · two to three days of celebrations"),
+      guestsMin: 150,
+      guestsMax: 250,
+      audience: item("Deux à trois jours de célébrations", "Two to three days of celebrations"),
       priceGbp: 41390,
       inclusions: [
         item("Domaine d'exception ou palais événementiel, location sur trois jours", "Exceptional estate or event palace with three-day hire"),

@@ -7,7 +7,7 @@ import { Container } from "@/components/ui/Container";
 import { siteConfig, socialLinks, telHref, whatsappHref } from "@/config/site";
 import type { Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
-import { getCategories } from "@/lib/content";
+import { getCategories, getSiteSections } from "@/lib/content";
 import { routePath, routePaths } from "@/lib/routes";
 import { buildMetadata } from "@/lib/seo/metadata";
 import { breadcrumbTrail } from "./shared";
@@ -19,7 +19,7 @@ export function contactMetadata(locale: Locale) {
 export async function ContactView({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
   const t = dict.contact;
-  const categories = await getCategories(locale);
+  const [categories, show] = await Promise.all([getCategories(locale), getSiteSections()]);
   const { email, phones, whatsapp } = siteConfig.contact;
   const hasDirectContact = Boolean(email || phones.length || whatsapp || socialLinks.length);
 
@@ -83,9 +83,11 @@ export async function ContactView({ locale }: { locale: Locale }) {
           )}
         </Container>
       </section>
-      <div className="border-t border-ivory/10">
-        <FaqSection eyebrow={t.faq.eyebrow} title={t.faq.title} items={t.faq.items} />
-      </div>
+      {show.contactFaq && (
+        <div className="border-t border-ivory/10">
+          <FaqSection eyebrow={t.faq.eyebrow} title={t.faq.title} items={t.faq.items} />
+        </div>
+      )}
     </>
   );
 }

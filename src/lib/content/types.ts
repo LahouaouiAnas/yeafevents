@@ -38,6 +38,8 @@ export type SeoFields = {
 /** A priced package ("formule") of an event category. */
 export type PricingFormula = {
   name: string;
+  guestsMin?: number;
+  guestsMax?: number;
   audience?: string;
   /** Starting prices; at least one is set unless `onRequest`. */
   priceEur?: number;

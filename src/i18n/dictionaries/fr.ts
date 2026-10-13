@@ -127,9 +127,19 @@ export const fr = {
       included: "Ce qui est inclus",
       featured: "La plus demandée",
       onRequest: "Sur devis",
+      guestsRange: "{min} à {max} invités",
+      guestsFrom: "Dès {min} invités",
+      guestsUpTo: "Jusqu'à {max} invités",
       quote: "Demander mon devis",
     },
+    includesTitle: "Ce que nous prenons en charge",
+    occasionsTitle: "Pour quelles occasions",
+    relatedServices: "Nos savoir-faire associés",
+    otherCategories: "Nos autres univers",
     testimonials: "Ils nous ont fait confiance",
+    localTitle: "À Marrakech et partout au Maroc",
+    localText:
+      "Basés à Marrakech, nous connaissons ses lieux et ses prestataires, et nous accompagnons vos événements dans tout le pays.",
   },
   marrakech: {
     seo: {

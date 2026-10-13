@@ -3,6 +3,7 @@ import { homePage } from "./homePage";
 import { post } from "./post";
 import { project } from "./project";
 import { quoteRequest } from "./quoteRequest";
+import { siteSettings } from "./siteSettings";
 import {
   localeParagraphs,
   localeRichText,
@@ -24,6 +25,7 @@ export const schemaTypes = [
   localeSlug,
   localizedImage,
   seo,
+  siteSettings,
   homePage,
   eventCategory,
   project,
@@ -33,4 +35,4 @@ export const schemaTypes = [
 ];
 
 /** Types with a fixed set of documents created by the site: no "create" or "delete" in the Studio. */
-export const fixedTypes = new Set(["eventCategory", "homePage"]);
+export const fixedTypes = new Set(["eventCategory", "homePage", "siteSettings"]);

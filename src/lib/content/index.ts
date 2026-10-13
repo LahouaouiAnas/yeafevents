@@ -17,7 +17,7 @@ import {
   type RawProject,
   type RawTestimonial,
 } from "@/lib/cms/mappers";
-import { categoriesQuery, homeQuery, postsQuery, projectsQuery, testimonialsQuery } from "@/lib/cms/queries";
+import { categoriesQuery, homeQuery, postsQuery, projectsQuery, siteSettingsQuery, testimonialsQuery } from "@/lib/cms/queries";
 import { sanityFetch } from "@/lib/cms/sanity";
 import {
   categoryKeyFromSlug,
@@ -27,6 +27,7 @@ import {
   type CategoryKey,
   type ServiceKey,
 } from "@/lib/routes";
+import { mergeSections, type SiteSections } from "./sections";
 import type { BlogPost, EventCategory, Project, Service, ShowcaseItem, Testimonial } from "./types";
 
 /**
@@ -120,4 +121,10 @@ export function getDefaultHomeContent(locale: Locale): HomeContent {
 export async function getHomeContent(locale: Locale): Promise<HomeContent> {
   const raw = await sanityFetch<RawHome | null>(homeQuery(locale), {}, ["homePage"]);
   return mergeHome(getDefaultHomeContent(locale), raw);
+}
+
+/** Which sections are shown (Studio → Sections du site), over the shipped defaults. */
+export async function getSiteSections(): Promise<SiteSections> {
+  const raw = await sanityFetch<Record<string, unknown>>(siteSettingsQuery, {}, ["siteSettings"]);
+  return mergeSections(raw);
 }

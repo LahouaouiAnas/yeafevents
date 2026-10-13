@@ -10,8 +10,10 @@ export const homePage = defineType({
   type: "document",
   groups: [
     { name: "hero", title: "Haut de page", default: true },
+    { name: "intro", title: "L'agence" },
     { name: "worlds", title: "Nos univers" },
     { name: "moments", title: "Quelques moments" },
+    { name: "why", title: "Pourquoi Yeaf" },
     { name: "cta", title: "Appel final" },
     { name: "seo", title: "Google" },
   ],
@@ -22,11 +24,11 @@ export const homePage = defineType({
     defineField({ name: "heroText", title: "Texte de présentation", type: "localeText", group: "hero" }),
     defineField({ name: "heroPhoto", title: "Photo (en arche, à droite)", type: "localizedImage", group: "hero" }),
 
-    // The "agency" and "why Yeaf" sections were removed from the home page; hidden, data kept.
-    defineField({ name: "introEyebrow", title: "Petit titre", type: "localeString", hidden: true }),
-    defineField({ name: "introText", title: "Texte principal", type: "localeText", hidden: true }),
-    defineField({ name: "introNote", title: "Note (sous le texte)", type: "localeText", hidden: true }),
-    defineField({ name: "introPhoto", title: "Photo (en arche)", type: "localizedImage", hidden: true }),
+    // "L'agence" and "Pourquoi Yeaf" are hidden on the site by default (Sections du site).
+    defineField({ name: "introEyebrow", title: "Petit titre", type: "localeString", group: "intro" }),
+    defineField({ name: "introText", title: "Texte principal", type: "localeText", group: "intro" }),
+    defineField({ name: "introNote", title: "Note (sous le texte)", type: "localeText", group: "intro" }),
+    defineField({ name: "introPhoto", title: "Photo (en arche)", type: "localizedImage", group: "intro" }),
 
     defineField({ name: "worldsEyebrow", title: "Petit titre", type: "localeString", group: "worlds" }),
     defineField({ name: "worldsTitle", title: "Titre", type: "localeString", group: "worlds" }),
@@ -56,13 +58,13 @@ export const homePage = defineType({
         ),
     }),
 
-    defineField({ name: "whyEyebrow", title: "Petit titre", type: "localeString", hidden: true }),
-    defineField({ name: "whyTitle", title: "Titre", type: "localeString", hidden: true }),
+    defineField({ name: "whyEyebrow", title: "Petit titre", type: "localeString", group: "why" }),
+    defineField({ name: "whyTitle", title: "Titre", type: "localeString", group: "why" }),
     defineField({
       name: "whySteps",
       title: "Étapes",
       type: "array",
-      hidden: true,
+      group: "why",
       of: [
         defineArrayMember({
           type: "object",
@@ -75,7 +77,7 @@ export const homePage = defineType({
         }),
       ],
     }),
-    defineField({ name: "whyPhoto", title: "Photo (en arche)", type: "localizedImage", hidden: true }),
+    defineField({ name: "whyPhoto", title: "Photo (en arche)", type: "localizedImage", group: "why" }),
 
     defineField({ name: "ctaTitle", title: "Titre", type: "localeString", group: "cta" }),
     defineField({ name: "ctaText", title: "Texte", type: "localeText", group: "cta" }),

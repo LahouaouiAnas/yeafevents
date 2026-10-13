@@ -88,6 +88,31 @@ export function ArchFrame({ children, className = "" }: { children: ReactNode; c
   );
 }
 
+/** Slow horizontal band of words separated by stars; static when motion is reduced. */
+export function Marquee({ items, label }: { items: string[]; label: string }) {
+  const row = (hidden: boolean) => (
+    <ul aria-hidden={hidden || undefined} className="flex shrink-0 items-center">
+      {items.map((item) => (
+        <li key={item} className="flex items-center">
+          <span className="px-8 font-display text-4xl font-normal whitespace-nowrap text-ivory/80 italic sm:px-12 sm:text-6xl">
+            {item}
+          </span>
+          <StarMark className="size-6 shrink-0 opacity-60 sm:size-8" />
+        </li>
+      ))}
+    </ul>
+  );
+
+  return (
+    <div className="overflow-hidden border-y border-ivory/10 py-8 sm:py-10" role="region" aria-label={label}>
+      <div className="marquee flex w-max">
+        {row(false)}
+        {row(true)}
+      </div>
+    </div>
+  );
+}
+
 /** Short gold rule ending in a small solid star, drawn under titles. */
 export function GoldRule({ className = "", centered = false }: { className?: string; centered?: boolean }) {
   return (

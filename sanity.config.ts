@@ -25,6 +25,10 @@ export default defineConfig({
               .child(S.documentTypeList("quoteRequest").title("Demandes de devis").defaultOrdering([{ field: "receivedAt", direction: "desc" }])),
             S.divider(),
             S.listItem()
+              .title("Sections du site (afficher / masquer)")
+              .id("siteSettings")
+              .child(S.document().schemaType("siteSettings").documentId("siteSettings").title("Sections du site")),
+            S.listItem()
               .title("Page d'accueil")
               .id("homePage")
               .child(S.document().schemaType("homePage").documentId("homePage").title("Page d'accueil")),
@@ -51,7 +55,7 @@ export default defineConfig({
     }),
   ],
   document: {
-    // Fixed documents (the five event types) are created by the site and must not disappear.
+    // Fixed documents (event types, home page, sections) are created by the site and must not disappear.
     newDocumentOptions: (previous) => previous.filter((option) => !fixedTypes.has(option.templateId)),
     actions: (previous, context) =>
       fixedTypes.has(context.schemaType)
