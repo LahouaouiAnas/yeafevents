@@ -9,25 +9,34 @@ type Labels = Dictionary["category"]["pricing"];
 
 const numberLocale: Record<Locale, string> = { fr: "fr-FR", en: "en-GB" };
 
+type PriceField = "priceEur" | "priceGbp" | "priceMad";
+
+/** Display order: the first price set is the main one, the others follow as "≈". */
+const priceFields: PriceField[] = ["priceEur", "priceGbp", "priceMad"];
+
+function formatPrice(field: PriceField, value: number, locale: Locale): string {
+  const options = { maximumFractionDigits: 0 } as const;
+  if (field === "priceMad") return `${new Intl.NumberFormat(numberLocale[locale], options).format(value)} MAD`;
+  const currency = field === "priceEur" ? "EUR" : "GBP";
+  return new Intl.NumberFormat(numberLocale[locale], { ...options, style: "currency", currency, currencyDisplay: "narrowSymbol" }).format(value);
+}
+
 /** "dès 4 500 €" / "≈ 48 000 MAD" / "Sur devis" for one formula. */
 function priceLines(formula: PricingFormula, labels: Labels, locale: Locale) {
-  const format = (value: number) => new Intl.NumberFormat(numberLocale[locale], { maximumFractionDigits: 0 }).format(value);
-  if (!formula.priceEur && !formula.priceMad) return { main: labels.onRequest, from: false };
-  const main = formula.priceEur ? `${format(formula.priceEur)} €` : `${format(formula.priceMad!)} MAD`;
-  const secondary = formula.priceEur && formula.priceMad ? `${labels.approx} ${format(formula.priceMad)} MAD` : undefined;
-  return { main, secondary, from: true };
+  const [first, ...others] = priceFields.filter((field) => formula[field]);
+  if (!first) return { main: labels.onRequest, from: false };
+  const secondary = others.map((field) => `${labels.approx} ${formatPrice(field, formula[field]!, locale)}`).join(" · ");
+  return { main: formatPrice(first, formula[first]!, locale), secondary: secondary || undefined, from: true };
 }
 
 /** Lowest displayed starting price of a list of formulas, e.g. for a card "dès 2 500 €". */
 export function startingPrice(formulas: PricingFormula[] | undefined, labels: Labels, locale: Locale): string | undefined {
-  // Compared in euros when any formula has a euro price, otherwise in dirhams.
+  // Compared in the first currency (€, then £, then MAD) that any formula uses.
   const list = formulas ?? [];
-  const currency = list.some((formula) => formula.priceEur) ? "priceEur" : "priceMad";
-  const cheapest = list
-    .filter((formula) => formula[currency])
-    .sort((a, b) => a[currency]! - b[currency]!)[0];
-  if (!cheapest) return undefined;
-  return `${labels.from} ${priceLines(cheapest, labels, locale).main}`;
+  const currency = priceFields.find((field) => list.some((formula) => formula[field]));
+  if (!currency) return undefined;
+  const cheapest = list.filter((formula) => formula[currency]).sort((a, b) => a[currency]! - b[currency]!)[0]!;
+  return `${labels.from} ${formatPrice(currency, cheapest[currency]!, locale)}`;
 }
 
 /**
@@ -53,8 +62,9 @@ export function FormulaCards({ formulas, labels, locale }: { formulas: PricingFo
               </p>
             )}
             <h3 className="font-display text-2xl font-normal sm:text-[1.7rem]">{formula.name}</h3>
-            <p className="mt-4 font-display text-3xl text-gold-soft sm:text-4xl">
-              {price.from && <span className="mr-1 text-[0.6em] text-ivory/70">{labels.from}</span>}
+            {/* Prices in the text face: Bodoni's hairline digits (4, 1) read poorly at this size. */}
+            <p className="mt-4 text-3xl font-light tracking-tight text-gold-soft tabular-nums sm:text-4xl">
+              {price.from && <span className="mr-1.5 text-[0.55em] tracking-normal text-ivory/70">{labels.from}</span>}
               {price.main}
             </p>
             {price.secondary && <p className="mt-1 text-sm text-ivory/60">{price.secondary}</p>}
@@ -75,6 +85,7 @@ export function FormulaCards({ formulas, labels, locale }: { formulas: PricingFo
                 </ul>
               </>
             )}
+            {formula.extras && <p className="mt-6 border-t border-ivory/10 pt-5 text-sm leading-relaxed text-stone">{formula.extras}</p>}
           </li>
         );
       })}

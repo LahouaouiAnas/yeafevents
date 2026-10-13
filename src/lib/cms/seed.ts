@@ -4,7 +4,7 @@ import { createClient } from "next-sanity";
 import { blogDrafts, type BlogDraft, type DraftBlock } from "@/content/blog-drafts";
 import { getCategoryContent, getCategoryMedia } from "@/content/categories";
 import { getImageSource, type ImageId } from "@/content/media";
-import { pricingDrafts } from "@/content/pricing-drafts";
+import { formerWeddingDraft, pricingDrafts, type PricingDraft } from "@/content/pricing-drafts";
 import { getShowcaseContent } from "@/content/showcase";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { locales, type Locale } from "@/i18n/config";
@@ -60,6 +60,7 @@ export async function seedSanity(): Promise<void> {
   await seedEventCategories(client, imageField);
   await renameFrenchPrivateParty(client);
   await seedFormulas(client);
+  await applyWeddingGuide(client);
   await seedHomePage(client, imageField);
   await upgradeHomeHero(client, imageField);
   await seedBlogDrafts(client, imageField);
@@ -84,10 +85,34 @@ async function renameFrenchPrivateParty(client: Client): Promise<void> {
   console.log("[seed] French private-party label renamed to « Soirées privées »");
 }
 
+const localized = (type: string, value: Record<Locale, string>) => ({ _type: type, ...value });
+
+/** Sanity fields of the "Formules & prix" tab, from a shipped draft. */
+function pricingFields(draft: PricingDraft) {
+  return {
+    pricingTitle: localized("localeString", draft.title),
+    pricingNote: localized("localeText", draft.note),
+    formulas: draft.formulas.map((formula, index) => ({
+      _type: "formula",
+      _key: `formula${index}`,
+      name: localized("localeString", formula.name),
+      ...(formula.audience ? { audience: localized("localeText", formula.audience) } : {}),
+      ...(formula.priceGbp ? { priceGbp: formula.priceGbp } : {}),
+      featured: formula.featured ?? false,
+      onRequest: false,
+      inclusions: formula.inclusions.map((label, row) => ({
+        _type: "inclusion",
+        _key: `inc${index}-${row}`,
+        label: localized("localeString", label),
+      })),
+      ...(formula.extras ? { extras: localized("localeText", formula.extras) } : {}),
+    })),
+  };
+}
+
 /**
- * Fills the "Formules & prix" tab of each event type once, with formula names and what they
- * include but no price: they stay off the site until the agency enters its prices. Only where
- * the tab was never touched (no `formulas` field at all), so Studio edits are never replaced.
+ * Fills the "Formules & prix" tab of each event type once (pricing-drafts.ts). Only where the
+ * tab was never touched (no `formulas` field at all), so Studio edits are never replaced.
  */
 async function seedFormulas(client: Client): Promise<void> {
   const ids = await client.fetch<string[]>(`*[_type == "eventCategory" && !defined(formulas)]._id`);
@@ -95,28 +120,42 @@ async function seedFormulas(client: Client): Promise<void> {
     const key = id.replace(/^category\./, "") as keyof typeof pricingDrafts;
     const draft = pricingDrafts[key];
     if (!draft) continue;
-    const localized = (type: string, value: Record<Locale, string>) => ({ _type: type, ...value });
-    await client
-      .patch(id)
-      .setIfMissing({
-        pricingTitle: localized("localeString", draft.title),
-        pricingNote: localized("localeText", draft.note),
-        formulas: draft.formulas.map((formula, index) => ({
-          _type: "formula",
-          _key: `formula${index}`,
-          name: localized("localeString", formula.name),
-          featured: formula.featured ?? false,
-          onRequest: false,
-          inclusions: formula.inclusions.map((label, row) => ({
-            _type: "inclusion",
-            _key: `inc${index}-${row}`,
-            label: localized("localeString", label),
-          })),
-        })),
-      })
-      .commit();
-    console.log(`[seed] price formulas (without prices) added to "${key}"`);
+    await client.patch(id).setIfMissing(pricingFields(draft)).commit();
+    console.log(`[seed] price formulas added to "${key}"`);
   }
+}
+
+/**
+ * Replaces the first, price-less wedding formulas with the plans of the agency's wedding guide,
+ * only while the tab still holds exactly those untouched formulas (no price, same names and
+ * inclusions). Anything edited in the Studio is kept as is.
+ */
+async function applyWeddingGuide(client: Client): Promise<void> {
+  const id = "category.wedding";
+  const current = await client.fetch<{
+    rev: string;
+    formulas?: { name?: string; priced: boolean; inclusions?: (string | null)[] }[] | null;
+  } | null>(
+    `*[_id == $id][0]{ "rev": _rev, "formulas": formulas[]{ "name": name.fr, "priced": defined(priceEur) || defined(priceGbp) || defined(priceMad) || onRequest == true, "inclusions": inclusions[].label.fr } }`,
+    { id },
+  );
+  const formulas = current?.formulas;
+  if (!current || !formulas) return;
+  const untouched =
+    formulas.length === formerWeddingDraft.length &&
+    formulas.every((formula, index) => {
+      const [name, inclusions] = formerWeddingDraft[index]!;
+      return !formula.priced && formula.name === name && JSON.stringify(formula.inclusions ?? []) === JSON.stringify(inclusions);
+    });
+  if (!untouched) return;
+  // ifRevisionId: if the agency saves the tab meanwhile, this write is refused and their edit wins.
+  await client
+    .patch(id)
+    .ifRevisionId(current.rev)
+    .set(pricingFields(pricingDrafts.wedding))
+    .commit()
+    .then(() => console.log("[seed] wedding formulas replaced with the wedding guide plans"))
+    .catch(() => console.log("[seed] wedding formulas edited meanwhile: kept as they are"));
 }
 
 type ImageField = ReturnType<typeof imageUploader>;
