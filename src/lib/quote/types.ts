@@ -1,6 +1,6 @@
 /** Shared between the quote form (client) and its Server Action. */
 
-export type QuoteField = "name" | "phone" | "email" | "eventType" | "city" | "date" | "guests" | "budget" | "message";
+export type QuoteField = "name" | "phone" | "email" | "eventType" | "city" | "date" | "guests" | "budget" | "pack" | "message";
 
 export type QuoteState =
   | { status: "idle" }

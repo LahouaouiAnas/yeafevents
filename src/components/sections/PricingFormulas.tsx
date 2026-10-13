@@ -4,6 +4,7 @@ import { GoldRule, StarBullet } from "@/components/ui/Ornaments";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/get-dictionary";
 import type { PricingFormula } from "@/lib/content/types";
+import { routePath, type CategoryKey } from "@/lib/routes";
 
 type Labels = Dictionary["category"]["pricing"];
 
@@ -53,7 +54,23 @@ export function startingPrice(formulas: PricingFormula[] | undefined, labels: La
  * Formulas side by side: name, price, then everything included, visible at once. The
  * featured formula gets a gold frame. Edited in the Studio (Types d'événement → Formules & prix).
  */
-export function FormulaCards({ formulas, labels, locale }: { formulas: PricingFormula[]; labels: Labels; locale: Locale }) {
+/** The quote form with this event type and package already chosen (read by EventComposer). */
+function chooseHref(category: CategoryKey, formula: PricingFormula, locale: Locale): string {
+  const query = new URLSearchParams({ type: category, pack: formula.name });
+  return `${routePath("contact", locale)}?${query}#composer`;
+}
+
+export function FormulaCards({
+  category,
+  formulas,
+  labels,
+  locale,
+}: {
+  category: CategoryKey;
+  formulas: PricingFormula[];
+  labels: Labels;
+  locale: Locale;
+}) {
   const columns = formulas.length >= 3 ? "lg:grid-cols-3" : formulas.length === 2 ? "md:grid-cols-2" : "max-w-xl";
   return (
     <ul className={`grid gap-6 ${columns}`}>
@@ -100,6 +117,17 @@ export function FormulaCards({ formulas, labels, locale }: { formulas: PricingFo
               </>
             )}
             {formula.extras && <p className="mt-6 border-t border-ivory/10 pt-5 text-sm leading-relaxed text-stone">{formula.extras}</p>}
+            {/* Pushed to the bottom so the buttons line up across cards of different lengths. */}
+            <div className="mt-auto pt-8">
+              <ButtonLink
+                href={chooseHref(category, formula, locale)}
+                variant={formula.featured ? "solid" : "outline"}
+                className="w-full"
+                aria-label={`${labels.choose} : ${formula.name}`}
+              >
+                {labels.choose}
+              </ButtonLink>
+            </div>
           </li>
         );
       })}
@@ -108,6 +136,7 @@ export function FormulaCards({ formulas, labels, locale }: { formulas: PricingFo
 }
 
 type PricingFormulasProps = {
+  category: CategoryKey;
   title: string;
   note?: string;
   formulas: PricingFormula[];
@@ -117,7 +146,7 @@ type PricingFormulasProps = {
 };
 
 /** Pricing section of an event-type page. */
-export function PricingFormulas({ title, note, formulas, labels, locale, quoteHref }: PricingFormulasProps) {
+export function PricingFormulas({ category, title, note, formulas, labels, locale, quoteHref }: PricingFormulasProps) {
   return (
     <section id="formules" aria-labelledby="pricing-title" className="scroll-mt-20 border-t border-ivory/10 py-20 sm:py-28">
       <Container>
@@ -127,7 +156,7 @@ export function PricingFormulas({ title, note, formulas, labels, locale, quoteHr
         <GoldRule className="mt-6" />
         {note && <p className="mt-6 max-w-2xl text-ivory/80">{note}</p>}
         <div className="mt-14">
-          <FormulaCards formulas={formulas} labels={labels} locale={locale} />
+          <FormulaCards category={category} formulas={formulas} labels={labels} locale={locale} />
         </div>
         <div className="mt-12">
           <ButtonLink href={quoteHref}>{labels.quote}</ButtonLink>

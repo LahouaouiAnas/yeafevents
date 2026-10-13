@@ -32,6 +32,7 @@ export const quoteRequest = defineType({
     defineField({ name: "date", title: "Date envisagée", type: "date", readOnly: true }),
     defineField({ name: "guests", title: "Invités", type: "number", readOnly: true }),
     defineField({ name: "budget", title: "Budget", type: "string", readOnly: true }),
+    defineField({ name: "pack", title: "Formule choisie", type: "string", readOnly: true }),
     defineField({ name: "message", title: "Message", type: "text", readOnly: true }),
     defineField({ name: "locale", title: "Langue du site", type: "string", readOnly: true }),
   ],

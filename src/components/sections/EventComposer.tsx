@@ -23,6 +23,8 @@ type Answers = {
   city: string;
   guests: string;
   budget: string;
+  /** Package picked with its "Choose" button (?type=…&pack=…). */
+  pack: string;
   message: string;
   name: string;
   phone: string;
@@ -39,13 +41,14 @@ const fieldStep: Record<QuoteField, Step> = {
   city: "when",
   guests: "guests",
   budget: "budget",
+  pack: "type",
   message: "wishes",
   name: "contact",
   phone: "contact",
   email: "contact",
 };
 
-const empty: Answers = { eventType: "", date: "", city: "", guests: "", budget: "", message: "", name: "", phone: "", email: "" };
+const empty: Answers = { eventType: "", date: "", city: "", guests: "", budget: "", pack: "", message: "", name: "", phone: "", email: "" };
 
 const inputClass =
   "mt-3 w-full border-0 border-b border-ivory/25 bg-transparent px-0 py-3 text-lg text-ivory transition-colors duration-300 placeholder:text-stone/50 hover:border-ivory/50 focus:border-champagne focus:ring-0 focus:outline-none aria-invalid:border-[#d98b7a]";
@@ -80,7 +83,17 @@ export function EventComposer({ locale, labels, composer, eventTypes, whatsapp }
   // The page is pre-rendered, so "today" and the load time must come from the visitor's browser.
   useEffect(() => {
     startedAt.current = String(Date.now());
-  }, []);
+    // Arriving from a package's "Choose" button: event type and package are already answered.
+    const params = new URLSearchParams(window.location.search);
+    const type = params.get("type") ?? "";
+    if (eventTypes.some((option) => option.value === type)) {
+      const pack = (params.get("pack") ?? "").slice(0, 120);
+      startTransition(() => {
+        setAnswers((current) => ({ ...current, eventType: type, pack }));
+        setIndex(1);
+      });
+    }
+  }, [eventTypes]);
 
   // Move focus to the new question, but not on first load.
   useEffect(() => {
@@ -131,6 +144,7 @@ export function EventComposer({ locale, labels, composer, eventTypes, whatsapp }
 
   const recap: { label: string; value: string }[] = [
     { label: labels.eventType, value: typeLabel },
+    ...(answers.pack ? [{ label: composer.pack, value: answers.pack }] : []),
     { label: labels.date, value: answers.date ? new Date(`${answers.date}T12:00:00`).toLocaleDateString(locale === "fr" ? "fr-FR" : "en-GB", { dateStyle: "long" }) : "" },
     { label: labels.city, value: answers.city },
     { label: labels.guests, value: answers.guests },
@@ -206,6 +220,8 @@ export function EventComposer({ locale, labels, composer, eventTypes, whatsapp }
                     <Choice
                       checked={answers.eventType === option.value}
                       onSelect={() => {
+                        // Another type than the chosen package's: the package no longer applies.
+                        if (option.value !== answers.eventType) set("pack", "");
                         set("eventType", option.value);
                         go(index + 1);
                       }}
