@@ -1,19 +1,19 @@
 import type { Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
-import { getCategories } from "@/lib/content";
+import { getCategories, getSiteSections } from "@/lib/content";
 import { categoryPath, routePath } from "@/lib/routes";
 import { HeaderBar, type NavItem } from "./HeaderBar";
 import { Logo } from "./Logo";
 
 export async function Header({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
-  const categories = await getCategories(locale);
+  const [categories, show] = await Promise.all([getCategories(locale), getSiteSections()]);
 
-  // Main navigation = home + the five event categories + pricing. Everything else lives in the footer and CTAs.
+  // Main navigation = home + the five event categories + packages (when shown). Everything else lives in the footer and CTAs.
   const items: NavItem[] = [
     { href: routePath("home", locale), label: dict.nav.home, exact: true },
     ...categories.map((category) => ({ href: categoryPath(category.key, locale), label: category.label })),
-    { href: routePath("pricing", locale), label: dict.nav.pricing },
+    ...(show.packagesPage ? [{ href: routePath("pricing", locale), label: dict.nav.pricing }] : []),
   ];
 
   const secondary: NavItem[] = [

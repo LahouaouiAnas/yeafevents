@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { absoluteUrl } from "@/config/site";
 import { defaultLocale, locales, type Locale } from "@/i18n/config";
-import { getPosts, getProjects, getShowcase } from "@/lib/content";
+import { getPosts, getProjects, getShowcase, getSiteSections } from "@/lib/content";
 import {
   blogPostPath,
   categoryKeys,
@@ -34,16 +34,18 @@ function localizedEntries(paths: LocalizedPaths, options: Omit<Entry, "url" | "a
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [projectsByLocale, postsByLocale] = await Promise.all([
+  const [projectsByLocale, postsByLocale, sections] = await Promise.all([
     Promise.all(locales.map((locale) => getProjects(locale))),
     Promise.all(locales.map((locale) => getPosts(locale))),
+    getSiteSections(),
   ]);
   const showcase = await getShowcase(defaultLocale);
   const hasProjects = showcase.length > 0 || projectsByLocale.some((list) => list.length > 0);
   const hasPosts = postsByLocale.some((list) => list.length > 0);
 
   // Listing pages are excluded (and noindexed) while they are empty.
-  const staticKeys: StaticRouteKey[] = ["home", "pricing", "marrakech", "morocco", "services", "about", "contact"];
+  const staticKeys: StaticRouteKey[] = ["home", "marrakech", "morocco", "services", "about", "contact"];
+  if (sections.packagesPage) staticKeys.push("pricing");
   if (hasProjects) staticKeys.push("projects");
   if (hasPosts) staticKeys.push("blog");
 

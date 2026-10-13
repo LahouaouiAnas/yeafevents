@@ -100,6 +100,8 @@ export const categoriesQuery = (l: Locale) => `
     showPrices,
     "formulas": formulas[]{
       "name": name.${l},
+      guestsMin,
+      guestsMax,
       "audience": audience.${l},
       priceEur,
       priceGbp,
@@ -140,3 +142,6 @@ export const homeQuery = (l: Locale) => `
     "seoDescription": seoDescription.${l}
   }
 `;
+
+/** Show / hide checkboxes (fixed ID `siteSettings`). */
+export const siteSettingsQuery = `*[_id == "siteSettings"][0]`;

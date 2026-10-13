@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { CtaBanner } from "@/components/sections/CtaBanner";
 import { FormulaCards } from "@/components/sections/PricingFormulas";
@@ -7,7 +8,7 @@ import { ButtonLink } from "@/components/ui/ButtonLink";
 import { Container } from "@/components/ui/Container";
 import type { Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
-import { getCategories } from "@/lib/content";
+import { getCategories, getSiteSections } from "@/lib/content";
 import { categoryPath, routePath, routePaths } from "@/lib/routes";
 import { buildMetadata } from "@/lib/seo/metadata";
 import { breadcrumbTrail } from "./shared";
@@ -24,7 +25,9 @@ export function pricingMetadata(locale: Locale) {
 export async function PricingView({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
   const t = dict.pricingPage;
-  const categories = await getCategories(locale);
+  const [categories, show] = await Promise.all([getCategories(locale), getSiteSections()]);
+  // Hidden in the Studio (Sections du site → Page Formules): the page does not exist.
+  if (!show.packagesPage) notFound();
   const contactHref = `${routePath("contact", locale)}#composer`;
 
   return (

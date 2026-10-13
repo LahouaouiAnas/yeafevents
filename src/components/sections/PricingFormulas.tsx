@@ -29,6 +29,16 @@ function priceLines(formula: PricingFormula, labels: Labels, locale: Locale) {
   return { main: formatPrice(first, formula[first]!, locale), secondary: secondary || undefined, from: true };
 }
 
+/** "60 à 80 invités" / "Dès 150 invités" / "Jusqu'à 30 invités". */
+function guestsLine({ guestsMin: min, guestsMax: max }: PricingFormula, labels: Labels, locale: Locale): string | undefined {
+  const format = (value: number) => new Intl.NumberFormat(numberLocale[locale]).format(value);
+  const fill = (template: string) => template.replace("{min}", format(min ?? 0)).replace("{max}", format(max ?? 0));
+  if (min && max) return fill(labels.guestsRange);
+  if (min) return fill(labels.guestsFrom);
+  if (max) return fill(labels.guestsUpTo);
+  return undefined;
+}
+
 /** Lowest displayed starting price of a list of formulas, e.g. for a card "dès 2 500 €". */
 export function startingPrice(formulas: PricingFormula[] | undefined, labels: Labels, locale: Locale): string | undefined {
   // Compared in the first currency (€, then £, then MAD) that any formula uses.
@@ -49,6 +59,7 @@ export function FormulaCards({ formulas, labels, locale }: { formulas: PricingFo
     <ul className={`grid gap-6 ${columns}`}>
       {formulas.map((formula) => {
         const price = priceLines(formula, labels, locale);
+        const guests = guestsLine(formula, labels, locale);
         return (
           <li
             key={formula.name}
@@ -70,7 +81,8 @@ export function FormulaCards({ formulas, labels, locale }: { formulas: PricingFo
               </p>
             )}
             {price?.secondary && <p className="mt-1 text-sm text-ivory/60">{price.secondary}</p>}
-            {formula.audience && <p className="mt-4 text-ivory/80">{formula.audience}</p>}
+            {guests && <p className="mt-4 text-lg text-ivory">{guests}</p>}
+            {formula.audience && <p className={guests ? "mt-1 text-ivory/70" : "mt-4 text-ivory/80"}>{formula.audience}</p>}
             {formula.inclusions.length > 0 && (
               <>
                 <p className="eyebrow mt-7 border-t border-ivory/10 pt-6 text-champagne">{labels.included}</p>

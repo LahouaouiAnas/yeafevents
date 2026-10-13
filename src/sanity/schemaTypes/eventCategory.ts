@@ -38,9 +38,9 @@ export const eventCategory = defineType({
     defineField({ name: "lead", title: "Chapeau (sous le titre)", type: "localeText", group: "text" }),
     defineField({ name: "introTitle", title: "Titre de l'introduction", type: "localeString", group: "text" }),
     defineField({ name: "intro", title: "Introduction", type: "localeParagraphs", group: "text" }),
-    // No longer shown on the site (pages were shortened); kept hidden so stored text is not flagged.
-    defineField({ name: "includes", title: "Ce qui est compris", type: "localeStringList", group: "text", hidden: true }),
-    defineField({ name: "occasions", title: "Occasions", type: "localeStringList", group: "text", hidden: true }),
+    // Shown only when "Ce que nous prenons en charge" / "Savoir-faire associés" are ticked in Sections du site.
+    defineField({ name: "includes", title: "Ce que nous prenons en charge", type: "localeStringList", group: "text" }),
+    defineField({ name: "occasions", title: "Occasions", type: "localeStringList", group: "text" }),
     defineField({
       name: "relatedServices",
       title: "Services associés",
@@ -48,7 +48,6 @@ export const eventCategory = defineType({
       of: [defineArrayMember({ type: "string" })],
       options: { list: serviceOptions },
       group: "text",
-      hidden: true,
     }),
     defineField({
       name: "showPrices",
@@ -82,10 +81,28 @@ export const eventCategory = defineType({
           type: "object",
           name: "formula",
           fields: [
-            defineField({ name: "name", title: "Nom (ex. « Formule Signature »)", type: "localeString" }),
+            defineField({ name: "name", title: "Titre de la formule (ex. « Formule Signature »)", type: "localeString" }),
+            defineField({
+              name: "guestsMin",
+              title: "Nombre d'invités : minimum",
+              description: "Affiché « 60 à 80 invités ». Laissez vide si sans minimum.",
+              type: "number",
+              validation: (rule) => rule.min(1).integer(),
+            }),
+            defineField({
+              name: "guestsMax",
+              title: "Nombre d'invités : maximum",
+              description: "Laissez vide si sans maximum (« Dès 150 invités »).",
+              type: "number",
+              validation: (rule) =>
+                rule.integer().custom((max, context) => {
+                  const min = (context.parent as { guestsMin?: number } | undefined)?.guestsMin;
+                  return typeof max === "number" && typeof min === "number" && max < min ? "Le maximum doit être au moins égal au minimum." : true;
+                }),
+            }),
             defineField({
               name: "audience",
-              title: "Pour qui (ex. « Pour 100 à 150 invités. Notre formule la plus demandée. »)",
+              title: "Description courte (ex. « Une journée et une soirée »)",
               type: "localeText",
             }),
             defineField({ name: "priceEur", title: "Prix de départ en €", type: "number", validation: (rule) => rule.min(0) }),
@@ -123,13 +140,17 @@ export const eventCategory = defineType({
             }),
           ],
           preview: {
-            select: { title: "name.fr", eur: "priceEur", gbp: "priceGbp", mad: "priceMad", onRequest: "onRequest" },
-            prepare: ({ title, eur, gbp, mad, onRequest }) => ({
-              title: title ?? "Formule",
-              subtitle:
-                [eur ? `dès ${eur} €` : null, gbp ? `dès ${gbp} £` : null, mad ? `${mad} MAD` : null].filter(Boolean).join(" · ") ||
-                (onRequest ? "Sur devis" : "Cachée : ajoutez un prix ou cochez « Prix sur demande »"),
-            }),
+            select: { title: "name.fr", eur: "priceEur", gbp: "priceGbp", mad: "priceMad", onRequest: "onRequest", min: "guestsMin", max: "guestsMax" },
+            prepare: ({ title, eur, gbp, mad, onRequest, min, max }) => {
+              const prices = [eur ? `dès ${eur} €` : null, gbp ? `dès ${gbp} £` : null, mad ? `${mad} MAD` : null].filter(Boolean).join(" · ");
+              const guests = min || max ? `${min ?? "?"}–${max ?? "+"} invités` : null;
+              return {
+                title: title ?? "Formule",
+                subtitle:
+                  [guests, prices || (onRequest ? "Sans prix" : null)].filter(Boolean).join(" · ") ||
+                  "Cachée : ajoutez un prix ou cochez « Afficher sans prix »",
+              };
+            },
           },
         }),
       ],

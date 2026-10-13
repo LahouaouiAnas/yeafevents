@@ -9,6 +9,7 @@ import { siteConfig } from "@/config/site";
 import { locales } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { resolveLocale } from "@/i18n/params";
+import { getSiteSections } from "@/lib/content";
 import { organizationSchema, websiteSchema } from "@/lib/seo/json-ld";
 
 export function generateStaticParams() {
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
 };
 
 export default async function LocaleLayout({ children, params }: LayoutProps<"/[lang]">) {
-  const locale = await resolveLocale(params);
+  const [locale, show] = await Promise.all([resolveLocale(params), getSiteSections()]);
 
   return (
     <html lang={locale} className={`${fontVariables} antialiased`}>
@@ -37,7 +38,9 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
           {children}
         </main>
         <Footer locale={locale} />
-        <WhatsAppButton label={getDictionary(locale).a11y.whatsapp} message={getDictionary(locale).a11y.whatsappMessage} />
+        {show.whatsappButton && (
+          <WhatsAppButton label={getDictionary(locale).a11y.whatsapp} message={getDictionary(locale).a11y.whatsappMessage} />
+        )}
         <JsonLd data={[organizationSchema(getDictionary(locale).footer.tagline), websiteSchema(locale)]} />
       </body>
     </html>

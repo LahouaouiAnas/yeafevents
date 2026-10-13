@@ -2,7 +2,7 @@ import Link from "next/link";
 import { siteConfig, telHref, whatsappHref } from "@/config/site";
 import type { Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
-import { getCategories } from "@/lib/content";
+import { getCategories, getSiteSections } from "@/lib/content";
 import { categoryPath, routePath } from "@/lib/routes";
 import { Container } from "@/components/ui/Container";
 import { Logo } from "./Logo";
@@ -13,11 +13,11 @@ const linkClass = "inline-block py-1 text-stone transition-colors duration-300 h
 /** Carries every secondary destination the slim main menu leaves out. */
 export async function Footer({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
-  const categories = await getCategories(locale);
+  const [categories, show] = await Promise.all([getCategories(locale), getSiteSections()]);
   const { email, phones, whatsapp } = siteConfig.contact;
 
   const agency = [
-    { href: routePath("pricing", locale), label: dict.nav.pricing },
+    ...(show.packagesPage ? [{ href: routePath("pricing", locale), label: dict.nav.pricing }] : []),
     { href: routePath("about", locale), label: dict.nav.about },
     { href: routePath("projects", locale), label: dict.nav.projects },
     { href: routePath("services", locale), label: dict.nav.services },

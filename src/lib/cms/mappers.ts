@@ -174,6 +174,8 @@ export type RawCategory = {
   formulas?:
     | {
         name?: string | null;
+        guestsMin?: number | null;
+        guestsMax?: number | null;
         audience?: string | null;
         priceEur?: number | null;
         priceGbp?: number | null;
@@ -188,14 +190,16 @@ export type RawCategory = {
 
 /** Formulas with a name and a price (or marked "on request"); anything incomplete stays off the site. */
 function toFormulas(raw: RawCategory["formulas"]): PricingFormula[] {
-  const price = (value: number | null | undefined) => (typeof value === "number" && value > 0 ? value : undefined);
+  const positive = (value: number | null | undefined) => (typeof value === "number" && value > 0 ? value : undefined);
   return (raw ?? [])
     .map((formula) => ({
       name: formula.name?.trim() ?? "",
+      guestsMin: positive(formula.guestsMin),
+      guestsMax: positive(formula.guestsMax),
       audience: formula.audience?.trim() || undefined,
-      priceEur: price(formula.priceEur),
-      priceGbp: price(formula.priceGbp),
-      priceMad: price(formula.priceMad),
+      priceEur: positive(formula.priceEur),
+      priceGbp: positive(formula.priceGbp),
+      priceMad: positive(formula.priceMad),
       onRequest: formula.onRequest ?? false,
       featured: formula.featured ?? false,
       inclusions: (formula.inclusions ?? [])

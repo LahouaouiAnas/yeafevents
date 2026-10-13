@@ -8,6 +8,7 @@ import { formerWeddingDraft, formerWeddingNote, pricingDrafts, type PricingDraft
 import { getShowcaseContent } from "@/content/showcase";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { locales, type Locale } from "@/i18n/config";
+import { defaultSections } from "@/lib/content/sections";
 import { categoryKeys } from "@/lib/routes";
 import { sanityConfig } from "./config";
 
@@ -62,6 +63,8 @@ export async function seedSanity(): Promise<void> {
   await seedFormulas(client);
   await applyWeddingGuide(client);
   await rewordWeddingNote(client);
+  await splitGuestCounts(client);
+  await seedSiteSettings(client);
   await seedHomePage(client, imageField);
   await upgradeHomeHero(client, imageField);
   await seedBlogDrafts(client, imageField);
@@ -97,6 +100,8 @@ function pricingFields(draft: PricingDraft) {
       _type: "formula",
       _key: `formula${index}`,
       name: localized("localeString", formula.name),
+      ...(formula.guestsMin ? { guestsMin: formula.guestsMin } : {}),
+      ...(formula.guestsMax ? { guestsMax: formula.guestsMax } : {}),
       ...(formula.audience ? { audience: localized("localeText", formula.audience) } : {}),
       ...(formula.priceGbp ? { priceGbp: formula.priceGbp } : {}),
       featured: formula.featured ?? false,
@@ -169,6 +174,58 @@ async function rewordWeddingNote(client: Client): Promise<void> {
   if (note !== formerWeddingNote) return;
   await client.patch(id).set({ pricingNote: localized("localeText", pricingDrafts.wedding.note) }).commit();
   console.log("[seed] wedding pricing introduction reworded without prices");
+}
+
+/**
+ * The guest count moved from the formula's short description ("60 à 80 invités · une journée
+ * et une soirée") to its own number fields. Splits descriptions still written that way;
+ * formulas that already have a guest count, or another wording, are left alone.
+ */
+async function splitGuestCounts(client: Client): Promise<void> {
+  type Formula = { guestsMin?: number; guestsMax?: number; audience?: Partial<Record<Locale, string>> } & Record<string, unknown>;
+  const docs = await client.fetch<{ _id: string; _rev: string; formulas: Formula[] }[]>(
+    `*[_type == "eventCategory" && defined(formulas)]{ _id, _rev, formulas }`,
+  );
+  const frPattern = /^(\d+) à (\d+) invités · (.+)$/;
+  const enPattern = /^\d+-\d+ guests · (.+)$/;
+  const capitalize = (text: string) => text.charAt(0).toLocaleUpperCase("fr") + text.slice(1);
+
+  for (const doc of docs) {
+    let changed = false;
+    const formulas = doc.formulas.map((formula) => {
+      const fr = formula.audience?.fr?.match(frPattern);
+      if (!fr || formula.guestsMin !== undefined || formula.guestsMax !== undefined) return formula;
+      changed = true;
+      const en = formula.audience?.en?.match(enPattern);
+      return {
+        ...formula,
+        guestsMin: Number(fr[1]),
+        guestsMax: Number(fr[2]),
+        audience: { ...formula.audience, fr: capitalize(fr[3]!), ...(en ? { en: capitalize(en[1]!) } : {}) },
+      };
+    });
+    if (!changed) continue;
+    await client
+      .patch(doc._id)
+      .ifRevisionId(doc._rev)
+      .set({ formulas })
+      .commit()
+      .then(() => console.log(`[seed] guest counts moved to their own fields in "${doc._id}"`))
+      .catch(() => console.log(`[seed] "${doc._id}" edited meanwhile: guest counts left as they are`));
+  }
+}
+
+/** "Sections du site" with every box at its default, so the Studio shows the real state. */
+async function seedSiteSettings(client: Client): Promise<void> {
+  const saved = await client.fetch<Record<string, unknown> | null>(`*[_id == "siteSettings"][0]`);
+  if (!saved) {
+    await client.createIfNotExists({ _id: "siteSettings", _type: "siteSettings", ...defaultSections });
+    console.log("[seed] « Sections du site » created");
+    return;
+  }
+  // Boxes added to the list later get their default, without touching the saved ones.
+  const missing = Object.fromEntries(Object.entries(defaultSections).filter(([key]) => typeof saved[key] !== "boolean"));
+  if (Object.keys(missing).length > 0) await client.patch("siteSettings").setIfMissing(missing).commit();
 }
 
 type ImageField = ReturnType<typeof imageUploader>;

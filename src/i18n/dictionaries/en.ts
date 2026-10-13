@@ -129,9 +129,19 @@ export const en: Dictionary = {
       included: "What's included",
       featured: "Most requested",
       onRequest: "On request",
+      guestsRange: "{min}–{max} guests",
+      guestsFrom: "From {min} guests",
+      guestsUpTo: "Up to {max} guests",
       quote: "Request my quote",
     },
+    includesTitle: "What we take care of",
+    occasionsTitle: "Occasions",
+    relatedServices: "Related expertise",
+    otherCategories: "Our other worlds",
     testimonials: "They trusted us",
+    localTitle: "In Marrakech and across Morocco",
+    localText:
+      "Based in Marrakech, we know its venues and suppliers, and we support your events throughout the country.",
   },
   marrakech: {
     seo: {
