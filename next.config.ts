@@ -31,6 +31,8 @@ const nextConfig: NextConfig = {
       { source: "/fr/services/soiree-privee", destination: "/fr/soirees-privees", permanent: true },
       // French private-party page renamed from its English slug.
       { source: "/fr/private-parties", destination: "/fr/soirees-privees", permanent: true },
+      { source: "/fr/tarifs", destination: "/fr/formules", permanent: true },
+      { source: "/en/pricing", destination: "/en/packages", permanent: true },
       { source: "/en/services/private-parties", destination: "/en/private-parties", permanent: true },
       { source: "/fr/services/evenement-entreprise", destination: "/fr/seminaires", permanent: true },
       { source: "/en/services/corporate-events", destination: "/en/seminars", permanent: true },

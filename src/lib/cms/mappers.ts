@@ -170,6 +170,7 @@ export type RawCategory = {
   serviceType?: string | null;
   pricingTitle?: string | null;
   pricingNote?: string | null;
+  showPrices?: boolean | null;
   formulas?:
     | {
         name?: string | null;
@@ -240,9 +241,14 @@ export function mergeCategory(base: EventCategory, raw: RawCategory | undefined)
 }
 
 function pricingOf(raw: RawCategory, label: string): EventCategory["pricing"] {
-  const formulas = toFormulas(raw.formulas);
-  if (formulas.length === 0) return undefined;
-  return { title: raw.pricingTitle?.trim() || label, note: raw.pricingNote?.trim() || undefined, formulas };
+  const showPrices = raw.showPrices === true;
+  const visible = toFormulas(raw.formulas);
+  if (visible.length === 0) return undefined;
+  // Hidden prices never reach the page, not even its source code.
+  const formulas = showPrices
+    ? visible
+    : visible.map((formula) => ({ ...formula, priceEur: undefined, priceGbp: undefined, priceMad: undefined, onRequest: false }));
+  return { title: raw.pricingTitle?.trim() || label, note: raw.pricingNote?.trim() || undefined, showPrices, formulas };
 }
 
 type Text = string | null | undefined;

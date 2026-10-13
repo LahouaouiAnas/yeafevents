@@ -9,10 +9,10 @@ export function generateStaticParams() {
   return [{ lang: LOCALE }];
 }
 
-export async function generateMetadata({ params }: PageProps<"/[lang]/tarifs">) {
+export async function generateMetadata({ params }: PageProps<"/[lang]/formules">) {
   return pricingMetadata(await resolveLocale(params, LOCALE));
 }
 
-export default async function Page({ params }: PageProps<"/[lang]/tarifs">) {
+export default async function Page({ params }: PageProps<"/[lang]/formules">) {
   return <PricingView locale={await resolveLocale(params, LOCALE)} />;
 }

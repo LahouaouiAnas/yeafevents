@@ -4,8 +4,9 @@ import type { CategoryKey } from "@/lib/routes";
 /**
  * Starting content of the "Formules & prix" tab, imported once per event type into Sanity
  * (src/lib/cms/seed.ts). Weddings carry the agency's own plans and prices (Yeaf Events wedding
- * guide for UK couples). The other types have no price yet: a formula stays off the site until
- * the agency enters its own price (or ticks "Prix sur demande") in the Studio.
+ * guide for UK couples); prices are only shown once "Afficher les prix" is ticked. The other
+ * types have no price yet: a formula stays off the site until the agency enters its own price
+ * (or ticks "Afficher sans prix") in the Studio.
  */
 
 type Localized = Record<Locale, string>;
@@ -40,17 +41,24 @@ const transfers = item("Accueil et transferts des invités", "Guest welcome and 
 const planning = item("Planification complète, de l'idée au jour J", "Full planning, from first idea to the day itself");
 
 const note = item(
-  "Prix de départ, ajustés ensuite à votre date, à votre lieu et au nombre d'invités.",
-  "Starting prices, then adjusted to your date, venue and number of guests.",
+  "Chaque formule est ensuite ajustée à votre date, à votre lieu et au nombre d'invités.",
+  "Each package is then tailored to your date, venue and number of guests.",
 );
+
+/** Wedding introduction, without prices (they are hidden unless "Afficher les prix" is ticked). */
+const weddingNote = item(
+  "Chaque formule est ajustée à votre date, à votre lieu, au nombre d'invités et aux prestations choisies. Hors vols, hébergement et transport des invités. Votre proposition personnalisée confirme le lieu, les prestations et le prix.",
+  "Each package is tailored to your date, venue, guest count and selected services. Guest flights, accommodation and transport are not included. Your personalised proposal confirms the venue, services and price.",
+);
+
+/** Wedding introduction shipped with the guide, which mentioned "indicative starting prices". */
+export const formerWeddingNote =
+  "Prix de départ indicatifs, selon la date, le lieu, le nombre d'invités et les prestations choisies. Hors vols, hébergement et transport des invités. Votre proposition personnalisée confirme le lieu, les prestations, les taxes et le prix final.";
 
 /** The three wedding plans of the agency's guide, with its indicative starting prices in GBP. */
 const weddingGuide: PricingDraft = {
   title: item("Nos formules mariage", "Our wedding packages"),
-  note: item(
-    "Prix de départ indicatifs, selon la date, le lieu, le nombre d'invités et les prestations choisies. Hors vols, hébergement et transport des invités. Votre proposition personnalisée confirme le lieu, les prestations, les taxes et le prix final.",
-    "Indicative starting prices, subject to the date, venue, guest count and selected services. Guest flights, accommodation and transport are not included. Your personalised proposal confirms the venue, services, taxes and final price.",
-  ),
+  note: weddingNote,
   formulas: [
     {
       name: tiers.essential,
@@ -157,8 +165,8 @@ export const pricingDrafts: Record<CategoryKey, PricingDraft> = {
   festival: {
     title: item("Nos formules festival", "Our festival packages"),
     note: item(
-      "Prix de départ, ajustés ensuite à la jauge, au site et à la durée de l'événement.",
-      "Starting prices, then adjusted to capacity, site and duration.",
+      "Chaque formule est ensuite ajustée à la jauge, au site et à la durée de l'événement.",
+      "Each package is then tailored to capacity, site and duration.",
     ),
     formulas: [
       { name: tiers.essential, inclusions: [item("Son et lumière", "Sound and lighting"), item("Régie technique", "Technical management")] },
@@ -176,8 +184,8 @@ export const pricingDrafts: Record<CategoryKey, PricingDraft> = {
   seminar: {
     title: item("Nos formules séminaire", "Our seminar packages"),
     note: item(
-      "Prix de départ, ajustés ensuite au nombre de participants, à la durée et au lieu.",
-      "Starting prices, then adjusted to the number of participants, duration and venue.",
+      "Chaque formule est ensuite ajustée au nombre de participants, à la durée et au lieu.",
+      "Each package is then tailored to the number of participants, duration and venue.",
     ),
     formulas: [
       { name: tiers.essential, inclusions: [item("Salle et équipement audiovisuel", "Meeting room and audiovisual equipment"), item("Pauses café", "Coffee breaks"), coordination] },
