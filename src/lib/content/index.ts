@@ -123,8 +123,18 @@ export async function getHomeContent(locale: Locale): Promise<HomeContent> {
   return mergeHome(getDefaultHomeContent(locale), raw);
 }
 
+function getSiteSettings() {
+  return sanityFetch<Record<string, unknown>>(siteSettingsQuery, {}, ["siteSettings"]);
+}
+
 /** Which sections are shown (Studio → Sections du site), over the shipped defaults. */
 export async function getSiteSections(): Promise<SiteSections> {
-  const raw = await sanityFetch<Record<string, unknown>>(siteSettingsQuery, {}, ["siteSettings"]);
-  return mergeSections(raw);
+  return mergeSections(await getSiteSettings());
+}
+
+/** The Meta Pixel ID, only when it is switched on in the Studio with a valid ID; otherwise null. */
+export async function getMetaPixelId(): Promise<string | null> {
+  const raw = await getSiteSettings();
+  const id = typeof raw?.metaPixelId === "string" ? raw.metaPixelId.trim() : "";
+  return raw?.metaPixelEnabled === true && /^\d{10,20}$/.test(id) ? id : null;
 }

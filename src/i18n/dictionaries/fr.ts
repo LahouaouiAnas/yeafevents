@@ -43,6 +43,15 @@ export const fr = {
     contact: "Contact",
     location: "Marrakech, Maroc",
     rights: "Tous droits réservés.",
+    privacy: "Confidentialité",
+    cookies: "Gérer les cookies",
+  },
+  consent: {
+    title: "Cookies",
+    text: "Avec votre accord, nous utilisons le pixel de Meta (Facebook, Instagram) pour mesurer l'efficacité de nos publicités. Sans accord, rien n'est envoyé.",
+    accept: "Accepter",
+    decline: "Refuser",
+    more: "En savoir plus",
   },
   home: {
     seo: {
@@ -442,6 +451,33 @@ export const fr = {
     seo: {
       title: "Formules événementielles à Marrakech | Yeaf Events",
       description: "Nos formules pour mariages, soirées privées, anniversaires, festivals et séminaires à Marrakech et au Maroc, et ce qu'elles incluent.",
+    },
+  },
+  privacyPage: {
+    eyebrow: "Confidentialité",
+    title: "Vos données personnelles",
+    lead: "Ce que nous faisons des informations que vous nous confiez sur ce site, et comment garder la main dessus.",
+    sections: [
+      {
+        title: "Qui sommes-nous",
+        text: "Yeaf Events, agence événementielle basée à Marrakech, est responsable des données recueillies sur ce site. Pour toute question : {email}.",
+      },
+      {
+        title: "Vos demandes de devis",
+        text: "Les informations que vous envoyez (nom, téléphone, email, détails de votre projet) servent uniquement à vous répondre et à préparer votre proposition. Elles sont conservées le temps nécessaire au suivi de votre demande et ne sont jamais vendues.",
+      },
+      {
+        title: "Mesure de nos publicités (Meta Pixel)",
+        text: "Seulement si vous l'acceptez dans le bandeau cookies, le pixel de Meta Platforms est chargé. Il informe Meta des pages consultées et de certaines actions (formule choisie, demande envoyée, clic vers WhatsApp, le téléphone ou l'email), afin de mesurer et d'améliorer nos publicités sur Facebook et Instagram. Meta traite ces données selon sa propre politique de confidentialité. Vous pouvez changer d'avis à tout moment avec le lien « Gérer les cookies » en bas de page.",
+      },
+      {
+        title: "Vos droits",
+        text: "Conformément à la loi marocaine 09-08 et, le cas échéant, au RGPD, vous pouvez demander l'accès à vos données, leur rectification ou leur suppression, ou vous opposer à leur utilisation, en écrivant à {email}.",
+      },
+    ],
+    seo: {
+      title: "Confidentialité | Yeaf Events",
+      description: "Comment Yeaf Events utilise vos données personnelles et les cookies, et comment exercer vos droits.",
     },
   },
   notFound: {

@@ -6,6 +6,7 @@ import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/get-dictionary";
 import type { ImageAsset } from "@/lib/content/types";
 import { submitQuoteRequest } from "@/lib/quote/actions";
+import { track } from "@/lib/tracking/meta";
 import { initialQuoteState, type QuoteField } from "@/lib/quote/types";
 
 type EventComposerProps = {
@@ -99,6 +100,12 @@ export function EventComposer({ locale, labels, composer, eventTypes, whatsapp }
   useEffect(() => {
     if (moved.current) heading.current?.focus();
   }, [index]);
+
+  // A sent request is the conversion that matters for ads (sent to Meta only with consent).
+  useEffect(() => {
+    if (state.status === "success") track("Lead", { content_category: answers.eventType, content_name: answers.pack || undefined });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- once per successful submission
+  }, [state]);
 
   // A field rejected by the server sends the visitor back to the question that asks it.
   useEffect(() => {

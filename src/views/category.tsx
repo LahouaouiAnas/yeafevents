@@ -1,5 +1,6 @@
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { TrackEvent } from "@/components/tracking/TrackEvent";
 import { ApproachSteps } from "@/components/sections/ApproachSteps";
 import { CtaBanner } from "@/components/sections/CtaBanner";
 import { MediaGallery } from "@/components/sections/MediaGallery";
@@ -162,6 +163,7 @@ export async function CategoryView({ category, locale }: { category: EventCatego
         <CtaBanner title={dict.home.cta.title} text={dict.home.cta.text} primary={{ href: contactHref, label: dict.cta.plan }} />
       )}
 
+      <TrackEvent event="ViewContent" params={{ content_category: category.key, content_name: category.label }} />
       <JsonLd
         data={serviceSchema({
           name: category.title,
