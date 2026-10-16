@@ -50,6 +50,28 @@ export const eventCategory = defineType({
       group: "text",
     }),
     defineField({
+      name: "hideFormulas",
+      title: "Masquer la section formules sur cette page",
+      description: "Coché : aucune formule de ce type d'événement n'apparaît sur le site (page de l'événement et page Formules).",
+      type: "boolean",
+      initialValue: false,
+      group: "pricing",
+    }),
+    defineField({
+      name: "pricingStyle",
+      title: "Présentation",
+      type: "string",
+      options: {
+        list: [
+          { title: "Formules côte à côte, avec bouton « Choisir cette formule »", value: "packs" },
+          { title: "Prestations (cartes courtes, sans bouton)", value: "services" },
+        ],
+        layout: "radio",
+      },
+      initialValue: "packs",
+      group: "pricing",
+    }),
+    defineField({
       name: "showPrices",
       title: "Afficher les prix sur le site",
       description: "Décoché : les formules et ce qu'elles incluent sont affichés, sans aucun prix. Les prix saisis restent enregistrés ici.",
@@ -81,6 +103,13 @@ export const eventCategory = defineType({
           type: "object",
           name: "formula",
           fields: [
+            defineField({
+              name: "hidden",
+              title: "Masquer cette formule",
+              description: "Cochée : la formule reste enregistrée ici mais n'apparaît plus sur le site.",
+              type: "boolean",
+              initialValue: false,
+            }),
             defineField({ name: "name", title: "Titre de la formule (ex. « Formule Signature »)", type: "localeString" }),
             defineField({
               name: "guestsMin",
@@ -140,15 +169,16 @@ export const eventCategory = defineType({
             }),
           ],
           preview: {
-            select: { title: "name.fr", eur: "priceEur", gbp: "priceGbp", mad: "priceMad", onRequest: "onRequest", min: "guestsMin", max: "guestsMax" },
-            prepare: ({ title, eur, gbp, mad, onRequest, min, max }) => {
+            select: { title: "name.fr", eur: "priceEur", gbp: "priceGbp", mad: "priceMad", onRequest: "onRequest", min: "guestsMin", max: "guestsMax", hidden: "hidden" },
+            prepare: ({ title, eur, gbp, mad, onRequest, min, max, hidden }) => {
               const prices = [eur ? `dès ${eur} €` : null, gbp ? `dès ${gbp} £` : null, mad ? `${mad} MAD` : null].filter(Boolean).join(" · ");
               const guests = min || max ? `${min ?? "?"}–${max ?? "+"} invités` : null;
+              const details = [guests, prices || (onRequest ? "Sans prix" : null)].filter(Boolean).join(" · ");
               return {
-                title: title ?? "Formule",
-                subtitle:
-                  [guests, prices || (onRequest ? "Sans prix" : null)].filter(Boolean).join(" · ") ||
-                  "Cachée : ajoutez un prix ou cochez « Afficher sans prix »",
+                title: `${hidden ? "🚫 " : ""}${title ?? "Formule"}`,
+                subtitle: hidden
+                  ? "Masquée sur le site"
+                  : details || "Cachée : ajoutez un prix ou cochez « Afficher sans prix »",
               };
             },
           },

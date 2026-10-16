@@ -171,6 +171,8 @@ export type RawCategory = {
   pricingTitle?: string | null;
   pricingNote?: string | null;
   showPrices?: boolean | null;
+  hideFormulas?: boolean | null;
+  pricingStyle?: string | null;
   formulas?:
     | {
         name?: string | null;
@@ -181,6 +183,7 @@ export type RawCategory = {
         priceGbp?: number | null;
         priceMad?: number | null;
         onRequest?: boolean | null;
+        hidden?: boolean | null;
         featured?: boolean | null;
         inclusions?: { label?: string | null; detail?: string | null }[] | null;
         extras?: string | null;
@@ -188,10 +191,11 @@ export type RawCategory = {
     | null;
 };
 
-/** Formulas with a name and a price (or marked "on request"); anything incomplete stays off the site. */
+/** Formulas not hidden, with a name and a price (or marked "on request"); anything incomplete stays off the site. */
 function toFormulas(raw: RawCategory["formulas"]): PricingFormula[] {
   const positive = (value: number | null | undefined) => (typeof value === "number" && value > 0 ? value : undefined);
   return (raw ?? [])
+    .filter((formula) => formula.hidden !== true)
     .map((formula) => ({
       name: formula.name?.trim() ?? "",
       guestsMin: positive(formula.guestsMin),
@@ -245,14 +249,16 @@ export function mergeCategory(base: EventCategory, raw: RawCategory | undefined)
 }
 
 function pricingOf(raw: RawCategory, label: string): EventCategory["pricing"] {
+  if (raw.hideFormulas === true) return undefined;
   const showPrices = raw.showPrices === true;
+  const style = raw.pricingStyle === "services" ? "services" : "packs";
   const visible = toFormulas(raw.formulas);
   if (visible.length === 0) return undefined;
   // Hidden prices never reach the page, not even its source code.
   const formulas = showPrices
     ? visible
     : visible.map((formula) => ({ ...formula, priceEur: undefined, priceGbp: undefined, priceMad: undefined, onRequest: false }));
-  return { title: raw.pricingTitle?.trim() || label, note: raw.pricingNote?.trim() || undefined, showPrices, formulas };
+  return { title: raw.pricingTitle?.trim() || label, note: raw.pricingNote?.trim() || undefined, style, showPrices, formulas };
 }
 
 type Text = string | null | undefined;

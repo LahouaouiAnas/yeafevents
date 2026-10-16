@@ -75,8 +75,11 @@ export type EventCategory = {
   video?: VideoAsset;
   relatedServices: ServiceKey[];
   /** Set only once formulas are entered in Sanity: prices are never invented. */
-  /** Prices are removed from `formulas` unless `showPrices` (ticked in the Studio). */
-  pricing?: { title: string; note?: string; showPrices: boolean; formulas: PricingFormula[] };
+  /**
+   * Prices are removed from `formulas` unless `showPrices` (ticked in the Studio). "services"
+   * cards are short, without a price or a "Choose" button.
+   */
+  pricing?: { title: string; note?: string; style: "packs" | "services"; showPrices: boolean; formulas: PricingFormula[] };
   seo: { title: string; description: string };
 };
 
