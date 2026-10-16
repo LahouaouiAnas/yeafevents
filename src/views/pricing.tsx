@@ -68,7 +68,7 @@ export async function PricingView({ locale }: { locale: Locale }) {
               </Link>
             </div>
             {category.pricing ? (
-              <FormulaCards formulas={category.pricing.formulas} labels={dict.category.pricing} locale={locale} />
+              <FormulaCards category={category.key} style={category.pricing.style} formulas={category.pricing.formulas} labels={dict.category.pricing} locale={locale} />
             ) : (
               <div className="flex flex-col gap-6 border border-ivory/12 p-7 sm:flex-row sm:items-center sm:justify-between sm:p-8">
                 <p className="max-w-xl text-ivory/85">{t.onRequest}</p>

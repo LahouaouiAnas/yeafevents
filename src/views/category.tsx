@@ -71,6 +71,8 @@ export async function CategoryView({ category, locale }: { category: EventCatego
 
       {show.categoryFormulas && category.pricing && (
         <PricingFormulas
+          category={category.key}
+          style={category.pricing.style}
           title={category.pricing.title}
           note={category.pricing.note}
           formulas={category.pricing.formulas}

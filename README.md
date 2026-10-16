@@ -55,13 +55,17 @@ dataset `production`, public en lecture). Le reste du contenu est dans `src/cont
   moments », étapes, appel final, textes Google), créé au démarrage depuis le contenu livré
   (`src/i18n/dictionaries`, `src/content/media.ts`). Les photos du diaporama restent vides : une photo
   choisie remplace la photo et la vidéo de sa diapositive. Un champ vide reprend le texte d'origine.
-- **Formules & prix** : premier onglet de chaque type d'événement. Case « Afficher les prix sur le
-  site » (décochée par défaut : les formules s'affichent sans aucun prix, qui n'est même pas envoyé
-  à la page). Par formule : titre, nombre d'invités (minimum / maximum, affiché « 60 à 80 invités »), description courte, prix de départ en €, £ et/ou MAD, case « Afficher sans prix
-  (sur devis) », « la plus demandée », liste « Ce qui est inclus », options et conditions.
-  `src/content/pricing-drafts.ts` y est importé une seule fois, si l'onglet n'a jamais été rempli :
-  les mariages reprennent les trois formules du guide mariage Yeaf, les autres types n'ont pas encore
-  de prix. Une formule n'apparaît qu'avec un prix ou « Afficher sans prix » : aucun prix n'est inventé.
+- **Formules & prix** : premier onglet de chaque type d'événement. Cases « Masquer la section
+  formules sur cette page » et « Afficher les prix sur le site » (décochée par défaut : aucun prix
+  n'est affiché ni même envoyé à la page), et choix de la présentation : formules côte à côte avec
+  bouton « Choisir cette formule », ou prestations (cartes courtes sans bouton, pour festivals et
+  séminaires). Par formule : « Masquer cette formule », titre, nombre d'invités (minimum / maximum),
+  description courte, prix de départ en €, £ et/ou MAD, « Afficher sans prix (sur devis) », « la
+  plus demandée », liste « Ce qui est inclus », options et conditions.
+  `src/content/pricing-drafts.ts` reprend les guides de l'agence (mariages, soirées privées,
+  anniversaires, festivals, séminaires) ; il est importé une seule fois si l'onglet n'a jamais été
+  rempli, et remplace une seule fois les premières formules provisoires restées intactes. Une
+  formule n'apparaît qu'avec un prix ou « Afficher sans prix » : aucun prix n'est inventé.
   Les formules s'affichent sur la page du type d'événement et sur la page Formules (`/fr/formules`,
   `/en/packages`) ; avec les prix affichés, les cartes de l'accueil indiquent aussi « dès … ».
 - **Sections du site** (document fixe `siteSettings`) : une case par section à afficher ou masquer

@@ -98,6 +98,8 @@ export const categoriesQuery = (l: Locale) => `
     "pricingTitle": pricingTitle.${l},
     "pricingNote": pricingNote.${l},
     showPrices,
+    hideFormulas,
+    pricingStyle,
     "formulas": formulas[]{
       "name": name.${l},
       guestsMin,
@@ -107,6 +109,7 @@ export const categoriesQuery = (l: Locale) => `
       priceGbp,
       priceMad,
       onRequest,
+      hidden,
       featured,
       "inclusions": inclusions[]{ "label": label.${l}, "detail": detail.${l} },
       "extras": extras.${l}

@@ -44,6 +44,7 @@ function rows(request: QuoteRequest, eventLabel: string): [string, string][] {
     ["Téléphone", request.phone],
     ["Email", request.email],
     ["Type d'événement", eventLabel],
+    ["Formule choisie", request.pack],
     ["Ville", request.city],
     ["Date envisagée", request.date],
     ["Invités", request.guests],

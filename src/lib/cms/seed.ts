@@ -4,7 +4,7 @@ import { createClient } from "next-sanity";
 import { blogDrafts, type BlogDraft, type DraftBlock } from "@/content/blog-drafts";
 import { getCategoryContent, getCategoryMedia } from "@/content/categories";
 import { getImageSource, type ImageId } from "@/content/media";
-import { formerWeddingDraft, formerWeddingNote, pricingDrafts, type PricingDraft } from "@/content/pricing-drafts";
+import { formerDrafts, formerWeddingNote, pricingDrafts, type PricingDraft } from "@/content/pricing-drafts";
 import { getShowcaseContent } from "@/content/showcase";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { locales, type Locale } from "@/i18n/config";
@@ -61,7 +61,7 @@ export async function seedSanity(): Promise<void> {
   await seedEventCategories(client, imageField);
   await renameFrenchPrivateParty(client);
   await seedFormulas(client);
-  await applyWeddingGuide(client);
+  await applyGuides(client);
   await rewordWeddingNote(client);
   await splitGuestCounts(client);
   await seedSiteSettings(client);
@@ -96,6 +96,8 @@ function pricingFields(draft: PricingDraft) {
   return {
     pricingTitle: localized("localeString", draft.title),
     pricingNote: localized("localeText", draft.note),
+    pricingStyle: draft.style,
+    hideFormulas: false,
     formulas: draft.formulas.map((formula, index) => ({
       _type: "formula",
       _key: `formula${index}`,
@@ -105,7 +107,8 @@ function pricingFields(draft: PricingDraft) {
       ...(formula.audience ? { audience: localized("localeText", formula.audience) } : {}),
       ...(formula.priceGbp ? { priceGbp: formula.priceGbp } : {}),
       featured: formula.featured ?? false,
-      onRequest: false,
+      onRequest: formula.onRequest ?? false,
+      hidden: false,
       inclusions: formula.inclusions.map((label, row) => ({
         _type: "inclusion",
         _key: `inc${index}-${row}`,
@@ -132,36 +135,36 @@ async function seedFormulas(client: Client): Promise<void> {
 }
 
 /**
- * Replaces the first, price-less wedding formulas with the plans of the agency's wedding guide,
- * only while the tab still holds exactly those untouched formulas (no price, same names and
- * inclusions). Anything edited in the Studio is kept as is.
+ * Replaces the first, price-less formulas of each event type with the agency's guide
+ * (pricing-drafts.ts), only while the tab still holds exactly those untouched formulas (no
+ * price, same names and inclusions). Anything edited in the Studio is kept as is.
  */
-async function applyWeddingGuide(client: Client): Promise<void> {
-  const id = "category.wedding";
-  const current = await client.fetch<{
-    rev: string;
-    formulas?: { name?: string; priced: boolean; inclusions?: (string | null)[] }[] | null;
-  } | null>(
-    `*[_id == $id][0]{ "rev": _rev, "formulas": formulas[]{ "name": name.fr, "priced": defined(priceEur) || defined(priceGbp) || defined(priceMad) || onRequest == true, "inclusions": inclusions[].label.fr } }`,
-    { id },
+async function applyGuides(client: Client): Promise<void> {
+  type Current = { _id: string; rev: string; formulas?: { name?: string; priced: boolean; inclusions?: (string | null)[] | null }[] | null };
+  const docs = await client.fetch<Current[]>(
+    `*[_type == "eventCategory" && defined(formulas)]{ _id, "rev": _rev, "formulas": formulas[]{ "name": name.fr, "priced": defined(priceEur) || defined(priceGbp) || defined(priceMad) || onRequest == true, "inclusions": inclusions[].label.fr } }`,
   );
-  const formulas = current?.formulas;
-  if (!current || !formulas) return;
-  const untouched =
-    formulas.length === formerWeddingDraft.length &&
-    formulas.every((formula, index) => {
-      const [name, inclusions] = formerWeddingDraft[index]!;
-      return !formula.priced && formula.name === name && JSON.stringify(formula.inclusions ?? []) === JSON.stringify(inclusions);
-    });
-  if (!untouched) return;
-  // ifRevisionId: if the agency saves the tab meanwhile, this write is refused and their edit wins.
-  await client
-    .patch(id)
-    .ifRevisionId(current.rev)
-    .set(pricingFields(pricingDrafts.wedding))
-    .commit()
-    .then(() => console.log("[seed] wedding formulas replaced with the wedding guide plans"))
-    .catch(() => console.log("[seed] wedding formulas edited meanwhile: kept as they are"));
+  for (const doc of docs) {
+    const key = doc._id.replace(/^category\./, "") as keyof typeof pricingDrafts;
+    const former = formerDrafts[key];
+    const formulas = doc.formulas ?? [];
+    if (!former) continue;
+    const untouched =
+      formulas.length === former.length &&
+      formulas.every((formula, index) => {
+        const [name, inclusions] = former[index]!;
+        return !formula.priced && formula.name === name && JSON.stringify(formula.inclusions ?? []) === JSON.stringify(inclusions);
+      });
+    if (!untouched) continue;
+    // ifRevisionId: if the agency saves the tab meanwhile, this write is refused and their edit wins.
+    await client
+      .patch(doc._id)
+      .ifRevisionId(doc.rev)
+      .set(pricingFields(pricingDrafts[key]))
+      .commit()
+      .then(() => console.log(`[seed] "${key}" formulas replaced with the agency's guide`))
+      .catch(() => console.log(`[seed] "${key}" formulas edited meanwhile: kept as they are`));
+  }
 }
 
 /**
