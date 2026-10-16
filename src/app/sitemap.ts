@@ -44,12 +44,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const hasPosts = postsByLocale.some((list) => list.length > 0);
 
   // Listing pages are excluded (and noindexed) while they are empty.
-  const staticKeys: StaticRouteKey[] = ["home", "marrakech", "morocco", "services", "about", "contact"];
+  const staticKeys: StaticRouteKey[] = ["home", "marrakech", "morocco", "services", "about", "contact", "privacy"];
   if (sections.packagesPage) staticKeys.push("pricing");
   if (hasProjects) staticKeys.push("projects");
   if (hasPosts) staticKeys.push("blog");
 
-  const priorities: Partial<Record<StaticRouteKey, number>> = { home: 1, pricing: 0.9, marrakech: 0.9, morocco: 0.8, services: 0.6 };
+  const priorities: Partial<Record<StaticRouteKey, number>> = { home: 1, pricing: 0.9, marrakech: 0.9, morocco: 0.8, services: 0.6, privacy: 0.2 };
 
   const entries: Entry[] = [
     ...staticKeys.flatMap((key) => localizedEntries(routePaths(key), { priority: priorities[key] ?? 0.6 })),

@@ -45,6 +45,15 @@ export const en: Dictionary = {
     contact: "Contact",
     location: "Marrakech, Morocco",
     rights: "All rights reserved.",
+    privacy: "Privacy",
+    cookies: "Manage cookies",
+  },
+  consent: {
+    title: "Cookies",
+    text: "With your consent, we use the Meta pixel (Facebook, Instagram) to measure how well our ads work. Without it, nothing is sent.",
+    accept: "Accept",
+    decline: "Decline",
+    more: "Learn more",
   },
   home: {
     seo: {
@@ -442,6 +451,33 @@ export const en: Dictionary = {
     seo: {
       title: "Event packages in Marrakech | Yeaf Events",
       description: "Our packages for weddings, private parties, birthdays, festivals and seminars in Marrakech and Morocco, and what they include.",
+    },
+  },
+  privacyPage: {
+    eyebrow: "Privacy",
+    title: "Your personal data",
+    lead: "What we do with the information you share on this site, and how you stay in control of it.",
+    sections: [
+      {
+        title: "Who we are",
+        text: "Yeaf Events, an event agency based in Marrakech, is responsible for the data collected on this site. For any question: {email}.",
+      },
+      {
+        title: "Your quote requests",
+        text: "The information you send (name, phone, email, details of your project) is only used to reply to you and prepare your proposal. It is kept for as long as needed to follow up your request and is never sold.",
+      },
+      {
+        title: "Measuring our ads (Meta Pixel)",
+        text: "Only if you accept in the cookie banner, the Meta Platforms pixel is loaded. It tells Meta which pages you view and certain actions (package chosen, request sent, click to WhatsApp, phone or email), so we can measure and improve our ads on Facebook and Instagram. Meta processes this data under its own privacy policy. You can change your mind at any time with the “Manage cookies” link at the bottom of the page.",
+      },
+      {
+        title: "Your rights",
+        text: "Under Moroccan law 09-08 and, where applicable, the GDPR, you can ask to access, correct or delete your data, or object to its use, by writing to {email}.",
+      },
+    ],
+    seo: {
+      title: "Privacy | Yeaf Events",
+      description: "How Yeaf Events uses your personal data and cookies, and how to exercise your rights.",
     },
   },
   notFound: {

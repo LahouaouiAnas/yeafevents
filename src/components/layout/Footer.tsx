@@ -2,7 +2,8 @@ import Link from "next/link";
 import { siteConfig, telHref, whatsappHref } from "@/config/site";
 import type { Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
-import { getCategories, getSiteSections } from "@/lib/content";
+import { ManageCookies } from "@/components/tracking/ManageCookies";
+import { getCategories, getMetaPixelId, getSiteSections } from "@/lib/content";
 import { categoryPath, routePath } from "@/lib/routes";
 import { Container } from "@/components/ui/Container";
 import { Logo } from "./Logo";
@@ -13,7 +14,7 @@ const linkClass = "inline-block py-1 text-stone transition-colors duration-300 h
 /** Carries every secondary destination the slim main menu leaves out. */
 export async function Footer({ locale }: { locale: Locale }) {
   const dict = getDictionary(locale);
-  const [categories, show] = await Promise.all([getCategories(locale), getSiteSections()]);
+  const [categories, show, pixelId] = await Promise.all([getCategories(locale), getSiteSections(), getMetaPixelId()]);
   const { email, phones, whatsapp } = siteConfig.contact;
 
   const agency = [
@@ -103,9 +104,15 @@ export async function Footer({ locale }: { locale: Locale }) {
         </div>
       </Container>
 
-      <Container className="border-t border-ivory/10 py-7 text-xs text-stone/80">
+      <Container className="flex flex-col gap-3 border-t border-ivory/10 py-7 text-xs text-stone/80 sm:flex-row sm:items-center sm:justify-between">
         <p>
           © {new Date().getFullYear()} {siteConfig.name}. {dict.footer.rights}
+        </p>
+        <p className="flex gap-6">
+          <Link href={routePath("privacy", locale)} className="hover:text-ivory">
+            {dict.footer.privacy}
+          </Link>
+          {pixelId && <ManageCookies label={dict.footer.cookies} className="cursor-pointer hover:text-ivory" />}
         </p>
       </Container>
     </footer>
