@@ -11,6 +11,8 @@ export type QuoteRequest = {
   date?: string;
   guests?: number;
   budget?: string;
+  /** Package chosen with its "Choose" button, as shown on the site. */
+  pack?: string;
   message?: string;
 };
 
@@ -23,6 +25,7 @@ const limits: Record<QuoteField, number> = {
   date: 10,
   guests: 7,
   budget: 80,
+  pack: 120,
   message: 5000,
 };
 
@@ -55,6 +58,7 @@ export function parseQuoteRequest(
   const date = text(form, "date");
   const guestsText = text(form, "guests");
   const budget = text(form, "budget");
+  const pack = text(form, "pack");
   const message = text(form, "message");
 
   if (name.length < 2) invalid.push("name");
@@ -77,6 +81,7 @@ export function parseQuoteRequest(
       date: date || undefined,
       guests,
       budget: budget || undefined,
+      pack: pack || undefined,
       message: message || undefined,
     },
   };
