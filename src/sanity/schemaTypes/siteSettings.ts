@@ -8,7 +8,7 @@ import { sectionDefinitions, sectionGroups, sectionKeys } from "@/lib/content/se
  */
 export const siteSettings = defineType({
   name: "siteSettings",
-  title: "Sections du site",
+  title: "Réglages du site",
   type: "document",
   groups: [
     ...Object.entries(sectionGroups).map(([name, title], index) => ({ name, title, default: index === 0 })),
@@ -44,5 +44,5 @@ export const siteSettings = defineType({
       validation: (rule) => rule.regex(/^\d{10,20}$/, { name: "numéro" }).error("Uniquement des chiffres (10 à 20)."),
     }),
   ],
-  preview: { prepare: () => ({ title: "Sections du site" }) },
+  preview: { prepare: () => ({ title: "Réglages du site" }) },
 });

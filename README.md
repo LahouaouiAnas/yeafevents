@@ -71,6 +71,10 @@ dataset `production`, public en lecture). Le reste du contenu est dans `src/cont
 - **Sections du site** (document fixe `siteSettings`) : une case par section à afficher ou masquer
   (accueil, pages d'événement, page Formules, bouton WhatsApp, FAQ du contact). La liste et les
   valeurs par défaut sont dans `src/lib/content/sections.ts` ; le document est créé au démarrage.
+- **Tableau de bord** (`src/sanity/studio/Dashboard.tsx`) : premier écran du Studio. Nouvelles
+  demandes de devis, dernières demandes, sections masquées, état du Meta Pixel, formules et prix de
+  chaque type d'événement, raccourcis vers chaque page et vers « Nouvel article / réalisation /
+  témoignage ». Thème clair aux couleurs du logo et police Jost (`src/sanity/studio/theme.ts`).
 - **Meta Pixel** (Sections du site → onglet « Publicité (Meta Pixel) ») : case « Activer » et ID du
   pixel. Activé, un bandeau cookies s'affiche ; le pixel (`src/lib/tracking/meta.ts`) n'est chargé
   qu'après « Accepter », et le lien « Gérer les cookies » du pied de page permet de changer d'avis.
