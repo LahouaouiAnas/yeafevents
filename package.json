@@ -12,7 +12,9 @@
     "check": "npm run lint && npm run typecheck && npm run build"
   },
   "dependencies": {
+    "@sanity/icons": "^5.2.3",
     "@sanity/image-url": "^2.1.1",
+    "@sanity/ui": "^4.4.9",
     "next": "16.4.0",
     "next-sanity": "^13.3.4",
     "nodemailer": "^10.0.15",
